@@ -1,0 +1,264 @@
+/*
+ * University of Washington — Design System
+ * colors_and_type.css
+ *
+ * Fonts: Encode Sans (Google Fonts — replaces "Encode Sans Normal Black"),
+ *        Open Sans (Google Fonts — exact match),
+ *        Uni Sans (NOT on Google Fonts — substituted with Nunito; flag for replacement)
+ * Source: uw.edu/brand/fonts
+ */
+
+/* ── Encode Sans Normal ── */
+@font-face { font-family: 'Encode Sans'; font-weight: 100; src: url('../fonts/EncodeSansNormal-100-Thin.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 200; src: url('../fonts/EncodeSansNormal-200-ExtraLight.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 300; src: url('../fonts/EncodeSansNormal-300-Light.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 400; src: url('../fonts/EncodeSansNormal-400-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 500; src: url('../fonts/EncodeSansNormal-500-Medium.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 600; src: url('../fonts/EncodeSansNormal-600-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 700; src: url('../fonts/EncodeSansNormal-700-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 800; src: url('../fonts/EncodeSansNormal-800-ExtraBold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans'; font-weight: 900; src: url('../fonts/EncodeSansNormal-900-Black.ttf') format('truetype'); }
+
+/* ── Encode Sans Wide ── */
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 100; src: url('../fonts/EncodeSansWide-100-Thin.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 200; src: url('../fonts/EncodeSansWide-200-ExtraLight.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 300; src: url('../fonts/EncodeSansWide-300-Light.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 400; src: url('../fonts/EncodeSansWide-400-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 500; src: url('../fonts/EncodeSansWide-500-Medium.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 600; src: url('../fonts/EncodeSansWide-600-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 700; src: url('../fonts/EncodeSansWide-700-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 800; src: url('../fonts/EncodeSansWide-800-ExtraBold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Wide'; font-weight: 900; src: url('../fonts/EncodeSansWide-900-Black.ttf') format('truetype'); }
+
+/* ── Encode Sans Compressed ── */
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 100; src: url('../fonts/EncodeSansCompressed-100-Thin.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 200; src: url('../fonts/EncodeSansCompressed-200-ExtraLight.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 300; src: url('../fonts/EncodeSansCompressed-300-Light.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 400; src: url('../fonts/EncodeSansCompressed-400-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 500; src: url('../fonts/EncodeSansCompressed-500-Medium.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 600; src: url('../fonts/EncodeSansCompressed-600-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 700; src: url('../fonts/EncodeSansCompressed-700-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 800; src: url('../fonts/EncodeSansCompressed-800-ExtraBold.ttf') format('truetype'); }
+@font-face { font-family: 'Encode Sans Compressed'; font-weight: 900; src: url('../fonts/EncodeSansCompressed-900-Black.ttf') format('truetype'); }
+
+/* ── Open Sans & Nunito (Google Fonts — no local file provided) ── */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Nunito:wght@300;400;600;700&display=swap');
+
+/* ─── COLOR TOKENS ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* Primary Brand Colors */
+  --uw-husky-purple:   #32006e;   /* PMS 2685 — darkest purple, backgrounds */
+  --uw-spirit-purple:  #4b2e83;   /* PMS 266  — most-used digital purple */
+  --uw-husky-gold:     #b7a57a;   /* Warm gold, print primary */
+  --uw-husky-gold-web: #e8e3d3;   /* Light cream gold, digital backgrounds */
+  --uw-heritage-gold:  #85754d;   /* Deep gold, text on light */
+  --uw-spirit-gold:    #ffc700;   /* Bright gold, highlights */
+
+  /* Accent Colors (≤ 15% of any design) */
+  --uw-accent-green:   #aadb1e;
+  --uw-accent-teal:    #2ad2c9;
+  --uw-accent-pink:    #e93cac;
+  --uw-accent-lavender:#c5b4e3;
+
+  /* Neutrals */
+  --uw-black:          #000000;
+  --uw-white:          #ffffff;
+  --uw-gray-90:        #1a1a1a;
+  --uw-gray-70:        #4d4d4d;
+  --uw-gray-50:        #808080;
+  --uw-gray-30:        #b3b3b3;
+  --uw-gray-10:        #e6e6e6;
+  --uw-warm-cream:     #e8d3a2;   /* From PPTX theme lt1 */
+
+  /* ─── SEMANTIC COLOR VARS ──────────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --bg-primary:         var(--uw-spirit-purple);
+  --bg-secondary:       var(--uw-husky-purple);
+  --bg-surface:         var(--uw-white);
+  --bg-subtle:          var(--uw-husky-gold-web);   /* #e8e3d3 */
+  --bg-warm:            var(--uw-warm-cream);       /* #e8d3a2 */
+
+  /* Text */
+  --text-primary:       var(--uw-husky-purple);
+  --text-on-purple:     var(--uw-white);
+  --text-on-gold:       var(--uw-husky-purple);
+  --text-body:          var(--uw-gray-90);
+  --text-muted:         var(--uw-gray-70);
+  --text-link:          var(--uw-spirit-purple);
+  --text-link-hover:    var(--uw-husky-purple);
+
+  /* Borders */
+  --border-default:     var(--uw-gray-30);
+  --border-brand:       var(--uw-spirit-purple);
+  --border-accent:      var(--uw-spirit-gold);
+
+  /* Interactive states */
+  --focus-ring:         var(--uw-spirit-gold);
+  --hover-overlay:      rgba(75, 46, 131, 0.08);
+  --press-overlay:      rgba(75, 46, 131, 0.16);
+
+  /* ─── TYPOGRAPHY TOKENS ────────────────────────────────────────────────── */
+
+  /* Font families */
+  --font-display:             'Encode Sans', sans-serif;            /* Headings, titles — Black 900 */
+  --font-display-wide:        'Encode Sans Wide', sans-serif;       /* Wide variant — impactful headlines */
+  --font-display-compressed:  'Encode Sans Compressed', sans-serif; /* Compressed — dense data / labels */
+  --font-body:                'Open Sans', sans-serif;              /* Body, UI, labels */
+  --font-uni:                 'Nunito', sans-serif;                 /* Sub-brand — Uni Sans substitute */
+  --font-mono:                'Courier New', monospace;
+
+  /* Font weights */
+  --weight-display: 900;   /* Encode Sans Black */
+  --weight-bold:    700;
+  --weight-semi:    600;
+  --weight-normal:  400;
+  --weight-light:   300;
+
+  /* Type scale (rem) */
+  --text-3xl:  3rem;      /* 48px — Hero titles */
+  --text-2xl:  2.25rem;   /* 36px — Page titles */
+  --text-xl:   1.75rem;   /* 28px — Section headers */
+  --text-lg:   1.375rem;  /* 22px — Sub-headers */
+  --text-md:   1.125rem;  /* 18px — Large body */
+  --text-base: 1rem;      /* 16px — Body */
+  --text-sm:   0.875rem;  /* 14px — Labels, captions */
+  --text-xs:   0.75rem;   /* 12px — Fine print */
+
+  /* Line heights */
+  --leading-tight:  1.15;
+  --leading-snug:   1.35;
+  --leading-normal: 1.6;
+  --leading-loose:  1.8;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.02em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.1em;
+  --tracking-caps:    0.12em;   /* Used on slide titles */
+
+  /* ─── SPACING TOKENS ───────────────────────────────────────────────────── */
+
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* ─── BORDER RADIUS ────────────────────────────────────────────────────── */
+
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   8px;
+  --radius-full: 9999px;
+
+  /* ─── SHADOWS ───────────────────────────────────────────────────────────── */
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 16px rgba(50,0,110,0.12);
+  --shadow-lg:  0 8px 32px rgba(50,0,110,0.18);
+  --shadow-brand: 0 4px 20px rgba(75,46,131,0.25);
+
+  /* ─── TRANSITIONS ───────────────────────────────────────────────────────── */
+
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+}
+
+/* ─── SEMANTIC ELEMENT STYLES ───────────────────────────────────────────── */
+
+h1, .h1 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--uw-husky-purple);
+}
+
+h2, .h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-wide);
+  color: var(--uw-spirit-purple);
+}
+
+h3, .h3 {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--uw-husky-purple);
+}
+
+h4, .h4 {
+  font-family: var(--font-body);
+  font-weight: var(--weight-semi);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  color: var(--uw-spirit-purple);
+}
+
+p, .body {
+  font-family: var(--font-body);
+  font-weight: var(--weight-normal);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-body);
+}
+
+.body-lg {
+  font-family: var(--font-body);
+  font-weight: var(--weight-normal);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+
+.caption, .label {
+  font-family: var(--font-body);
+  font-weight: var(--weight-semi);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.overline {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--uw-heritage-gold);
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  background: var(--bg-subtle);
+  padding: 2px 5px;
+  border-radius: var(--radius-sm);
+}
