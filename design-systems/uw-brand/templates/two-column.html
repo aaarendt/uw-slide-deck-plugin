@@ -1,0 +1,163 @@
+<!-- UW Two-Column Slide Template
+     Variables:
+       slide_number  — display number (e.g. "3")
+       title         — slide heading
+       eyebrow       — optional small label above title
+       left_heading  — optional heading for left column
+       left_content  — HTML content for left column (bullets, text, etc.)
+       right_heading — optional heading for right column
+       right_content — HTML content for right column
+       theme         — "light" (default) or "dark"
+       accent_bar    — "top" (default) or "left"
+-->
+<section data-label="{{ slide_number }} {{ title }}"
+         aria-label="Slide {{ slide_number }}: {{ title }}"
+         class="slide-two-column theme-{{ theme | default('light') }}">
+
+  <div class="accent-bar {{ accent_bar | default('top') }}"></div>
+
+  <div class="slide-inner">
+    <!-- Header -->
+    <div class="slide-header">
+      {% if eyebrow %}
+      <p class="eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+      <h2>{{ title }}</h2>
+    </div>
+
+    <!-- Two columns -->
+    <div class="columns">
+      <div class="column column-left" aria-label="Left column">
+        {% if left_heading %}
+        <h3 class="column-heading">{{ left_heading }}</h3>
+        {% endif %}
+        <div class="column-body">{{ left_content }}</div>
+      </div>
+
+      <div class="column-divider" aria-hidden="true"></div>
+
+      <div class="column column-right" aria-label="Right column">
+        {% if right_heading %}
+        <h3 class="column-heading">{{ right_heading }}</h3>
+        {% endif %}
+        <div class="column-body">{{ right_content }}</div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    section.slide-two-column {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Themes ── */
+    section.slide-two-column.theme-light {
+      background: var(--bg-surface);
+      color: var(--text-body);
+    }
+    section.slide-two-column.theme-dark {
+      background: var(--bg-primary);
+      color: var(--text-on-purple);
+    }
+
+    /* ── Accent bar ── */
+    section.slide-two-column .accent-bar {
+      position: absolute;
+      background: var(--uw-spirit-gold);
+      z-index: 2;
+    }
+    section.slide-two-column .accent-bar.top {
+      top: 0; left: 0; right: 0;
+      height: 8px;
+    }
+    section.slide-two-column .accent-bar.left {
+      top: 0; left: 0; bottom: 0;
+      width: 8px;
+    }
+
+    /* ── Inner layout ── */
+    section.slide-two-column .slide-inner {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: var(--space-8) var(--space-8) var(--space-6);
+      gap: var(--space-6);
+    }
+
+    /* ── Header ── */
+    section.slide-two-column .slide-header .eyebrow {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 var(--space-3) 0;
+    }
+    section.slide-two-column.theme-light .eyebrow { color: var(--uw-spirit-purple); }
+    section.slide-two-column.theme-dark  .eyebrow { color: var(--uw-spirit-gold); }
+
+    section.slide-two-column h2 {
+      font-family: 'Encode Sans', sans-serif;
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 1.1;
+      margin: 0;
+    }
+    section.slide-two-column.theme-light h2 { color: var(--uw-spirit-purple); }
+    section.slide-two-column.theme-dark  h2 { color: var(--uw-white); }
+
+    /* ── Columns ── */
+    section.slide-two-column .columns {
+      display: flex;
+      flex: 1;
+      gap: 0;
+      align-items: flex-start;
+    }
+
+    section.slide-two-column .column {
+      flex: 1;
+      padding: 0 var(--space-6);
+    }
+    section.slide-two-column .column:first-child {
+      padding-left: 0;
+    }
+    section.slide-two-column .column:last-child {
+      padding-right: 0;
+    }
+
+    section.slide-two-column .column-divider {
+      width: 2px;
+      align-self: stretch;
+      background: var(--uw-spirit-gold);
+      flex-shrink: 0;
+    }
+
+    section.slide-two-column .column-heading {
+      font-family: 'Encode Sans', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      margin: 0 0 var(--space-4) 0;
+    }
+    section.slide-two-column.theme-light .column-heading { color: var(--uw-husky-purple); }
+    section.slide-two-column.theme-dark  .column-heading { color: var(--uw-husky-gold-web); }
+
+    section.slide-two-column .column-body {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 28px;
+      line-height: 1.5;
+    }
+
+    section.slide-two-column .column-body ul,
+    section.slide-two-column .column-body ol {
+      padding-left: 1.4em;
+      margin: 0;
+    }
+    section.slide-two-column .column-body li {
+      margin-bottom: 0.5em;
+    }
+  </style>
+</section>

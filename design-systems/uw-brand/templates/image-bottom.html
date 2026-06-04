@@ -1,0 +1,151 @@
+<!-- UW Image-Bottom Slide Template
+     Variables:
+       slide_number  — display number (e.g. "4")
+       title         — slide heading
+       eyebrow       — optional small label above title
+       body          — HTML content (text, bullets) displayed above the image
+       image_src     — path to image file (e.g. "assets/diagram.png")
+       image_alt     — required alt text for the image (accessibility)
+       caption       — optional caption shown below the image
+       theme         — "light" (default) or "dark"
+       accent_bar    — "top" (default) or "left"
+-->
+<section data-label="{{ slide_number }} {{ title }}"
+         aria-label="Slide {{ slide_number }}: {{ title }}"
+         class="slide-image-bottom theme-{{ theme | default('light') }}">
+
+  <div class="accent-bar {{ accent_bar | default('top') }}"></div>
+
+  <div class="slide-inner">
+    <!-- Text region -->
+    <div class="text-region">
+      {% if eyebrow %}
+      <p class="eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+      <h2>{{ title }}</h2>
+      {% if body %}
+      <div class="body-content">{{ body }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Image region -->
+    <figure class="image-region">
+      <img src="{{ image_src }}" alt="{{ image_alt }}" class="slide-image">
+      {% if caption %}
+      <figcaption class="image-caption">{{ caption }}</figcaption>
+      {% endif %}
+    </figure>
+  </div>
+
+  <style>
+    section.slide-image-bottom {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Themes ── */
+    section.slide-image-bottom.theme-light {
+      background: var(--bg-surface);
+      color: var(--text-body);
+    }
+    section.slide-image-bottom.theme-dark {
+      background: var(--bg-primary);
+      color: var(--text-on-purple);
+    }
+
+    /* ── Accent bar ── */
+    section.slide-image-bottom .accent-bar {
+      position: absolute;
+      background: var(--uw-spirit-gold);
+      z-index: 2;
+    }
+    section.slide-image-bottom .accent-bar.top {
+      top: 0; left: 0; right: 0;
+      height: 8px;
+    }
+    section.slide-image-bottom .accent-bar.left {
+      top: 0; left: 0; bottom: 0;
+      width: 8px;
+    }
+
+    /* ── Inner layout ── */
+    section.slide-image-bottom .slide-inner {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: var(--space-8) var(--space-8) var(--space-6);
+      gap: var(--space-6);
+    }
+
+    /* ── Text region ── */
+    section.slide-image-bottom .text-region {
+      flex: 0 0 auto;
+    }
+
+    section.slide-image-bottom .eyebrow {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 var(--space-3) 0;
+    }
+    section.slide-image-bottom.theme-light .eyebrow { color: var(--uw-spirit-purple); }
+    section.slide-image-bottom.theme-dark  .eyebrow { color: var(--uw-spirit-gold); }
+
+    section.slide-image-bottom h2 {
+      font-family: 'Encode Sans', sans-serif;
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 1.1;
+      margin: 0 0 var(--space-4) 0;
+    }
+    section.slide-image-bottom.theme-light h2 { color: var(--uw-spirit-purple); }
+    section.slide-image-bottom.theme-dark  h2 { color: var(--uw-white); }
+
+    section.slide-image-bottom .body-content {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 28px;
+      line-height: 1.5;
+    }
+    section.slide-image-bottom .body-content ul,
+    section.slide-image-bottom .body-content ol {
+      padding-left: 1.4em;
+      margin: 0;
+    }
+    section.slide-image-bottom .body-content li {
+      margin-bottom: 0.4em;
+    }
+
+    /* ── Image region ── */
+    section.slide-image-bottom .image-region {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      margin: 0;
+      min-height: 0;
+    }
+
+    section.slide-image-bottom .slide-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    section.slide-image-bottom .image-caption {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 24px;
+      line-height: 1.4;
+      margin-top: var(--space-3);
+      text-align: center;
+    }
+    section.slide-image-bottom.theme-light .image-caption { color: var(--text-muted); }
+    section.slide-image-bottom.theme-dark  .image-caption { color: var(--uw-husky-gold-web); }
+  </style>
+</section>

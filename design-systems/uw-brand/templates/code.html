@@ -1,0 +1,197 @@
+<!-- UW Code Slide Template
+     Designed for displaying code snippets with optional explanatory text.
+
+     Variables:
+       slide_number  — display number (e.g. "6")
+       title         — slide heading
+       eyebrow       — optional small label above title (e.g. "Python", "YAML")
+       code          — the code snippet (HTML-escaped or CDATA wrapped)
+       language      — language label displayed on the code block (e.g. "python")
+       caption       — optional text below the code block
+       annotation    — optional callout/annotation HTML shown to the right of code
+       theme         — "dark" (default) or "light"
+       accent_bar    — "left" (default for code) or "top"
+
+     Note: Escape HTML special characters in `code` (<, >, &) before rendering.
+           Use a Jinja2 filter: {{ code | e }} or pre-escape in the data source.
+-->
+<section data-label="{{ slide_number }} {{ title }}"
+         aria-label="Slide {{ slide_number }}: {{ title }}"
+         class="slide-code theme-{{ theme | default('dark') }}">
+
+  <div class="accent-bar {{ accent_bar | default('left') }}"></div>
+
+  <div class="slide-inner">
+    <!-- Header -->
+    <div class="slide-header">
+      {% if eyebrow %}
+      <p class="eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+      <h2>{{ title }}</h2>
+    </div>
+
+    <!-- Code + optional annotation -->
+    <div class="content-area">
+      <div class="code-block-wrap">
+        {% if language %}
+        <div class="language-badge" aria-label="Language: {{ language }}">{{ language }}</div>
+        {% endif %}
+        <pre class="code-block"><code>{{ code }}</code></pre>
+        {% if caption %}
+        <p class="code-caption">{{ caption }}</p>
+        {% endif %}
+      </div>
+
+      {% if annotation %}
+      <aside class="annotation" aria-label="Code annotation">
+        {{ annotation }}
+      </aside>
+      {% endif %}
+    </div>
+  </div>
+
+  <style>
+    section.slide-code {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Themes ── */
+    section.slide-code.theme-dark {
+      background: var(--uw-husky-purple);
+      color: var(--uw-white);
+    }
+    section.slide-code.theme-light {
+      background: var(--bg-surface);
+      color: var(--text-body);
+    }
+
+    /* ── Accent bar ── */
+    section.slide-code .accent-bar {
+      position: absolute;
+      background: var(--uw-spirit-gold);
+      z-index: 2;
+    }
+    section.slide-code .accent-bar.top {
+      top: 0; left: 0; right: 0;
+      height: 8px;
+    }
+    section.slide-code .accent-bar.left {
+      top: 0; left: 0; bottom: 0;
+      width: 8px;
+    }
+
+    /* ── Inner layout ── */
+    section.slide-code .slide-inner {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: var(--space-6) var(--space-8) var(--space-6) calc(var(--space-8) + 8px);
+      gap: var(--space-4);
+      min-height: 0;
+    }
+
+    /* ── Header ── */
+    section.slide-code .eyebrow {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px 0;
+      color: var(--uw-spirit-gold);
+    }
+
+    section.slide-code h2 {
+      font-family: 'Encode Sans', sans-serif;
+      font-weight: 800;
+      font-size: 48px;
+      line-height: 1.1;
+      margin: 0;
+    }
+    section.slide-code.theme-dark  h2 { color: var(--uw-white); }
+    section.slide-code.theme-light h2 { color: var(--uw-spirit-purple); }
+
+    /* ── Content area ── */
+    section.slide-code .content-area {
+      display: flex;
+      flex: 1;
+      gap: var(--space-6);
+      min-height: 0;
+    }
+
+    section.slide-code .code-block-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      min-height: 0;
+    }
+
+    /* ── Language badge ── */
+    section.slide-code .language-badge {
+      display: inline-block;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--uw-spirit-gold);
+      color: var(--uw-husky-purple);
+      padding: 4px 14px;
+      border-radius: 4px 4px 0 0;
+      align-self: flex-start;
+    }
+
+    /* ── Code block ── */
+    section.slide-code .code-block {
+      flex: 1;
+      margin: 0;
+      padding: var(--space-6);
+      background: #1a1035;   /* very dark purple, slightly off-brand for readability */
+      border-radius: 0 6px 6px 6px;
+      overflow: auto;
+      border-left: 4px solid var(--uw-spirit-gold);
+      min-height: 0;
+    }
+
+    section.slide-code .code-block code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 26px;
+      line-height: 1.6;
+      color: #e8e3d3;         /* uw-husky-gold-web — warm, readable on dark */
+      white-space: pre;
+      display: block;
+    }
+
+    /* ── Caption ── */
+    section.slide-code .code-caption {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 24px;
+      line-height: 1.4;
+      margin: 0;
+    }
+    section.slide-code.theme-dark  .code-caption { color: var(--uw-husky-gold-web); }
+    section.slide-code.theme-light .code-caption { color: var(--text-muted); }
+
+    /* ── Annotation sidebar ── */
+    section.slide-code .annotation {
+      flex: 0 0 400px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 26px;
+      line-height: 1.5;
+      padding: var(--space-4);
+      background: rgba(255,255,255,0.07);
+      border-radius: 6px;
+      border-left: 3px solid var(--uw-spirit-gold);
+      align-self: flex-start;
+    }
+    section.slide-code.theme-light .annotation {
+      background: var(--uw-husky-gold-web);
+      color: var(--uw-husky-purple);
+    }
+  </style>
+</section>
