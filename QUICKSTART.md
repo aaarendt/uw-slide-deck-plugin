@@ -1,21 +1,40 @@
 # Quick Start Guide
 
-## Installation
+## First-Time Setup (one time only)
+
+Create a symlink so Claude Code can find this plugin:
 
 ```bash
-ln -s /path/to/uw-slides-plugin ~/.claude/plugins/local/uw-slides
+ln -s /home/arendta/git/aaarendt/uw-slides-plugin ~/.claude/plugins/local/uw-slides
 ```
 
-## Create First Deck
+This only needs to be done once. After that, the plugin is available in every Claude Code session.
 
-```bash
-claude code /uw-slides:new-deck my-talk
-cd my-talk
+## Working Inside Claude Code
+
+All steps below are done by chatting with Claude — no terminal commands needed.
+
+### 1. Create a New Deck
+
+Tell Claude:
+> "Create a new deck called my-talk"
+
+Claude uses the `new-deck` skill to scaffold this structure:
+
+```
+my-talk/
+├── content/
+│   ├── 01-title.md
+│   ├── 02-overview.md
+│   └── 03-conclusion.md
+├── assets/
+├── order.txt
+└── README.md
 ```
 
-## Edit Slides
+### 2. Edit Your Slides
 
-Edit `content/*.md` files:
+Each slide is a markdown file in `content/`. Edit them directly in VS Code:
 
 ```yaml
 ---
@@ -32,18 +51,22 @@ Main takeaway
 What I'll say...
 ```
 
-## Render
+Reorder slides by editing `order.txt`.
 
-```bash
-claude code /uw-slides:render
-open build/index.html
-```
+### 3. Render
 
-## Validation
+Tell Claude:
+> "Render my deck"
 
-```bash
-claude code /uw-slides:accessibility-check
-claude code /uw-slides:design-review
-```
+Claude generates `build/index.html`. Open it in a browser to preview.
 
-See full guide in main README.md
+### 4. Validate
+
+Tell Claude:
+> "Check accessibility" or "Review the design"
+
+Claude runs WCAG 2.1 AA checks and UW brand compliance review, reporting any issues.
+
+---
+
+See `README.md` for the full reference guide.

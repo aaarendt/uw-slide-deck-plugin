@@ -11,12 +11,12 @@
 ## 🔲 Essential (Before Using)
 
 ### Layout Templates Needed
-- [ ] two-column.html
-- [ ] image-bottom.html
-- [ ] comparison.html
-- [ ] code.html
-- [ ] transition.html
-- [ ] architecture.html
+- [x] two-column.html
+- [x] image-bottom.html
+- [x] comparison.html
+- [x] code.html
+- [x] transition.html
+- [x] architecture.html
 
 See `HOW-TO-CREATE-TEMPLATES.md` for extraction guide.
 
