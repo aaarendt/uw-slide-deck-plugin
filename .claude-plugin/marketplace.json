@@ -1,0 +1,20 @@
+{
+    "name": "uw-slides-local",
+    "description": "Local UW Slides plugin — University of Washington branded slide deck builder",
+    "owner": {
+        "name": "Anthony Arendt",
+        "url": "https://github.com/aaarendt"
+    },
+    "plugins": [
+        {
+            "name": "uw-slides",
+            "description": "University of Washington slide deck builder with brand compliance and WCAG 2.1 AA accessibility.",
+            "author": {
+                "name": "Anthony Arendt"
+            },
+            "category": "development",
+            "source": ".",
+            "homepage": "https://github.com/aaarendt/uw-slides-plugin"
+        }
+    ]
+}
