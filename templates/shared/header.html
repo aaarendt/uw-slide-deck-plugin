@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="University of Washington Presentation">
+  <meta name="author" content="University of Washington">
+  <title>UW Presentation</title>
+
+  <!-- Encode Sans Local Fonts (Normal, Wide, Compressed variants) -->
+  <style>
+    /* Encode Sans Normal */
+    @font-face { font-family: 'Encode Sans'; font-weight: 100; src: url('../assets/fonts/EncodeSansNormal-100-Thin.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 200; src: url('../assets/fonts/EncodeSansNormal-200-ExtraLight.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 300; src: url('../assets/fonts/EncodeSansNormal-300-Light.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 400; src: url('../assets/fonts/EncodeSansNormal-400-Regular.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 500; src: url('../assets/fonts/EncodeSansNormal-500-Medium.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 600; src: url('../assets/fonts/EncodeSansNormal-600-SemiBold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 700; src: url('../assets/fonts/EncodeSansNormal-700-Bold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 800; src: url('../assets/fonts/EncodeSansNormal-800-ExtraBold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans'; font-weight: 900; src: url('../assets/fonts/EncodeSansNormal-900-Black.ttf') format('truetype'); font-display: swap; }
+
+    /* Encode Sans Wide */
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 100; src: url('../assets/fonts/EncodeSansWide-100-Thin.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 200; src: url('../assets/fonts/EncodeSansWide-200-ExtraLight.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 300; src: url('../assets/fonts/EncodeSansWide-300-Light.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 400; src: url('../assets/fonts/EncodeSansWide-400-Regular.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 500; src: url('../assets/fonts/EncodeSansWide-500-Medium.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 600; src: url('../assets/fonts/EncodeSansWide-600-SemiBold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 700; src: url('../assets/fonts/EncodeSansWide-700-Bold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 800; src: url('../assets/fonts/EncodeSansWide-800-ExtraBold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Wide'; font-weight: 900; src: url('../assets/fonts/EncodeSansWide-900-Black.ttf') format('truetype'); font-display: swap; }
+
+    /* Encode Sans Compressed */
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 100; src: url('../assets/fonts/EncodeSansCompressed-100-Thin.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 200; src: url('../assets/fonts/EncodeSansCompressed-200-ExtraLight.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 300; src: url('../assets/fonts/EncodeSansCompressed-300-Light.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 400; src: url('../assets/fonts/EncodeSansCompressed-400-Regular.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 500; src: url('../assets/fonts/EncodeSansCompressed-500-Medium.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 600; src: url('../assets/fonts/EncodeSansCompressed-600-SemiBold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 700; src: url('../assets/fonts/EncodeSansCompressed-700-Bold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 800; src: url('../assets/fonts/EncodeSansCompressed-800-ExtraBold.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Encode Sans Compressed'; font-weight: 900; src: url('../assets/fonts/EncodeSansCompressed-900-Black.ttf') format('truetype'); font-display: swap; }
+  </style>
+
+  <!-- Open Sans from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────────────────────────── */
+
+    :root {
+      /* Primary Brand Colors */
+      --uw-husky-purple:   #32006e;
+      --uw-spirit-purple:  #4b2e83;
+      --uw-spirit-gold:    #ffc700;
+      --uw-husky-gold-web: #e8e3d3;
+      --uw-heritage-gold:  #85754d;
+
+      /* Accent Colors */
+      --uw-accent-green:   #aadb1e;
+      --uw-accent-teal:    #2ad2c9;
+      --uw-accent-pink:    #e93cac;
+      --uw-accent-lavender:#c5b4e3;
+
+      /* Neutrals */
+      --uw-white:          #ffffff;
+      --uw-black:          #000000;
+      --uw-gray-90:        #1a1a1a;
+      --uw-gray-70:        #4d4d4d;
+      --uw-gray-50:        #808080;
+      --uw-gray-30:        #b3b3b3;
+      --uw-gray-10:        #e6e6e6;
+
+      /* Font families */
+      --font-display:      'Encode Sans', sans-serif;
+      --font-display-wide: 'Encode Sans Wide', sans-serif;
+      --font-display-compressed: 'Encode Sans Compressed', sans-serif;
+      --font-body:         'Open Sans', sans-serif;
+
+      /* Spacing tokens (based on 8px grid) */
+      --space-1:   8px;
+      --space-2:  16px;
+      --space-3:  24px;
+      --space-4:  32px;
+      --space-5:  40px;
+      --space-6:  48px;
+      --space-7:  56px;
+      --space-8:  64px;
+      --space-10: 80px;
+      --space-12: 96px;
+
+      /* Border radius */
+      --radius-sm:   2px;
+      --radius-md:   4px;
+      --radius-lg:   8px;
+
+      /* Shadows */
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md:  0 4px 16px rgba(50,0,110,0.12);
+      --shadow-lg:  0 8px 32px rgba(50,0,110,0.18);
+    }
+
+    /* ─── BASE STYLES ────────────────────────────────────────────────────── */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: #000;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── SLIDE SYSTEM ───────────────────────────────────────────────────── */
+
+    section.slide {
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      position: relative;
+    }
+
+    section.slide.active {
+      display: flex;
+    }
+
+    /* ─── UTILITY CLASSES (Available to all slides) ──────────────────────── */
+
+    .accent-bar-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: var(--uw-spirit-gold);
+      z-index: 10;
+    }
+
+    .accent-bar-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: var(--uw-spirit-gold);
+      z-index: 10;
+    }
+
+    .accent-bar-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 8px;
+      background: var(--uw-spirit-gold);
+      z-index: 10;
+    }
+
+    .accent-bar-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 8px;
+      background: var(--uw-spirit-gold);
+      z-index: 10;
+    }
+
+    /* Screen reader only content */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+</head>
+<body>

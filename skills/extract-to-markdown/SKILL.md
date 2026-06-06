@@ -1,33 +1,44 @@
 ---
 name: extract-to-markdown
-description: Convert existing monolithic HTML slide decks into markdown-per-slide format.
+description: Extract slide content from HTML presentations to create a SLIDES.md planning document
 ---
 
 # Extract to Markdown Skill
 
 ## Purpose
-Migrate existing slide decks (HTML, PowerPoint) into markdown-per-slide workflow.
+Create a SLIDES.md outline from existing HTML slide decks to help plan new fragment-based presentations.
 
 ## Usage
 ```bash
-claude code /uw-slides:extract-to-markdown slides/index.html output-dir/
+/uw-slides:extract-to-markdown slides/index.html
 ```
 
 ## What It Does
-1. Parses input HTML or PowerPoint export
-2. Extracts slides as individual markdown files
-3. Generates front matter with inferred layouts
-4. Creates order.txt
-5. Copies images to assets/
-6. Produces extraction report
+1. Parses HTML slide deck
+2. Extracts slide content (headings, text, structure)
+3. Generates SLIDES.md with slide outlines
+4. Notes image references
+5. Produces extraction report
 
 ## Output
-```
-output-dir/
-├── content/*.md
-├── assets/
-├── order.txt
-└── extraction-report.md
+Creates `SLIDES.md` in the current directory:
+
+```markdown
+# Extracted Presentation
+
+## 01-title
+Title: Original Title
+Content: Extracted text...
+
+## 02-content
+Main points:
+- Point 1
+- Point 2
+
+Images: diagram.png
 ```
 
-See skill documentation for supported formats.
+This serves as a starting point for planning your fragment-based presentation.
+
+## Note
+This skill extracts content outline only - you'll still need to ask your LLM to generate the actual HTML slide fragments based on the SLIDES.md plan.

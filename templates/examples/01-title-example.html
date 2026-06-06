@@ -1,0 +1,84 @@
+<section data-slide="example-title"
+         aria-label="Example Title Slide"
+         class="slide">
+
+  <div class="title-layout">
+    <div class="logo-container">
+      <img src="../assets/W-Logo_Purple_RGB.png" alt="University of Washington W logo" class="uw-logo">
+    </div>
+
+    <div class="title-content">
+      <h1>Research Presentation Title</h1>
+      <h2>Compelling Subtitle Goes Here</h2>
+    </div>
+
+    <div class="presenter-info">
+      <p class="name">Presenter Name</p>
+      <p class="title">Research Scientist</p>
+      <p class="affiliation">University of Washington</p>
+      <p class="date">June 4, 2026</p>
+    </div>
+  </div>
+
+  <style>
+    section[data-slide="example-title"] {
+      background: var(--uw-spirit-purple);
+      color: var(--uw-white);
+      position: relative;
+    }
+
+    section[data-slide="example-title"]::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: var(--uw-spirit-gold);
+    }
+
+    section[data-slide="example-title"] .title-layout {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 80px;
+      text-align: center;
+    }
+
+    section[data-slide="example-title"] .uw-logo {
+      height: 120px;
+      filter: brightness(0) invert(1);
+    }
+
+    section[data-slide="example-title"] h1 {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 1.0;
+      margin: 0 0 24px 0;
+    }
+
+    section[data-slide="example-title"] h2 {
+      font-family: var(--font-body);
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--uw-husky-gold-web);
+      margin: 0;
+    }
+
+    section[data-slide="example-title"] .presenter-info {
+      font-size: 28px;
+      line-height: 1.6;
+      color: var(--uw-husky-gold-web);
+    }
+
+    section[data-slide="example-title"] .presenter-info .name {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+  </style>
+</section>
