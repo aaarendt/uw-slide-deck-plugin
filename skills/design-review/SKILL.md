@@ -11,10 +11,11 @@ Ensure slide deck follows UW brand guidelines.
 ## What Gets Checked
 1. **Color Tokens** — Use CSS variables, not hardcoded hex
 2. **Font Usage** — Only approved UW fonts
-3. **Layout Patterns** — Use approved templates
-4. **Logo Treatment** — Correct inversion on dark backgrounds
-5. **Accent Bar** — 8px gold bar on every slide
-6. **Type Scale** — Follow UW hierarchy
+3. **Font Size Floor** — All visible text must use `clamp()` with a minimum of `1.5rem` (24pt). Exception: source/citation lines and decorative uppercase labels may use `1rem` minimum. Hard-coded values below `1.5rem` for content text are a violation. Presentations are projected — small text is unreadable past the third row of an audience.
+4. **Layout Patterns** — Use approved templates
+5. **Logo Treatment** — Correct inversion on dark backgrounds
+6. **Accent Bar** — 8px gold bar on every slide
+7. **Type Scale** — Follow UW hierarchy
 
 ## Usage
 ```bash
