@@ -1,0 +1,101 @@
+
+  <!-- Slide counter -->
+  <div class="slide-counter" aria-live="polite" aria-atomic="true">
+    <span id="current-slide">1</span> / <span id="total-slides">0</span>
+  </div>
+
+  <style>
+    .slide-counter {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      font-family: var(--font-body);
+      font-size: 18px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 16px;
+      border-radius: 4px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+  </style>
+
+  <script>
+    // Slide navigation system
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+      // Remove active class from all slides
+      slides.forEach(slide => slide.classList.remove('active'));
+
+      // Clamp to valid range
+      currentSlide = Math.max(0, Math.min(n, totalSlides - 1));
+
+      // Show current slide
+      slides[currentSlide].classList.add('active');
+
+      // Update counter
+      document.getElementById('current-slide').textContent = currentSlide + 1;
+
+      // Update URL hash
+      window.location.hash = currentSlide + 1;
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        showSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        showSlide(currentSlide - 1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        showSlide(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        showSlide(totalSlides - 1);
+      }
+    });
+
+    // Click to advance (anywhere except the counter)
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.slide-counter')) {
+        showSlide(currentSlide + 1);
+      }
+    });
+
+    // Initialize presentation
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set total slides
+      document.getElementById('total-slides').textContent = totalSlides;
+
+      // Load from hash if present
+      if (window.location.hash) {
+        const hashSlide = parseInt(window.location.hash.slice(1)) - 1;
+        if (!isNaN(hashSlide) && hashSlide >= 0 && hashSlide < totalSlides) {
+          showSlide(hashSlide);
+          return;
+        }
+      }
+
+      // Otherwise show first slide
+      showSlide(0);
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('hashchange', () => {
+      const hashSlide = parseInt(window.location.hash.slice(1)) - 1;
+      if (!isNaN(hashSlide) && hashSlide >= 0 && hashSlide < totalSlides) {
+        // Update without creating new history entry
+        slides.forEach(slide => slide.classList.remove('active'));
+        currentSlide = hashSlide;
+        slides[currentSlide].classList.add('active');
+        document.getElementById('current-slide').textContent = currentSlide + 1;
+      }
+    });
+  </script>
+</body>
+</html>

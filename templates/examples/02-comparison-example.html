@@ -1,0 +1,106 @@
+<section data-slide="example-comparison"
+         aria-label="Example Comparison Slide"
+         class="slide">
+
+  <div class="comparison-grid">
+    <div class="header">
+      <div class="accent-bar-left"></div>
+      <h2>Before and After Comparison</h2>
+    </div>
+
+    <div class="columns">
+      <div class="column left">
+        <h3>Before</h3>
+        <ul>
+          <li>Manual data entry</li>
+          <li>Error-prone processes</li>
+          <li>Time-intensive workflows</li>
+          <li>Limited collaboration</li>
+        </ul>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="column right">
+        <h3>After</h3>
+        <ul>
+          <li>Automated pipelines</li>
+          <li>Validated inputs</li>
+          <li>Efficient workflows</li>
+          <li>Real-time collaboration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    section[data-slide="example-comparison"] {
+      background: var(--uw-white);
+      color: var(--uw-gray-90);
+    }
+
+    section[data-slide="example-comparison"] .comparison-grid {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 60px 80px;
+    }
+
+    section[data-slide="example-comparison"] .header {
+      position: relative;
+      margin-bottom: 60px;
+    }
+
+    section[data-slide="example-comparison"] h2 {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--uw-spirit-purple);
+      margin: 0;
+    }
+
+    section[data-slide="example-comparison"] .columns {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    section[data-slide="example-comparison"] .divider {
+      height: 100%;
+      background: var(--uw-spirit-gold);
+    }
+
+    section[data-slide="example-comparison"] h3 {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--uw-spirit-purple);
+      margin: 0 0 32px 0;
+    }
+
+    section[data-slide="example-comparison"] ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    section[data-slide="example-comparison"] li {
+      font-size: 28px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      padding-left: 36px;
+      position: relative;
+    }
+
+    section[data-slide="example-comparison"] li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--uw-spirit-gold);
+      font-weight: 700;
+      font-size: 32px;
+    }
+  </style>
+</section>
