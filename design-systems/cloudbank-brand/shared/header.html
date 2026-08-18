@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CloudBank Presentation">
+  <meta name="author" content="CloudBank">
+  <title>CloudBank Presentation</title>
+
+  <!-- Nunito & Open Sans (Google Fonts) -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Nunito:wght@300;400;600;700;800;900&display=swap');
+  </style>
+
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────────────────────────── */
+
+    :root {
+      /* Primary Brand Colors */
+      --cb-deep-navy:      #1b2c50;
+      --cb-signal-blue:    #3a629f;
+      --cb-ink:            #14161b;
+      --cb-mist:           #b8c4dc;
+      --cb-fog:            #f5f5f5;
+      --cb-paper-warm:     #eef2f9;
+
+      /* Accent Colors */
+      --cb-accent-teal:    #2ad2c9;
+      --cb-accent-amber:   #e8a13c;
+      --cb-accent-crimson: #c33b3b;
+      --cb-accent-green:   #4cae4f;
+
+      /* Neutrals */
+      --cb-black:          #000000;
+      --cb-white:          #ffffff;
+      --cb-gray-90:        #1a1a1a;
+      --cb-gray-70:        #4d4d4d;
+      --cb-gray-50:        #808080;
+      --cb-gray-30:        #b3b3b3;
+      --cb-gray-10:        #e6e6e6;
+
+      /* Semantic — Backgrounds */
+      --bg-primary:         var(--cb-deep-navy);
+      --bg-secondary:       var(--cb-ink);
+      --bg-surface:         var(--cb-white);
+      --bg-subtle:          var(--cb-fog);
+      --bg-warm:            var(--cb-paper-warm);
+
+      /* Semantic — Text */
+      --text-primary:       var(--cb-deep-navy);
+      --text-on-dark:       var(--cb-white);
+      --text-on-mist:       var(--cb-deep-navy);
+      --text-body:          var(--cb-ink);
+      --text-muted:         var(--cb-gray-70);
+      --text-link:          var(--cb-signal-blue);
+      --text-link-hover:    var(--cb-deep-navy);
+
+      /* Semantic — Borders */
+      --border-default:     var(--cb-gray-30);
+      --border-brand:       var(--cb-deep-navy);
+      --border-accent:      var(--cb-signal-blue);
+
+      /* Font families */
+      --font-display:             'Nunito', sans-serif;
+      --font-display-wide:        'Nunito', sans-serif;
+      --font-display-compressed:  'Nunito', sans-serif;
+      --font-body:                'Open Sans', sans-serif;
+      --font-mono:                'Courier New', monospace;
+
+      /* Font weights */
+      --weight-display: 800;
+      --weight-bold:    700;
+      --weight-semi:    600;
+      --weight-normal:  400;
+      --weight-light:   300;
+
+      /* Spacing tokens (based on 8px grid) */
+      --space-1:   8px;
+      --space-2:  16px;
+      --space-3:  24px;
+      --space-4:  32px;
+      --space-5:  40px;
+      --space-6:  48px;
+      --space-7:  56px;
+      --space-8:  64px;
+      --space-10: 80px;
+      --space-12: 96px;
+
+      /* Border radius */
+      --radius-sm:   2px;
+      --radius-md:   4px;
+      --radius-lg:   8px;
+
+      /* Shadows */
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md:  0 4px 16px rgba(27,44,80,0.12);
+      --shadow-lg:  0 8px 32px rgba(27,44,80,0.18);
+    }
+
+    /* ─── BASE STYLES ────────────────────────────────────────────────────── */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: #000;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── SLIDE SYSTEM ───────────────────────────────────────────────────── */
+
+    section.slide {
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      position: relative;
+    }
+
+    section.slide.active {
+      display: flex;
+    }
+
+    /* ─── UTILITY CLASSES (Available to all slides) ──────────────────────── */
+
+    .accent-bar-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--cb-signal-blue);
+      z-index: 10;
+    }
+
+    .accent-bar-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--cb-signal-blue);
+      z-index: 10;
+    }
+
+    .accent-bar-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--cb-signal-blue);
+      z-index: 10;
+    }
+
+    .accent-bar-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--cb-signal-blue);
+      z-index: 10;
+    }
+
+    /* Screen reader only content */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+</head>
+<body>

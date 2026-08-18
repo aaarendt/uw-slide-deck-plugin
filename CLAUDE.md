@@ -26,10 +26,16 @@ uw-slides-plugin/
 │   ├── build-visuals.sh     # Pass-2 build script template
 │   ├── SLIDES.md            # Planning document template
 │   └── VISUALS.md           # Visual additions template
-├── design-system/
-│   ├── DESIGN.md            # Authoritative UW brand guidelines (~5500 words)
-│   ├── colors_and_type.css  # Design tokens and @font-face declarations
-│   └── fonts/               # Encode Sans (45 variants: 5 widths × 9 weights)
+├── design-systems/
+│   ├── uw-brand/
+│   │   ├── DESIGN.md            # Authoritative UW brand guidelines (~5500 words)
+│   │   ├── colors_and_type.css  # Design tokens and @font-face declarations
+│   │   ├── fonts/               # Encode Sans (45 variants: 5 widths × 9 weights)
+│   │   └── templates/           # UW-specific scaffolding templates
+│   └── cloudbank-brand/
+│       ├── DESIGN.md            # CloudBank brand guidelines
+│       ├── colors_and_type.css  # CloudBank CSS tokens
+│       └── templates/           # CloudBank-specific scaffolding templates
 └── references/
     ├── accessibility-requirements.md
     └── markdown-schema.md
@@ -92,7 +98,7 @@ The build scripts accept an optional directory argument: `./build.sh /path/to/de
 
 ## Design System
 
-Read `design-system/DESIGN.md` before generating any slide HTML. Key tokens available in all slides (injected via `shared/header.html`):
+Read `design-systems/uw-brand/DESIGN.md` (or `design-systems/cloudbank-brand/DESIGN.md`) before generating any slide HTML. Key tokens available in all slides (injected via `shared/header.html`):
 
 ```css
 --uw-spirit-purple: #4b2e83
@@ -100,7 +106,7 @@ Read `design-system/DESIGN.md` before generating any slide HTML. Key tokens avai
 --uw-husky-purple:  #32006e
 --font-display:     Encode Sans
 --font-body:        Open Sans
---space-1 … --space-12  /* 8px grid: 8px–96px */
+--space-1 … --space-20  /* 4px base: 4px–80px; --space-8 = 32px, --space-20 = 80px */
 ```
 
 Every slide should have an 8px gold accent bar (`--uw-spirit-gold`), typically `::before` on the `<section>`.
@@ -137,7 +143,7 @@ When `/uw-slides:new-deck` runs, the presentation gets:
 └── build-visuals.sh
 ```
 
-Font paths in `shared/header.html` are relative to the plugin install path (`../../design-system/fonts/`). If the plugin is not at `~/.claude/plugins/local/uw-slides/`, update those paths.
+Font paths in the UW brand `shared/header.html` (generated presentations) are relative to the deck's own `assets/fonts/` directory (`../assets/fonts/`). The `new-deck` skill copies Encode Sans fonts from `design-systems/uw-brand/fonts/` into `assets/fonts/` at scaffold time. CloudBank decks use Google Fonts via CDN — no local font copy needed.
 
 ## Skill Development Notes
 
