@@ -11,7 +11,10 @@ Create a UW-branded presentation using a modular, LLM-first architecture where e
 ## Usage
 ```bash
 /uw-slides:new-deck <presentation-name>
+/uw-slides:new-deck <presentation-name> --brand=cloudbank
 ```
+
+The optional `--brand=<uw|cloudbank>` parameter selects the design system. Defaults to `uw`.
 
 ## Architecture Overview
 
@@ -96,9 +99,17 @@ Each slide must follow this pattern:
 - 4.5:1 contrast ratio minimum
 
 **Available CSS Variables (from header.html):**
+
+For `--brand=uw`:
 - Colors: `--uw-spirit-purple`, `--uw-husky-purple`, `--uw-spirit-gold`, `--uw-husky-gold-web`, `--uw-heritage-gold`, `--uw-white`, `--uw-black`, `--uw-gray-90`, etc.
-- Fonts: `--font-display`, `--font-display-wide`, `--font-display-compressed`, `--font-body`
-- Spacing: `--space-1` (8px) through `--space-12` (96px)
+- Fonts: `--font-display` (Encode Sans), `--font-display-wide`, `--font-display-compressed`, `--font-display-narrow`, `--font-display-condensed`, `--font-body` (Open Sans), `--font-mono`
+- Spacing: `--space-1` (4px) through `--space-20` (80px); common: `--space-8` 32px, `--space-16` 64px, `--space-20` 80px
+
+For `--brand=cloudbank`:
+- Colors: `--cb-deep-navy`, `--cb-signal-blue`, `--cb-ink`, `--cb-mist`, `--cb-fog`, `--cb-white`, `--cb-black`, etc.
+- Semantic aliases: `--bg-primary`, `--bg-surface`, `--text-body`, `--text-on-dark`, `--border-accent`, etc.
+- Fonts: `--font-display` (Nunito), `--font-body` (Open Sans)
+- Spacing: `--space-1` (4px) through `--space-20` (80px); common: `--space-8` 32px, `--space-16` 64px, `--space-20` 80px
 
 **Design Freedom:**
 - Any HTML structure
@@ -142,19 +153,25 @@ Every slide must meet WCAG 2.1 Level AA:
 When this skill is invoked, create the following files:
 
 ### 1. Copy shared templates
-Copy from plugin templates directory:
-- `shared/header.html` from `~/.claude/plugins/local/uw-slides/templates/shared/header.html`
+Brand-agnostic files come from the root templates directory; only `header.html` is brand-specific.
+
+Brand-agnostic (same for all brands):
 - `shared/footer.html` from `~/.claude/plugins/local/uw-slides/templates/shared/footer.html`
 - `build.sh` from `~/.claude/plugins/local/uw-slides/templates/build.sh`
 - `build-visuals.sh` from `~/.claude/plugins/local/uw-slides/templates/build-visuals.sh`
 - `SLIDES.md` from `~/.claude/plugins/local/uw-slides/templates/SLIDES.md`
 - `VISUALS.md` from `~/.claude/plugins/local/uw-slides/templates/VISUALS.md`
 
-### 2. Copy UW brand fonts
-Copy all Encode Sans fonts from plugin to presentation:
-- Copy `~/.claude/plugins/local/uw-slides/design-system/fonts/*` to `assets/fonts/`
+Brand-specific (use the `--brand` value, default: `uw`):
+- `shared/header.html` from `~/.claude/plugins/local/uw-slides/design-systems/${brand}-brand/shared/header.html`
+
+### 2. Copy brand fonts (UW only)
+For `--brand=uw`: copy all Encode Sans fonts from plugin to presentation:
+- Copy `~/.claude/plugins/local/uw-slides/design-systems/uw-brand/fonts/*` to `assets/fonts/`
 - This includes 45 .ttf files (~9MB total) for all Encode Sans variants
 - Ensures presentations are self-contained and portable
+
+For `--brand=cloudbank`: **skip font copy.** CloudBank uses Nunito and Open Sans loaded via Google Fonts CDN — no local font files needed.
 
 ### 3. Create empty directories
 - `content/` (empty — pass-1 slides added here via conversation)

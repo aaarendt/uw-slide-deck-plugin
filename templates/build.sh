@@ -30,7 +30,7 @@ fi
 slide_count=0
 
 # Extract slide IDs from SLIDES.md (lines starting with "## " followed by slide name)
-grep "^## " "$DECK_DIR/SLIDES.md" | sed 's/^## //' | while IFS= read -r slide_name; do
+grep "^## [0-9]" "$DECK_DIR/SLIDES.md" | sed 's/^## //' | while IFS= read -r slide_name; do
   # Skip empty lines
   [[ -z "$slide_name" ]] && continue
 

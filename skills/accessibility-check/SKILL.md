@@ -6,7 +6,7 @@ description: Validate WCAG 2.1 Level AA compliance. Checks contrast ratios, font
 # Accessibility Check Skill
 
 ## Purpose
-Validate WCAG 2.1 Level AA compliance for UW slide decks.
+Validate WCAG 2.1 Level AA compliance for slide decks.
 
 ## What Gets Checked
 1. **Color Contrast** — 4.5:1 for text, 3:1 for large text
@@ -19,7 +19,10 @@ Validate WCAG 2.1 Level AA compliance for UW slide decks.
 ## Usage
 ```bash
 claude code /uw-slides:accessibility-check
+claude code /uw-slides:accessibility-check --brand=cloudbank
 ```
+
+The optional `--brand=<uw|cloudbank>` parameter identifies which brand's approved contrast pairings to reference when reporting results. Defaults to `uw`. The WCAG 2.1 AA thresholds (4.5:1 text, 3:1 large text) apply to both brands. For approved CloudBank contrast combinations, see `design-systems/cloudbank-brand/DESIGN.md`.
 
 ## Output
 ```

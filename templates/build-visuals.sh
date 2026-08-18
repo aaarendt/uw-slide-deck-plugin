@@ -33,7 +33,7 @@ cat "$DECK_DIR/shared/header.html" > "$OUTPUT"
 slide_count=0
 
 # Use SLIDES.md for ordering; serve fragments from content-with-visuals/ with content/ fallback
-grep "^## " "$DECK_DIR/SLIDES.md" | sed 's/^## //' | while IFS= read -r slide_name; do
+grep "^## [0-9]" "$DECK_DIR/SLIDES.md" | sed 's/^## //' | while IFS= read -r slide_name; do
   [[ -z "$slide_name" ]] && continue
 
   visuals_file="$DECK_DIR/content-with-visuals/${slide_name}.html"
