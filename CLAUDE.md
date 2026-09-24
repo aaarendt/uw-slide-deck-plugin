@@ -106,7 +106,7 @@ Read `design-systems/uw-brand/DESIGN.md` (or `design-systems/cloudbank-brand/DES
 --uw-husky-purple:  #32006e
 --font-display:     Encode Sans
 --font-body:        Open Sans
---space-1 … --space-20  /* 4px base: 4px–80px; --space-8 = 32px, --space-20 = 80px */
+--space-1 … --space-20  /* 8px base: 8px–160px; --space-8 = 64px, --space-20 = 160px */
 ```
 
 Every slide should have an 8px gold accent bar (`--uw-spirit-gold`), typically `::before` on the `<section>`.
