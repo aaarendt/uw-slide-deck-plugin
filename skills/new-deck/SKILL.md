@@ -168,6 +168,8 @@ Brand-agnostic (same for all brands):
 Brand-specific (use the `--brand` value, default: `uw`):
 - `shared/header.html` from `~/.claude/plugins/local/uw-slides/design-systems/${brand}-brand/shared/header.html`
 
+Write a `.brand` file to the presentation root containing just the brand name and a trailing newline (e.g. `uw\n` or `cloudbank\n`). This file is read by all other skills to auto-detect the brand without requiring a `--brand=` flag on every invocation. It should be git-tracked.
+
 ### 2. Copy brand fonts (UW only)
 For `--brand=uw`: copy all Encode Sans fonts from plugin to presentation:
 - Copy `~/.claude/plugins/local/uw-slides/design-systems/uw-brand/fonts/*` to `assets/fonts/`
@@ -245,6 +247,14 @@ build/
 *.swp
 *~
 ```
+
+### 6. Create AGENTS.md
+Copy `~/.claude/plugins/local/uw-slides/templates/AGENTS.md`, then replace:
+- `[Presentation Name]` with the actual presentation name
+- `[BRAND]` with the brand value (`uw` or `cloudbank`)
+
+### 7. Create CLAUDE.md
+Copy `~/.claude/plugins/local/uw-slides/templates/CLAUDE.md` verbatim (no substitutions needed).
 
 ## Success Message
 

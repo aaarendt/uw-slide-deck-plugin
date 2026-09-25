@@ -20,13 +20,20 @@ Ensure slide deck follows UW brand guidelines.
 7. **Type Scale** — Follow brand hierarchy
 8. **CloudBank contrast rule** *(brand=cloudbank only)* — Any text element whose computed foreground is `--cb-signal-blue` and whose background is `--cb-deep-navy` or `--bg-primary` → **FAIL** with: "Signal Blue on Deep Navy fails WCAG AA (2.25:1). Use `--cb-mist` (7.86:1) for subtitles on dark, or `--cb-white` (13.79:1) for titles."
 
+## Brand Resolution
+
+Resolve the brand in this order:
+1. `--brand=` flag if provided
+2. `.brand` file in the current directory if it exists
+3. Default to `uw`
+
 ## Usage
 ```bash
-claude code /uw-slides:design-review
-claude code /uw-slides:design-review --brand=cloudbank
+/uw-slides:design-review
+/uw-slides:design-review --brand=cloudbank
 ```
 
-The optional `--brand=<uw|cloudbank>` parameter selects which brand rules to apply. Defaults to `uw`.
+The optional `--brand=<uw|cloudbank>` parameter overrides auto-detection. If omitted, the brand is read from `.brand` in the deck directory (written by `new-deck` at scaffold time).
 
 ## Output
 ```

@@ -9,10 +9,18 @@ description: Apply pass-2 visual additions from VISUALS.md to existing slide HTM
 
 Read `VISUALS.md` and add the specified visual elements — photographs, diagrammatic accents, icons — to the already-rendered HTML slide fragments from pass 1. Write modified fragments to `content-with-visuals/`. Do not touch `content/`.
 
+## Brand Resolution
+
+Resolve the brand in this order:
+1. `--brand=` flag if provided
+2. `.brand` file in the current directory if it exists
+3. Default to `uw`
+
 ## Usage
 
 ```
 /uw-slides:apply-visuals
+/uw-slides:apply-visuals --brand=cloudbank
 ```
 
 Run from inside the presentation directory, or with the presentation directory as context. Pass 1 (`build.sh`) must have been run first — `content/` must exist and contain the rendered slide fragments.
@@ -39,7 +47,7 @@ When writing a modified fragment, add `data-visuals-applied="true"` to the root 
 
 Create inline SVG elements using the global styling rules from `VISUALS.md`:
 - Thin uniform stroke, no filled shapes
-- Gold color: use `var(--uw-spirit-gold)` or `var(--uw-husky-gold-web)`
+- Accent color: `uw` → `var(--uw-spirit-gold)`; `cloudbank` → `var(--cb-signal-blue)`
 - Geometric and minimal — two or three strokes per mark
 - Small scale — the slide's typography remains primary
 - Scope styles inside `section[data-slide="..."] svg { ... }` to avoid leaking

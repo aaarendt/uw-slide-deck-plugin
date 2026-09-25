@@ -16,13 +16,20 @@ Validate WCAG 2.1 Level AA compliance for slide decks.
 5. **Semantic HTML** — Proper heading hierarchy
 6. **Keyboard Navigation** — Arrow keys functional
 
+## Brand Resolution
+
+Resolve the brand in this order:
+1. `--brand=` flag if provided
+2. `.brand` file in the current directory if it exists
+3. Default to `uw`
+
 ## Usage
 ```bash
-claude code /uw-slides:accessibility-check
-claude code /uw-slides:accessibility-check --brand=cloudbank
+/uw-slides:accessibility-check
+/uw-slides:accessibility-check --brand=cloudbank
 ```
 
-The optional `--brand=<uw|cloudbank>` parameter identifies which brand's approved contrast pairings to reference when reporting results. Defaults to `uw`. The WCAG 2.1 AA thresholds (4.5:1 text, 3:1 large text) apply to both brands. For approved CloudBank contrast combinations, see `design-systems/cloudbank-brand/DESIGN.md`.
+The optional `--brand=<uw|cloudbank>` parameter overrides auto-detection and selects which brand's approved contrast pairings to reference when reporting results. If omitted, the brand is read from `.brand` in the deck directory (written by `new-deck` at scaffold time). The WCAG 2.1 AA thresholds (4.5:1 text, 3:1 large text) apply to both brands. For approved CloudBank contrast combinations, see `design-systems/cloudbank-brand/DESIGN.md`.
 
 ## Output
 ```
