@@ -246,6 +246,14 @@ build/
 *~
 ```
 
+### 6. Create AGENTS.md
+Copy `~/.claude/plugins/local/uw-slides/templates/AGENTS.md`, then replace:
+- `[Presentation Name]` with the actual presentation name
+- `[BRAND]` with the brand value (`uw` or `cloudbank`)
+
+### 7. Create CLAUDE.md
+Copy `~/.claude/plugins/local/uw-slides/templates/CLAUDE.md` verbatim (no substitutions needed).
+
 ## Success Message
 
 After scaffolding, tell the user:
