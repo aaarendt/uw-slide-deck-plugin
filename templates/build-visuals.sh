@@ -49,7 +49,7 @@ grep "^## [0-9]" "$DECK_DIR/SLIDES.md" | sed 's/^## //' | while IFS= read -r sli
   fi
 done
 
-slide_count=$(grep -c "^## " "$DECK_DIR/SLIDES.md" || echo 0)
+slide_count=$(grep -c "^## [0-9]" "$DECK_DIR/SLIDES.md" || echo 0)
 
 if [ ! -f "$DECK_DIR/shared/footer.html" ]; then
   echo "Error: shared/footer.html not found"

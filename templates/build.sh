@@ -44,7 +44,7 @@ grep "^## [0-9]" "$DECK_DIR/SLIDES.md" | sed 's/^## //' | while IFS= read -r sli
 done
 
 # Count slides for final report (since we're in a subshell with the pipe)
-slide_count=$(grep -c "^## " "$DECK_DIR/SLIDES.md" || echo 0)
+slide_count=$(grep -c "^## [0-9]" "$DECK_DIR/SLIDES.md" || echo 0)
 
 # Add footer
 if [ ! -f "$DECK_DIR/shared/footer.html" ]; then

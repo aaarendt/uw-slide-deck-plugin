@@ -40,6 +40,7 @@ This skill creates a **fragment-based** presentation:
 ├── VISUALS.md                   # Pass 2: per-slide visual additions
 ├── build.sh                     # Pass 1: concatenate content/ → build/index.html
 ├── build-visuals.sh             # Pass 2: concatenate content-with-visuals/ → build/index-with-visuals.html
+├── publish.sh                   # Pass 3: inline images as base64 → build/index-published.html
 └── README.md                    # User instructions
 ```
 
@@ -53,6 +54,7 @@ This skill creates a **fragment-based** presentation:
 6. **Plan visuals:** Edit `VISUALS.md` once content is settled
 7. **Apply visuals:** Run `/uw-slides:apply-visuals` (LLM reads VISUALS.md, writes to `content-with-visuals/`)
 8. **Build pass 2:** Run `./build-visuals.sh` → `build/index-with-visuals.html`
+9. **Publish:** Run `./publish.sh` → `build/index-published.html` (all images inlined as base64 for a fully self-contained portable file)
 
 ## Slide Fragment Pattern
 
@@ -103,13 +105,13 @@ Each slide must follow this pattern:
 For `--brand=uw`:
 - Colors: `--uw-spirit-purple`, `--uw-husky-purple`, `--uw-spirit-gold`, `--uw-husky-gold-web`, `--uw-heritage-gold`, `--uw-white`, `--uw-black`, `--uw-gray-90`, etc.
 - Fonts: `--font-display` (Encode Sans), `--font-display-wide`, `--font-display-compressed`, `--font-display-narrow`, `--font-display-condensed`, `--font-body` (Open Sans), `--font-mono`
-- Spacing: `--space-1` (4px) through `--space-20` (80px); common: `--space-8` 32px, `--space-16` 64px, `--space-20` 80px
+- Spacing: `--space-1` (8px) through `--space-20` (160px); common: `--space-8` 64px, `--space-16` 128px, `--space-20` 160px
 
 For `--brand=cloudbank`:
 - Colors: `--cb-deep-navy`, `--cb-signal-blue`, `--cb-ink`, `--cb-mist`, `--cb-fog`, `--cb-white`, `--cb-black`, etc.
 - Semantic aliases: `--bg-primary`, `--bg-surface`, `--text-body`, `--text-on-dark`, `--border-accent`, etc.
 - Fonts: `--font-display` (Nunito), `--font-body` (Open Sans)
-- Spacing: `--space-1` (4px) through `--space-20` (80px); common: `--space-8` 32px, `--space-16` 64px, `--space-20` 80px
+- Spacing: `--space-1` (8px) through `--space-20` (160px); common: `--space-8` 64px, `--space-16` 128px, `--space-20` 160px
 
 **Design Freedom:**
 - Any HTML structure
@@ -159,6 +161,7 @@ Brand-agnostic (same for all brands):
 - `shared/footer.html` from `~/.claude/plugins/local/uw-slides/templates/shared/footer.html`
 - `build.sh` from `~/.claude/plugins/local/uw-slides/templates/build.sh`
 - `build-visuals.sh` from `~/.claude/plugins/local/uw-slides/templates/build-visuals.sh`
+- `publish.sh` from `~/.claude/plugins/local/uw-slides/templates/publish.sh`
 - `SLIDES.md` from `~/.claude/plugins/local/uw-slides/templates/SLIDES.md`
 - `VISUALS.md` from `~/.claude/plugins/local/uw-slides/templates/VISUALS.md`
 
@@ -215,6 +218,11 @@ UW-branded presentation using a two-pass, fragment-based architecture.
 3. Build: `./build-visuals.sh`
 4. Preview: `open build/index-with-visuals.html`
 
+## Pass 3 — Publish (portable file)
+
+1. Run: `./publish.sh`
+2. Share: `build/index-published.html` — fully self-contained, all images inlined as base64
+
 ## Reordering Slides
 
 Edit the `## slide-id` order in `SLIDES.md`, then rebuild with `./build.sh`.
@@ -258,6 +266,10 @@ Pass 2 — visual additions (after content is settled):
 2. Run /uw-slides:apply-visuals
 3. Build: ./build-visuals.sh
 4. Preview: open build/index-with-visuals.html
+
+Pass 3 — publish (portable, self-contained file):
+1. Run: ./publish.sh
+2. Share: build/index-published.html (all images inlined as base64)
 
 Each slide is a self-contained HTML fragment with inline scoped styles.
 Full creative freedom within UW brand guidelines.
