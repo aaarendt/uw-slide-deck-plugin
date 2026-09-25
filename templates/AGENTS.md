@@ -12,6 +12,7 @@ Before writing any slide HTML, read:
 ```
 /uw-slides:design-review
 /uw-slides:accessibility-check
+/uw-slides:extract-to-markdown
 ```
 
 ## Build
