@@ -1,0 +1,156 @@
+<section data-slide="layout-diagram"
+         data-layout="diagram"
+         aria-label="Slide 11: Diagram"
+         class="slide">
+
+  <div class="layout">
+    <h1 data-slot="key-message">How a job runs in the cloud</h1>
+
+    <ol class="flow" data-slot="nodes">
+      <li><span class="label">Upload</span><span class="desc">Data to storage</span></li>
+      <li><span class="label">Launch</span><span class="desc">Start a VM</span></li>
+      <li><span class="label">Compute</span><span class="desc">Run the job</span></li>
+      <li><span class="label">Retrieve</span><span class="desc">Download results</span></li>
+    </ol>
+
+    <p class="caption" data-slot="caption" data-optional>Stop the VM after the results are saved.</p>
+    <p class="source" data-slot="source" data-optional>Source: Course architecture notes</p>
+  </div>
+
+  <style>
+    section[data-slide="layout-diagram"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      --node-bg: var(--slide-bg-dark);
+      --node-fg: var(--slide-text-on-dark);
+      --node-muted: var(--slide-text-muted-on-dark);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    section[data-slide="layout-diagram"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="layout-diagram"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="layout-diagram"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-5);
+    }
+
+    /* Wide screens: nodes in a row, connected by small chevrons in the gaps */
+    section[data-slide="layout-diagram"] .flow {
+      list-style: none;
+      display: flex;
+      align-items: stretch;
+      gap: clamp(2rem, 3.5vw, 4rem);
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="layout-diagram"] .flow li {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      background: var(--node-bg);
+      color: var(--node-fg);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-3);
+    }
+
+    section[data-slide="layout-diagram"] .flow li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 0.9rem;
+      height: 0.9rem;
+      margin-left: clamp(0.5rem, 1vw, 1.25rem);
+      border-top: 4px solid var(--slide-accent);
+      border-right: 4px solid var(--slide-accent);
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    section[data-slide="layout-diagram"] .label {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    section[data-slide="layout-diagram"] .desc {
+      font-size: clamp(1.5rem, 2vw, 1.875rem);
+      line-height: 1.3;
+      color: var(--node-muted);
+    }
+
+    section[data-slide="layout-diagram"] .caption {
+      font-size: clamp(1.5rem, 1.8vw, 1.75rem);
+      line-height: 1.4;
+      color: var(--fg-muted);
+      margin: var(--space-4) 0 0;
+    }
+
+    section[data-slide="layout-diagram"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    /* Narrower screens (4:3 and similar): stack the nodes, label beside description */
+    @media (max-aspect-ratio: 3/2) {
+      section[data-slide="layout-diagram"] .flow {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+
+      section[data-slide="layout-diagram"] .flow li {
+        flex: none;
+        flex-direction: row;
+        align-items: baseline;
+        gap: var(--space-3);
+        padding: var(--space-2) var(--space-3);
+      }
+
+      section[data-slide="layout-diagram"] .label {
+        flex: 0 0 8em;
+      }
+
+      section[data-slide="layout-diagram"] .flow li:not(:last-child)::after {
+        top: 100%;
+        left: 3rem;
+        margin: 0.35rem 0 0;
+        transform: translateX(-50%) rotate(135deg);
+      }
+    }
+  </style>
+</section>

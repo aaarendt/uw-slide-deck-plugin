@@ -1,0 +1,135 @@
+<section data-slide="layout-two-column"
+         data-layout="two-column"
+         aria-label="Slide 5: Two columns"
+         class="slide">
+
+  <div class="layout">
+    <h1 data-slot="key-message">Why researchers move to the cloud</h1>
+
+    <div class="columns">
+      <div class="main" data-slot="main">
+        <ul>
+          <li>Capacity on demand for peak workloads</li>
+          <li>Pay only for the hours you use</li>
+          <li>Share environments with collaborators</li>
+        </ul>
+      </div>
+
+      <aside class="side" data-slot="side">
+        <h2>Watch out</h2>
+        <p>Idle resources keep billing until you stop them.</p>
+      </aside>
+    </div>
+
+    <p class="source" data-slot="source" data-optional>Source: Provider pricing pages, 2026</p>
+  </div>
+
+  <style>
+    section[data-slide="layout-two-column"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      --panel: var(--slide-bg-subtle);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    section[data-slide="layout-two-column"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="layout-two-column"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="layout-two-column"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-6);
+    }
+
+    section[data-slide="layout-two-column"] .columns {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+
+    section[data-slide="layout-two-column"] .main,
+    section[data-slide="layout-two-column"] .side {
+      min-width: 0;
+      font-size: clamp(1.5rem, 2.4vw, 2.375rem);
+      line-height: 1.4;
+    }
+
+    section[data-slide="layout-two-column"] .side {
+      background: var(--panel);
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      padding: var(--space-4);
+    }
+
+    section[data-slide="layout-two-column"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 2.8vw, 2.625rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="layout-two-column"] p {
+      margin: 0;
+    }
+
+    section[data-slide="layout-two-column"] ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="layout-two-column"] li {
+      position: relative;
+      padding-left: 1.5em;
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="layout-two-column"] li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.6em;
+      height: 0.6em;
+      border-radius: 50%;
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="layout-two-column"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+  </style>
+</section>

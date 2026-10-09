@@ -1,0 +1,140 @@
+<section data-slide="layout-exercise"
+         data-layout="exercise"
+         aria-label="Slide 9: Exercise"
+         class="slide">
+
+  <div class="layout">
+    <div class="tag-row">
+      <p class="eyebrow">Activity</p>
+      <p class="time" data-slot="time">10 min</p>
+    </div>
+
+    <h1 data-slot="key-message">Launch your first virtual machine</h1>
+
+    <ol data-slot="steps">
+      <li>Open the console and choose a small instance</li>
+      <li>Connect with the browser terminal</li>
+      <li>Run the test script and note the runtime</li>
+    </ol>
+
+    <div class="deliverable" data-slot="deliverable" data-optional>
+      <p class="label">Deliverable</p>
+      <p>The runtime, pasted in the shared notes</p>
+    </div>
+  </div>
+
+  <style>
+    section[data-slide="layout-exercise"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      --chip-bg: var(--slide-bg-dark);
+      --chip-fg: var(--slide-text-on-dark);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    section[data-slide="layout-exercise"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="layout-exercise"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 6vw, 7.5rem) clamp(2rem, 5vw, 5rem);
+    }
+
+    section[data-slide="layout-exercise"] .tag-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+
+    section[data-slide="layout-exercise"] .eyebrow {
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="layout-exercise"] .time {
+      font-size: clamp(1.5rem, 1.8vw, 1.75rem);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--chip-fg);
+      background: var(--chip-bg);
+      border-radius: var(--radius-lg);
+      padding: var(--space-1) var(--space-2);
+      margin: 0;
+    }
+
+    section[data-slide="layout-exercise"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-5);
+    }
+
+    section[data-slide="layout-exercise"] ol {
+      list-style: none;
+      counter-reset: step;
+      max-width: 64rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="layout-exercise"] li {
+      counter-increment: step;
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+      line-height: 1.35;
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="layout-exercise"] li::before {
+      content: counter(step);
+      flex: none;
+      font-family: var(--font-display);
+      font-weight: 900;
+      color: var(--head);
+      min-width: 1em;
+    }
+
+    section[data-slide="layout-exercise"] .deliverable {
+      margin-top: auto;
+      padding-top: var(--space-3);
+      border-top: 2px solid var(--slide-accent);
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      line-height: 1.35;
+    }
+
+    section[data-slide="layout-exercise"] .deliverable p {
+      margin: 0;
+    }
+
+    section[data-slide="layout-exercise"] .deliverable .label {
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+  </style>
+</section>

@@ -77,6 +77,14 @@ Approved combinations:
 ✅ Mist on deep-navy:        7.9:1 (AAA — use for subtitles on dark)
 ❌ Signal-blue on deep-navy: 2.3:1 (fails all AA — decorative only)
 
+## Layout tokens
+
+`shared/header.html` defines brand-neutral `--slide-*` aliases that the layout
+library (`templates/layouts/`, `references/layouts.md`) uses so one fragment
+works in every brand. For CloudBank: dark = Deep Navy, deep = Ink, subtle = Fog,
+accent = Signal Blue (4px bar), headings in sentence case. Signal Blue on Deep
+Navy is decorative only (see the accessibility table above).
+
 ## References
 - `colors_and_type.css` — CSS tokens
 - `templates/` — Layout templates

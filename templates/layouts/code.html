@@ -1,0 +1,95 @@
+<section data-slide="layout-code"
+         data-layout="code"
+         aria-label="Slide 10: Code"
+         class="slide">
+
+  <div class="layout">
+    <h1 data-slot="key-message">Start a VM from the terminal</h1>
+
+    <pre data-slot="code"><code>aws ec2 run-instances \
+  --image-id ami-0abcd1234 \
+  --instance-type t3.small \
+  --count 1</code></pre>
+
+    <p class="caption" data-slot="caption" data-optional>Replace the image ID with the one from the course notes.</p>
+    <p class="source" data-slot="source" data-optional>Source: AWS CLI documentation</p>
+  </div>
+
+  <style>
+    section[data-slide="layout-code"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      --code-bg: var(--slide-bg-deep);
+      --code-fg: var(--slide-text-on-dark);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    section[data-slide="layout-code"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="layout-code"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="layout-code"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-5);
+    }
+
+    section[data-slide="layout-code"] pre {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      max-width: 100%;
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    section[data-slide="layout-code"] code {
+      font-family: var(--font-mono);
+      font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    section[data-slide="layout-code"] .caption {
+      font-size: clamp(1.5rem, 1.8vw, 1.75rem);
+      line-height: 1.4;
+      color: var(--fg-muted);
+      margin: var(--space-3) 0 0;
+    }
+
+    section[data-slide="layout-code"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+  </style>
+</section>

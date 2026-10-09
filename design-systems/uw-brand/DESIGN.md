@@ -762,6 +762,8 @@ h1 {
 
 **Why design tokens:** Design tokens centralize values and make updates easy. If UW changes their purple (unlikely but possible), you update one value, not hundreds.
 
+**Layout tokens:** `shared/header.html` also defines brand-neutral `--slide-*` aliases (`--slide-bg-dark`, `--slide-heading`, `--slide-accent`, and so on) that the layout library (`templates/layouts/`, `references/layouts.md`) uses so one fragment works in every brand. For UW: dark = Spirit Purple, deep = Husky Purple, accent = Spirit Gold (8px bar), headings uppercase. Hand-written slides may keep using the `--uw-*` tokens directly.
+
 ### Font Loading
 
 **Google Fonts (Recommended):**

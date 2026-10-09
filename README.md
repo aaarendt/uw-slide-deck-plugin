@@ -12,6 +12,7 @@ Create branded presentations with any LLM using a fragment-based architecture. S
 - **WCAG 2.1 AA accessible:** Built-in accessibility requirements
 - **Simple build:** Bash scripts with no dependencies; `python3` (standard library only, no pip) is needed only for `publish.sh` and the `tools/deckparse.py` schema parser
 - **Schema (in progress):** `deck.yml` + `slides/<id>.md` briefs are defined in `references/slide-schema.md` and will replace `SLIDES.md`; build scripts still use `SLIDES.md` for now
+- **Layout library:** 12 brand-neutral slide layouts (`templates/layouts/`, documented in `references/layouts.md`) that render in both the UW and CloudBank brands
 
 ---
 
