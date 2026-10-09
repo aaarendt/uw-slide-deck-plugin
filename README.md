@@ -4,13 +4,13 @@ Create branded presentations with any LLM using a fragment-based architecture. S
 
 ## Features
 
-- **LLM-agnostic:** Works with Claude, GPT, Gemini, Llama, etc.
+- **LLM-friendly:** Slides, SLIDES.md and the design docs are plain files any LLM can read and write. The skills and install steps below target Claude Code; with other tools, point the LLM at `AGENTS.md` and the design docs instead
 - **Fragment-based:** Each slide is self-contained HTML with inline scoped styles
 - **Two-pass workflow:** Pass 1 builds content and layout; pass 2 adds visuals
 - **SLIDES.md-driven:** Slide order and content intent live in one planning document
 - **UW brand compliant:** Design system documented in `design-systems/uw-brand/DESIGN.md`
 - **WCAG 2.1 AA accessible:** Built-in accessibility requirements
-- **Simple build:** Bash scripts, no Python/Node/parsing
+- **Simple build:** Bash scripts with no dependencies; only the optional `publish.sh` step needs `python3`
 
 ---
 
@@ -65,6 +65,8 @@ presentation-name/
 
 `SLIDES.md` controls both slide content intent and build order. The build script reads `## slide-id` headings (top to bottom) to determine which fragments to concatenate and in what sequence. Moving a heading in SLIDES.md reorders the built presentation.
 
+A heading counts as a slide only if its text is a kebab-case ID: lowercase letters, digits and hyphens (`## 03-approach` or `## approach`). Any other heading (`## Notes`, `## How to render this deck`) is ignored. IDs must be unique, and each must match a fragment filename in `content/`.
+
 Write SLIDES.md in plain prose — bullet points, speaker notes, key messages, whatever helps. The LLM reads it to generate slides; there's no required format beyond the `## slide-id` headings.
 
 ### Fragment Pattern
@@ -105,6 +107,8 @@ The `section[data-slide="..."]` selector scopes all styles to that slide — no 
 
 Both scripts accept an optional path argument: `./build.sh /path/to/deck`
 
+By default a slide listed in SLIDES.md with no fragment yet is skipped with a warning, so you can build while the deck is in progress. Use `--strict` (`./build.sh --strict`) to fail instead, for example in CI. Duplicate IDs always fail the build, and fragments in `content/` that SLIDES.md doesn't list are reported as warnings.
+
 ### Two-Pass Workflow
 
 **Pass 1 — content and structure:**
@@ -141,10 +145,10 @@ Key tokens available in all UW slides (injected via `shared/header.html`):
 --uw-husky-purple:  #32006e    /* darker variant */
 --font-display:     Encode Sans
 --font-body:        Open Sans
---space-4:          16px       /* 4px base scale */
---space-8:          32px
---space-16:         64px
---space-20:         80px
+--space-4:          32px       /* 8px base scale */
+--space-8:          64px
+--space-16:         128px
+--space-20:         160px
 ```
 
 For the complete token set (semantic color aliases, weight/leading/tracking tokens, full type scale), see `design-systems/uw-brand/colors_and_type.css`.
@@ -198,14 +202,15 @@ Edit `shared/header.html` in your presentation to change colors, spacing, or typ
 
 ### Global Defaults
 
-To change defaults for all future presentations, edit the plugin's template files:
+To change defaults for all future presentations, edit the plugin's files. They are copied when running `/uw-slides:new-deck`:
 
 ```
-design-systems/uw-brand/templates/shared/header.html
-design-systems/uw-brand/templates/shared/footer.html
+design-systems/uw-brand/shared/header.html          # UW header (tokens, fonts, base styles)
+design-systems/cloudbank-brand/shared/header.html   # CloudBank header
+templates/shared/footer.html                        # Navigation JS (shared by all brands)
 ```
 
-These are copied when running `/uw-slides:new-deck`.
+Build scripts (`templates/*.sh`), `SLIDES.md`, `VISUALS.md` and `AGENTS.md` templates are copied the same way. Existing decks are not updated; they keep the copy they were scaffolded with.
 
 ---
 
