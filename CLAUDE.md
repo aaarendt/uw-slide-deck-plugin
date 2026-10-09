@@ -20,22 +20,25 @@ uw-slides-plugin/
 │   ├── design-review/SKILL.md
 │   └── extract-to-markdown/SKILL.md
 ├── templates/               # Scaffolding source copied to new presentations
-│   ├── shared/              # header.html and footer.html
+│   ├── shared/              # footer.html (brand-agnostic; header.html comes from design-systems/<brand>/shared/)
 │   ├── examples/            # Reference HTML fragments
 │   ├── build.sh             # Pass-1 build script template
 │   ├── build-visuals.sh     # Pass-2 build script template
+│   ├── publish.sh           # Pass-3 publish script template (inlines images; needs python3)
 │   ├── SLIDES.md            # Planning document template
-│   └── VISUALS.md           # Visual additions template
+│   ├── VISUALS.md           # Visual additions template
+│   ├── AGENTS.md            # Agent instructions copied into each deck
+│   └── CLAUDE.md            # Claude Code pointer copied into each deck
 ├── design-systems/
 │   ├── uw-brand/
 │   │   ├── DESIGN.md            # Authoritative UW brand guidelines (~5500 words)
 │   │   ├── colors_and_type.css  # Design tokens and @font-face declarations
 │   │   ├── fonts/               # Encode Sans (45 variants: 5 widths × 9 weights)
-│   │   └── templates/           # UW-specific scaffolding templates
+│   │   └── shared/header.html   # Header copied into UW decks
 │   └── cloudbank-brand/
 │       ├── DESIGN.md            # CloudBank brand guidelines
 │       ├── colors_and_type.css  # CloudBank CSS tokens
-│       └── templates/           # CloudBank-specific scaffolding templates
+│       └── shared/header.html   # Header copied into CloudBank decks
 └── references/
     ├── accessibility-requirements.md
     └── markdown-schema.md
@@ -84,7 +87,7 @@ From inside a generated presentation directory:
 ./build-visuals.sh          # Pass 2 → build/index-with-visuals.html
 ```
 
-The build scripts accept an optional directory argument: `./build.sh /path/to/deck`
+The build scripts accept an optional directory argument: `./build.sh /path/to/deck`. Add `--strict` to fail on slides listed in SLIDES.md that have no fragment (default: warn and skip). Only `## <kebab-case-id>` headings are treated as slides.
 
 ## Available Skills
 
