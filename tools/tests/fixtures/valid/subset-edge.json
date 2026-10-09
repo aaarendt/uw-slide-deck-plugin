@@ -1,0 +1,42 @@
+{
+  "plain": "hello world",
+  "double": "has: colon and # hash",
+  "single": "it's fine",
+  "escaped": "say \"hi\" \\ done",
+  "url": "https://example.org/a#frag",
+  "dashy": "-not-a-list",
+  "empty_value": null,
+  "explicit_null": null,
+  "tilde": null,
+  "empty_string": "",
+  "count": 42,
+  "negative": -7,
+  "zero": 0,
+  "flag": true,
+  "off_flag": false,
+  "yes_string": "yes",
+  "no_string": "no",
+  "on_string": "on",
+  "off_string": "off",
+  "quoted_number": "007",
+  "quoted_bool": "true",
+  "quoted_date": "2026-10-09",
+  "empty_list": [],
+  "version": "v1.2.0",
+  "indented_comment_below": "kept",
+  "tags": [
+    "first",
+    "second: quoted",
+    3
+  ],
+  "slides": [
+    "a-slide",
+    "b-slide"
+  ],
+  "params": {
+    "background": "spirit-purple",
+    "count": 3,
+    "nothing": null,
+    "eyebrow": "LABEL"
+  }
+}

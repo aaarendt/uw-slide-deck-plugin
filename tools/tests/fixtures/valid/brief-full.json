@@ -1,0 +1,33 @@
+{
+  "front_matter": {
+    "id": "brief-full",
+    "title": "Why the cloud: three reasons",
+    "layout": "stat-callout",
+    "layout_rationale": "One large number anchors the argument",
+    "layout_intent": null,
+    "objective": [
+      "obj-1",
+      "obj-2"
+    ],
+    "owner": "jdoe",
+    "status": "review",
+    "duration": 2,
+    "locked": false,
+    "use": null,
+    "params": {
+      "background": "spirit-purple",
+      "eyebrow": "WHY"
+    },
+    "section": "Motivation"
+  },
+  "body": {
+    "key_message": "Most research compute is idle 70% of the time.",
+    "talking_points": "- Idle hardware is paid for either way\n- Burst capacity changes what questions you can ask",
+    "source": "Smith et al., 2024",
+    "notes": "Pause after the number.\n\n```\n## Not a heading (inside a fence)\n```",
+    "slots": {
+      "stat": "70%"
+    }
+  },
+  "hash": "3df0f304a368"
+}

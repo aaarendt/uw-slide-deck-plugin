@@ -1,0 +1,165 @@
+# Each case: "### name | expected line | message substring", then a brief named x.md.
+### no-front-matter | 1 | must start with
+# Key message
+Hello
+### unclosed-front-matter | 1 | not closed
+---
+id: x
+# Key message
+Hello
+### missing-id | - | missing required field 'id'
+---
+title: T
+---
+# Key message
+Hello
+### unknown-field | 3 | unknown field 'colour'
+---
+id: x
+colour: red
+---
+# Key message
+Hello
+### id-file-mismatch | 2 | does not match the file name
+---
+id: y
+---
+# Key message
+Hello
+### id-not-kebab | 2 | invalid id
+---
+id: Bad_Id
+---
+# Key message
+Hello
+### bad-status | 3 | status must be
+---
+id: x
+status: finished
+---
+# Key message
+Hello
+### yes-is-a-string-not-bool | 3 | 'locked' must be true or false
+---
+id: x
+locked: yes
+---
+# Key message
+Hello
+### duration-not-int | 3 | positive integer
+---
+id: x
+duration: "2"
+---
+# Key message
+Hello
+### custom-needs-intent | 3 | requires 'layout_intent'
+---
+id: x
+layout: custom
+---
+# Key message
+Hello
+### intent-without-custom | 4 | only allowed with layout: custom
+---
+id: x
+layout: two-column
+layout_intent: something
+---
+# Key message
+Hello
+### use-with-layout | 3 | cannot be combined
+---
+id: x
+use: catalog/thing
+layout: two-column
+---
+### use-bad-format | 3 | expected catalog/<id>
+---
+id: x
+use: other/thing
+---
+### params-not-map | 3 | must be a map
+---
+id: x
+params: nope
+---
+# Key message
+Hello
+### params-nested | 5 | deeper than one level
+---
+id: x
+params:
+  a:
+    b: 1
+---
+# Key message
+Hello
+### objective-bad | 3 | objective
+---
+id: x
+objective: 5
+---
+# Key message
+Hello
+### missing-key-message | - | Key message
+---
+id: x
+---
+## Talking points
+- a
+### empty-key-message | - | Key message
+---
+id: x
+---
+# Key message
+
+## Notes
+n
+### content-before-heading | 4 | before the first heading
+---
+id: x
+---
+Some text
+# Key message
+Hello
+### unknown-section | 6 | unknown section
+---
+id: x
+---
+# Key message
+Hello
+## Speaker notes
+text
+### unknown-h1 | 4 | unknown heading
+---
+id: x
+---
+# Title
+Hello
+### duplicate-section | 8 | duplicate section
+---
+id: x
+---
+# Key message
+Hello
+## Notes
+one
+## Notes
+two
+### bad-slot-name | 6 | unknown section
+---
+id: x
+---
+# Key message
+Hello
+## Slot: Left Side
+text
+### duplicate-yaml-key-in-front-matter | 4 | duplicate key 'id'
+---
+id: x
+title: T
+id: x
+---
+# Key message
+Hello

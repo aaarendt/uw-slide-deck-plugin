@@ -1,0 +1,17 @@
+{
+  "title": "Cloud Basics: A Hands-on Introduction",
+  "audience": "Graduate students new to cloud computing",
+  "duration": 60,
+  "presenter": "Jane Doe",
+  "date": "2026-11-03",
+  "catalog": "v1.0.0",
+  "objectives": {
+    "obj-1": "Explain what the cloud is",
+    "obj-2": "Launch a VM: step by step"
+  },
+  "slides": [
+    "title",
+    "02-what-is-cloud",
+    "demo"
+  ]
+}
