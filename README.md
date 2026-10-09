@@ -4,14 +4,14 @@ Create branded presentations with any LLM using a fragment-based architecture. S
 
 ## Features
 
-- **LLM-friendly:** Slides, SLIDES.md and the design docs are plain files any LLM can read and write. The skills and install steps below target Claude Code; with other tools, point the LLM at `AGENTS.md` and the design docs instead
+- **LLM-friendly:** Slides, briefs and the design docs are plain files any LLM can read and write. The skills and install steps below target Claude Code; with other tools, point the LLM at `AGENTS.md` and the design docs instead
 - **Fragment-based:** Each slide is self-contained HTML with inline scoped styles
 - **Two-pass workflow:** Pass 1 builds content and layout; pass 2 adds visuals
-- **SLIDES.md-driven:** Slide order and content intent live in one planning document
+- **Brief-driven:** `deck.yml` holds the slide order; one brief per slide (`slides/<id>.md`) holds the message, layout, notes, owner and status. The HTML is generated from the briefs and can be regenerated safely (locked slides are never overwritten)
 - **UW brand compliant:** Design system documented in `design-systems/uw-brand/DESIGN.md`
 - **WCAG 2.1 AA accessible:** Built-in accessibility requirements
-- **Simple build:** Bash scripts with no dependencies; `python3` (standard library only, no pip) is needed only for `publish.sh` and the `tools/deckparse.py` schema parser
-- **Schema (in progress):** `deck.yml` + `slides/<id>.md` briefs are defined in `references/slide-schema.md` and will replace `SLIDES.md`; build scripts still use `SLIDES.md` for now
+- **Simple build:** Bash scripts; `python3` (standard library only, no pip) powers `tools/deckparse.py` (validation, slide status, `OUTLINE.md`) and `publish.sh`. Builds still work without it, with the slide list read unvalidated
+- **Schema:** `deck.yml` and the briefs are defined in `references/slide-schema.md`. `SLIDES.md` (legacy) still builds, with a deprecation warning
 - **Layout library:** 12 brand-neutral slide layouts (`templates/layouts/`, documented in `references/layouts.md`) that render in both the UW and CloudBank brands
 
 ---
@@ -32,8 +32,8 @@ No other dependencies. The plugin is now available in any Claude Code session.
 # Scaffold a new presentation
 /uw-slides:new-deck my-presentation
 
-# Plan your deck — edit SLIDES.md, then generate slides via conversation:
-"Create slide 1 based on SLIDES.md"
+# Plan your deck — edit deck.yml and the briefs in slides/, then generate the slides:
+/uw-slides:generate-slides
 
 # Build and preview
 cd my-presentation
@@ -57,19 +57,25 @@ presentation-name/
 ├── assets/
 │   ├── images/
 │   └── diagrams/
-├── SLIDES.md                  # Planning document — defines order and content intent
+├── deck.yml                   # Deck metadata, objectives and slide order
+├── slides/                    # One brief per slide (slides/<id>.md)
+├── OUTLINE.md                 # Generated read-only overview (./outline.sh)
 ├── VISUALS.md                 # Pass-2 additions spec — photos, diagrams, icons
 ├── build.sh                   # Pass-1 build: content/ → build/index.html
-└── build-visuals.sh           # Pass-2 build: content-with-visuals/ → build/index-with-visuals.html
+├── build-visuals.sh           # Pass-2 build: content-with-visuals/ → build/index-with-visuals.html
+├── outline.sh                 # Regenerates OUTLINE.md
+└── publish.sh                 # Pass-3: inline images into one portable file
 ```
 
-### SLIDES.md Is the Source of Truth
+### deck.yml and the Briefs Are the Source of Truth
 
-`SLIDES.md` controls both slide content intent and build order. The build script reads `## slide-id` headings (top to bottom) to determine which fragments to concatenate and in what sequence. Moving a heading in SLIDES.md reorders the built presentation.
+`deck.yml` lists the slides in order; the build script concatenates `content/<id>.html` in that order, so moving a line reorders the built presentation. Each slide has a brief, `slides/<id>.md`: a short front matter block (layout, owner, status, duration, `locked`) and sections for the key message, talking points, source and speaker notes. Format and rules: `references/slide-schema.md`.
 
-A heading counts as a slide only if its text is a kebab-case ID: lowercase letters, digits and hyphens (`## 03-approach` or `## approach`). Any other heading (`## Notes`, `## How to render this deck`) is ignored. IDs must be unique, and each must match a fragment filename in `content/`.
+A slide ID is lowercase letters, digits and single hyphens (`03-approach`). IDs must be unique, and each needs a brief and, once generated, a fragment `content/<id>.html`.
 
-Write SLIDES.md in plain prose — bullet points, speaker notes, key messages, whatever helps. The LLM reads it to generate slides; there's no required format beyond the `## slide-id` headings.
+`content/*.html` is generated from the briefs and records which version of the brief it came from (`data-brief-hash`). `/uw-slides:generate-slides` skips slides with `locked: true` (hand-edited HTML) and asks before replacing a slide whose brief changed. To check the state of every slide: `python3 tools/deckparse.py status <deck-dir>`. `./outline.sh` writes `OUTLINE.md`, a generated overview that is never edited by hand.
+
+**Legacy decks** with only a `SLIDES.md` still build (headings `## <kebab-case-id>` give the order) and print a deprecation warning; the fallback is planned for removal in v0.3.0. Migration mapping: `references/slide-schema.md`, section 6.
 
 ### Fragment Pattern
 
@@ -109,13 +115,15 @@ The `section[data-slide="..."]` selector scopes all styles to that slide — no 
 
 Both scripts accept an optional path argument: `./build.sh /path/to/deck`
 
-By default a slide listed in SLIDES.md with no fragment yet is skipped with a warning, so you can build while the deck is in progress. Use `--strict` (`./build.sh --strict`) to fail instead, for example in CI. Duplicate IDs always fail the build, and fragments in `content/` that SLIDES.md doesn't list are reported as warnings.
+By default a slide listed in `deck.yml` with no fragment yet is skipped with a warning, so you can build while the deck is in progress. Use `--strict` (`./build.sh --strict`) to fail instead, for example in CI. An invalid `deck.yml` (such as a duplicate ID) always fails the build, and fragments in `content/` that `deck.yml` doesn't list are reported as warnings.
+
+The scripts read `deck.yml` with `tools/deckparse.py` (needs `python3`), found via `$UW_SLIDES_HOME`, `<deck>/tools/` or `~/.claude/plugins/local/uw-slides`. If it can't be found they still read the plain `slides:` list, without validation.
 
 ### Two-Pass Workflow
 
 **Pass 1 — content and structure:**
-1. Edit `SLIDES.md` with your slide content and intent
-2. Generate `content/*.html` fragments via conversation with your LLM
+1. Edit `deck.yml` (order) and one brief per slide in `slides/`
+2. Run `/uw-slides:generate-slides` → `content/*.html` fragments
 3. Run `./build.sh` → `build/index.html`
 4. The deck should look complete at this stage — no image placeholders
 
@@ -189,10 +197,11 @@ Omitting `--brand` defaults to `uw`.
 | Skill | Purpose |
 |-------|---------|
 | `new-deck` | Scaffold a new presentation directory |
+| `generate-slides` | Generate `content/*.html` from the briefs using the layout library; skips locked slides, asks before overwriting stale ones |
 | `apply-visuals` | Pass 2 — add photos, diagrams, and icons per VISUALS.md |
 | `accessibility-check` | WCAG 2.1 AA validation |
 | `design-review` | Brand compliance review |
-| `extract-to-markdown` | Convert an existing HTML deck to a SLIDES.md outline |
+| `extract-to-markdown` | Convert an existing HTML deck to `deck.yml` + `slides/*.md` briefs |
 
 ---
 
@@ -212,13 +221,13 @@ design-systems/cloudbank-brand/shared/header.html   # CloudBank header
 templates/shared/footer.html                        # Navigation JS (shared by all brands)
 ```
 
-Build scripts (`templates/*.sh`), `SLIDES.md`, `VISUALS.md` and `AGENTS.md` templates are copied the same way. Existing decks are not updated; they keep the copy they were scaffolded with.
+Build scripts (`templates/*.sh`), `deck.yml`, `slides/`, `VISUALS.md` and `AGENTS.md` templates are copied the same way. Existing decks are not updated; they keep the copy they were scaffolded with.
 
 ---
 
 ## Tips
 
-- Write SLIDES.md before asking your LLM to generate HTML. A clear content brief produces better slides than generating ad hoc.
+- Write the briefs before generating HTML. A clear key message per slide produces better slides than generating ad hoc.
 - Be specific: "Create a two-column comparison slide with purple background and gold accent on the left column."
 - If a slide feels visually sparse, the right response is stronger typography or layout — not adding a placeholder image.
 - Text must fit the slide. If content overflows, reduce the amount of text, not the font size. All visible text must be at least `1.5rem` (24pt) — anything smaller is invisible past the third row.
@@ -229,12 +238,12 @@ Build scripts (`templates/*.sh`), `SLIDES.md`, `VISUALS.md` and `AGENTS.md` temp
 ## Troubleshooting
 
 **Slides don't render**
-- Check that HTML files exist in `content/` with filenames matching the `## slide-id` headings in SLIDES.md (without `.html`)
+- Check that HTML files exist in `content/` with filenames matching the IDs in the `slides:` list of `deck.yml` (without `.html`); `python3 tools/deckparse.py status .` shows which slides are missing
 - Each `<section>` must have `class="slide"`
 - Confirm `./build.sh` ran without errors
 
 **Wrong slide order**
-- Order is determined by `## slide-id` sequence in SLIDES.md (top to bottom), not by filename. Edit SLIDES.md to reorder.
+- Order is determined by the `slides:` list in `deck.yml` (top to bottom), not by filename. Edit `deck.yml` to reorder.
 
 **Images not showing**
 - Image paths are relative to `build/index.html`. From there, go up one level to reach the deck root: `<img src="../assets/images/photo.jpg" alt="...">`
@@ -244,8 +253,8 @@ Build scripts (`templates/*.sh`), `SLIDES.md`, `VISUALS.md` and `AGENTS.md` temp
 
 **Build script fails**
 - Confirm `shared/header.html` and `shared/footer.html` exist
-- Confirm SLIDES.md contains `## slide-id` headings
-- Check permissions: `chmod +x build.sh build-visuals.sh`
+- Confirm `deck.yml` has a `slides:` list (the error message gives the file and line)
+- Check permissions: `chmod +x build.sh build-visuals.sh outline.sh`
 
 ---
 

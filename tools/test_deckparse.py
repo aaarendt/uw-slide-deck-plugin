@@ -189,5 +189,97 @@ class Cli(unittest.TestCase):
             self.assertEqual(self.run_cli("deck", "f", "--format", "kv").returncode, 2)
 
 
+class DeckDir(unittest.TestCase):
+    """status and outline operate on a whole deck directory."""
+
+    def setUp(self):
+        import tempfile
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = self.tmp.name
+        os.makedirs(os.path.join(self.dir, "slides"))
+        os.makedirs(os.path.join(self.dir, "content"))
+        self.write("deck.yml", 'title: "T"\nduration: 10\nobjectives:\n  o1: "One"\n  o2: "Two"\n'
+                   "slides:\n  - a\n  - b\n  - c\n  - d\n  - e\n  - f\n")
+        self.write("slides/a.md", "---\nid: a\nlayout: key-message\nduration: 3\nobjective: o1\n---\n# Key message\nA | b\n")
+        self.write("slides/b.md", "---\nid: b\nlayout: bullets\n---\n# Key message\nB\n")
+        self.write("slides/c.md", "---\nid: c\nuse: catalog/intro\n---\n")
+        self.write("slides/d.md", "---\nid: d\nlocked: true\n---\n# Key message\nD\n")
+        self.write("slides/f.md", "---\nid: f\nlayout: bullets\n---\n# Key message\nF\n")
+        self.write("slides/_example.md", "---\nid: example\n---\n# Key message\nx\n")
+        self.write("slides/orphan.md", "---\nid: orphan\n---\n# Key message\nx\n")
+        h = dp.brief_hash(dp.parse_brief(read_abs(self.dir, "slides/a.md"), "a.md"))
+        self.write("content/a.html", f'<section data-slide="a" data-brief-hash="{h}" class="slide"></section>')
+        self.write("content/b.html", '<section data-slide="b" class="slide"></section>')
+        self.write("content/f.html", '<section data-slide="f" data-brief-hash="000000000000" class="slide"></section>')
+        self.write("content/zz.html", '<section data-slide="zz" class="slide"></section>')
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def write(self, rel, text):
+        with open(os.path.join(self.dir, rel), "w", encoding="utf-8") as fh:
+            fh.write(text)
+
+    def states(self):
+        return {r["id"]: r["state"] for r in dp.deck_status(self.dir)["slides"]}
+
+    def test_states(self):
+        self.assertEqual(self.states(), {
+            "a": "fresh", "b": "untracked", "c": "catalog", "d": "locked", "e": "no-brief", "f": "stale"})
+
+    def test_orphans_ignore_templates(self):
+        rep = dp.deck_status(self.dir)
+        self.assertEqual(rep["orphan_briefs"], ["orphan"])
+        self.assertEqual(rep["orphan_fragments"], ["zz"])
+
+    def test_brief_change_marks_stale_and_notes_do_not(self):
+        self.write("slides/a.md", "---\nid: a\nlayout: key-message\nduration: 3\nobjective: o1\n---\n# Key message\nA | b\n\n## Notes\nspeaker\n")
+        self.assertEqual(self.states()["a"], "fresh")
+        self.write("slides/a.md", "---\nid: a\nlayout: key-message\nduration: 3\nobjective: o1\n---\n# Key message\nChanged\n")
+        self.assertEqual(self.states()["a"], "stale")
+
+    def test_missing_html_and_invalid_brief(self):
+        os.remove(os.path.join(self.dir, "content", "a.html"))
+        self.write("slides/b.md", "---\nid: b\nbogus: 1\n---\n# Key message\nB\n")
+        s = self.states()
+        self.assertEqual((s["a"], s["b"]), ("missing", "invalid"))
+
+    def test_locked_beats_missing_but_catalog_beats_locked(self):
+        self.write("slides/c.md", "---\nid: c\nuse: catalog/intro\nlocked: true\n---\n")
+        self.assertEqual(self.states()["c"], "catalog")
+
+    def test_outline_is_deterministic_and_complete(self):
+        first = dp.render_outline(self.dir)
+        self.assertEqual(first, dp.render_outline(self.dir))
+        self.assertTrue(first.startswith("<!-- GENERATED"))
+        self.assertIn("| 1 | a | A \\| b | key-message | 3 |  | draft | o1 |", first)
+        self.assertIn("| 3 | c | (catalog slide) | catalog/intro |", first)
+        self.assertIn("| 4 | d | D | auto |  |  | draft (locked) |  |", first)
+        self.assertIn("| 5 | e | (missing brief) |", first)
+        self.assertIn("- o1: One (a)", first)
+        self.assertIn("- o2: Two (NOT COVERED)", first)
+        self.assertIn("Planned minutes: 3 of 10 (5 slide(s) without a duration)", first)
+
+    def test_cli(self):
+        def run(*a):
+            return subprocess.run([sys.executable, os.path.join(HERE, "deckparse.py"), *a],
+                                  capture_output=True, text=True)
+        r = run("status", self.dir)
+        self.assertEqual(r.returncode, 1)  # slide e has no brief
+        self.assertIn("fresh      a", r.stdout)
+        self.assertIn("orphan-fragment zz", r.stdout)
+        self.assertEqual(json.loads(run("status", self.dir, "--format", "json").stdout)["slides"][0]["state"], "fresh")
+        self.assertEqual(run("outline", self.dir).stdout, dp.render_outline(self.dir))
+        self.assertEqual(run("outline", self.dir, "--format", "json").returncode, 2)
+        self.assertEqual(run("status", "/nonexistent").returncode, 1)
+        self.write("deck.yml", 'title: "T"\nslides:\n  - a\n  - b\n')
+        self.assertEqual(run("status", self.dir).returncode, 0)
+
+
+def read_abs(*parts):
+    with open(os.path.join(*parts), encoding="utf-8") as fh:
+        return fh.read()
+
+
 if __name__ == "__main__":
     unittest.main()
