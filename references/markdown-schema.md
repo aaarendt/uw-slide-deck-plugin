@@ -1,4 +1,9 @@
-# Markdown Front Matter Schema
+# Markdown Front Matter Schema (legacy)
+
+> **Superseded by [slide-schema.md](slide-schema.md)**, which defines `deck.yml`
+> and `slides/<id>.md` briefs (`id` replaces `slide_id`, and so on). The field
+> mapping is in its "Mapping from older formats" section. This file remains only
+> as a reference for decks that still use it.
 
 ## Required Fields
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Claude Code plugin (`uw-slides`) for creating University of Washington branded HTML presentations. The plugin lives in `~/.claude/plugins/local/uw-slides/` (symlinked) and exposes skills to Claude Code sessions in any project directory.
 
-No build system, no dependencies — just bash scripts and HTML fragments. (`publish.sh` additionally needs `python3` to inline images.)
+No build system, no dependencies — just bash scripts and HTML fragments. (`publish.sh` and `tools/deckparse.py` additionally need `python3`, standard library only.)
 
 ## Plugin Structure
 
@@ -25,7 +25,9 @@ uw-slides-plugin/
 │   ├── build.sh             # Pass-1 build script template
 │   ├── build-visuals.sh     # Pass-2 build script template
 │   ├── publish.sh           # Pass-3 publish script template (inlines images; needs python3)
-│   ├── SLIDES.md            # Planning document template
+│   ├── SLIDES.md            # Planning document template (legacy; superseded by deck.yml + slides/)
+│   ├── deck.yml             # Deck metadata + slide order template (see references/slide-schema.md)
+│   ├── slides/_example.md   # Slide brief template
 │   ├── VISUALS.md           # Visual additions template
 │   ├── AGENTS.md            # Agent instructions copied into each deck
 │   └── CLAUDE.md            # Claude Code pointer copied into each deck
@@ -41,8 +43,11 @@ uw-slides-plugin/
 │       └── shared/header.html   # Header copied into CloudBank decks
 └── references/
     ├── accessibility-requirements.md
-    └── markdown-schema.md
+    ├── markdown-schema.md   # Legacy front matter (superseded)
+    └── slide-schema.md      # deck.yml + slide brief schema, staleness hash, generation rules
 ```
+
+`tools/deckparse.py` (Python 3 stdlib only; tests: `python3 tools/test_deckparse.py`) parses and validates `deck.yml` and briefs. Build scripts do not use it yet.
 
 ## Slide Fragment Architecture
 
