@@ -407,7 +407,7 @@ def parse_brief(text, path="brief.md"):
     if not isinstance(sid, str) or not ID_RE.match(sid):
         raise DeckParseError(path, lines[("id",)], f"invalid id {sid!r} (lowercase letters, digits and single hyphens)")
     stem = os.path.basename(str(path))
-    if stem.endswith(".md") and stem[:-3] != sid:
+    if stem.endswith(".md") and not stem.startswith("_") and stem[:-3] != sid:
         raise DeckParseError(path, lines[("id",)], f"id {sid!r} does not match the file name {stem!r}")
     if data.get("status", "draft") not in STATUSES:
         raise DeckParseError(path, lines.get(("status",)), f"status must be one of {', '.join(STATUSES)}")

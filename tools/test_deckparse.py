@@ -131,6 +131,25 @@ class Hash(unittest.TestCase):
         self.assertRegex(h, r"^[0-9a-f]{12}$")
 
 
+class Templates(unittest.TestCase):
+    ROOT = os.path.dirname(HERE)
+
+    def test_templates_parse(self):
+        with open(os.path.join(self.ROOT, "templates", "deck.yml"), encoding="utf-8") as fh:
+            deck = dp.parse_deck(fh.read(), "deck.yml")
+        self.assertEqual(deck["slides"], ["title", "example-slide"])
+        path = os.path.join(self.ROOT, "templates", "slides", "_example.md")
+        with open(path, encoding="utf-8") as fh:
+            brief = dp.parse_brief(fh.read(), path)
+        self.assertEqual(brief["front_matter"]["id"], "example-slide")
+
+    def test_underscore_files_skip_name_check(self):
+        text = "---\nid: other\n---\n# Key message\nHi\n"
+        dp.parse_brief(text, "slides/_tmpl.md")
+        with self.assertRaises(dp.DeckParseError):
+            dp.parse_brief(text, "slides/tmpl.md")
+
+
 class Cli(unittest.TestCase):
     def run_cli(self, *args):
         return subprocess.run([sys.executable, os.path.join(HERE, "deckparse.py"), *args],
