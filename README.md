@@ -4,13 +4,13 @@ Create branded presentations with any LLM using a fragment-based architecture. S
 
 ## Features
 
-- **LLM-agnostic:** Works with Claude, GPT, Gemini, Llama, etc.
+- **LLM-friendly:** Slides, SLIDES.md and the design docs are plain files any LLM can read and write. The skills and install steps below target Claude Code; with other tools, point the LLM at `AGENTS.md` and the design docs instead
 - **Fragment-based:** Each slide is self-contained HTML with inline scoped styles
 - **Two-pass workflow:** Pass 1 builds content and layout; pass 2 adds visuals
 - **SLIDES.md-driven:** Slide order and content intent live in one planning document
 - **UW brand compliant:** Design system documented in `design-systems/uw-brand/DESIGN.md`
 - **WCAG 2.1 AA accessible:** Built-in accessibility requirements
-- **Simple build:** Bash scripts, no Python/Node/parsing
+- **Simple build:** Bash scripts with no dependencies; only the optional `publish.sh` step needs `python3`
 
 ---
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Claude Code plugin (`uw-slides`) for creating University of Washington branded HTML presentations. The plugin lives in `~/.claude/plugins/local/uw-slides/` (symlinked) and exposes skills to Claude Code sessions in any project directory.
 
-No build system, no dependencies — just bash scripts and HTML fragments.
+No build system, no dependencies — just bash scripts and HTML fragments. (`publish.sh` additionally needs `python3` to inline images.)
 
 ## Plugin Structure
 
