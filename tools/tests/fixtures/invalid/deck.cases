@@ -1,0 +1,50 @@
+# Each case: "### name | expected line | message substring", then a deck.yml.
+### missing-title | - | missing required field 'title'
+slides:
+  - a
+### missing-slides | - | missing required field 'slides'
+title: T
+### unknown-field | 2 | unknown field 'theme'
+title: T
+theme: dark
+slides: []
+### duration-not-int | 2 | positive integer
+title: T
+duration: an hour
+slides: []
+### duration-float | 2 | ambiguous number
+title: T
+duration: 7.5
+slides: []
+### slides-not-list | 2 | must be a list
+title: T
+slides: a
+### slide-id-uppercase | 4 | invalid slide ID
+title: T
+slides:
+  - ok
+  - Bad_ID
+### slide-id-date-like | 3 | ambiguous number or date
+title: T
+slides:
+  - 2026-10-09
+### duplicate-slide-id | 5 | duplicate slide ID 'a'
+title: T
+slides:
+  - a
+  - b
+  - a
+### objectives-not-map | 2 | must be a map
+title: T
+objectives: nope
+slides: []
+### objective-empty | 3 | needs a text value
+title: T
+objectives:
+  o1:
+slides: []
+### per-slide-map-rejected | 3 | contains ':'
+title: T
+slides:
+  - id: a
+    layout: title

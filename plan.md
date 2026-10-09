@@ -114,7 +114,7 @@ Update this checklist after each merge so new sessions know the current state.
 
 - [x] WS0 Baseline fixes (branch `ws0-baseline-fixes`; slide heading rule: `## <kebab-case-id>`; `--strict` flag, default warn-and-skip for missing fragments; build scripts assemble output in a temp file)
 - [ ] WS1 Versioning, stamping, paths
-- [ ] WS2 Schemas (deck.yml, briefs)
+- [x] WS2 Schemas (deck.yml, briefs) (branch `ws2-schemas`; `references/slide-schema.md`, `tools/deckparse.py` + tests, `templates/deck.yml`, `templates/slides/_example.md`; durations are integer minutes; `title` kept as optional brief field; front matter `notes` dropped in favour of `## Notes`; the generation rules are copied into the schema doc but remain in `templates/SLIDES.md` until WS5 stops scaffolding it)
 - [ ] WS3 Layout library
 - [ ] WS4 plan-deck skill
 - [ ] WS5 Generation + deck.yml build

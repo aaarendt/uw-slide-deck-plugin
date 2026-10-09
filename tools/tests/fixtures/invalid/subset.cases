@@ -1,0 +1,109 @@
+# Each case: "### name | expected line | message substring", then the file content.
+# All of these are valid YAML (or close to it) but outside the supported subset.
+### anchor | 1 | anchors
+base: &b one
+ref: *b
+### alias-only | 2 | anchors
+a: x
+b: *a
+### tag | 1 | tags
+a: !!str 5
+### block-scalar-literal | 1 | block scalars
+a: |
+  text
+### block-scalar-folded | 1 | block scalars
+a: >
+  text
+### flow-map | 1 | flow-style
+a: {x: 1}
+### flow-list | 1 | flow-style
+a: [x, y]
+### tab-indent | 2 | tabs
+a:
+	b: 1
+### duplicate-key | 3 | duplicate key 'a'
+a: 1
+b: 2
+a: 3
+### duplicate-nested-key | 4 | duplicate key 'x'
+m:
+  x: 1
+  y: 2
+  x: 3
+### nesting-too-deep | 3 | deeper than one level
+m:
+  n:
+    o: 1
+### list-in-map | 3 | cannot mix
+m:
+  a: 1
+  - b
+### map-in-list | 2 | quote it
+l:
+  - a: 1
+### nested-list-item | 3 | not supported
+l:
+  - a
+    - b
+### multiline-plain | 2 | multi-line
+a: first
+  second
+### multiline-quoted | 1 | unterminated
+a: "first
+### unterminated-single | 1 | unterminated
+a: 'abc
+### trailing-comment | 1 | trailing comments
+a: value # note
+### trailing-comment-quoted | 1 | trailing comments
+a: "value" # note
+### comment-after-key | 1 | comments after a key
+a: # note
+### unquoted-colon | 1 | contains ':'
+a: x: y
+### text-after-quote | 1 | after closing quote
+a: "x" y
+### bad-escape | 1 | escape
+a: "line\nbreak"
+### top-level-list | 1 | not a list
+- a
+- b
+### bad-indent-top | 2 | indentation
+a: 1
+  b: 2
+### quoted-key | 1 | invalid key
+"a": 1
+### spaced-key | 1 | invalid key
+my key: 1
+### numeric-key | 1 | invalid key
+1: one
+### no-space-after-colon | 1 | space must follow
+a:b
+### merge-key | 1 | invalid key
+<<: x
+### document-marker | 1 | document markers
+---
+a: 1
+### empty-list-item | 3 | empty list item
+l:
+  - a
+  -
+### ambiguous-null | 1 | ambiguous
+a: NULL
+### ambiguous-bool | 1 | ambiguous
+a: True
+### leading-zero | 1 | ambiguous number
+a: 007
+### float | 1 | ambiguous number
+a: 1.5
+### hex | 1 | ambiguous number
+a: 0x1F
+### plus-int | 1 | ambiguous number
+a: +5
+### date | 1 | ambiguous number or date
+a: 2026-10-09
+### sexagesimal | 1 | ambiguous number
+a: 1:30
+### reserved-at | 1 | reserved
+a: @foo
+### question-key | 1 | unsupported
+a: ? b

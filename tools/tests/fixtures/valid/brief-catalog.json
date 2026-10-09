@@ -1,0 +1,27 @@
+{
+  "front_matter": {
+    "id": "brief-catalog",
+    "title": null,
+    "layout": "auto",
+    "layout_rationale": null,
+    "layout_intent": null,
+    "objective": [],
+    "owner": null,
+    "status": "draft",
+    "duration": null,
+    "locked": false,
+    "use": "catalog/uw-title",
+    "params": {
+      "presenter": "Jane Doe"
+    },
+    "section": null
+  },
+  "body": {
+    "key_message": null,
+    "talking_points": null,
+    "source": null,
+    "notes": null,
+    "slots": {}
+  },
+  "hash": "cd669a2d8da3"
+}

@@ -10,7 +10,8 @@ Create branded presentations with any LLM using a fragment-based architecture. S
 - **SLIDES.md-driven:** Slide order and content intent live in one planning document
 - **UW brand compliant:** Design system documented in `design-systems/uw-brand/DESIGN.md`
 - **WCAG 2.1 AA accessible:** Built-in accessibility requirements
-- **Simple build:** Bash scripts with no dependencies; only the optional `publish.sh` step needs `python3`
+- **Simple build:** Bash scripts with no dependencies; `python3` (standard library only, no pip) is needed only for `publish.sh` and the `tools/deckparse.py` schema parser
+- **Schema (in progress):** `deck.yml` + `slides/<id>.md` briefs are defined in `references/slide-schema.md` and will replace `SLIDES.md`; build scripts still use `SLIDES.md` for now
 
 ---
 
