@@ -268,10 +268,26 @@ python3 tools/deckparse.py deck  deck.yml --format ids         # one slide ID pe
 python3 tools/deckparse.py brief slides/<id>.md                # JSON: front_matter, body, hash
 python3 tools/deckparse.py brief slides/<id>.md --format kv    # key=value lines (params.<k>=<v>)
 python3 tools/deckparse.py hash  slides/<id>.md                # data-brief-hash value
+python3 tools/deckparse.py status  <deck-dir>                  # one line per slide: missing, stale, untracked, fresh, locked, catalog, ...
+python3 tools/deckparse.py status  <deck-dir> --format json    # the same, plus orphan briefs and fragments
+python3 tools/deckparse.py outline <deck-dir>                  # OUTLINE.md content on stdout (./outline.sh writes the file)
 python3 tools/test_deckparse.py                                # run the parser tests
 ```
 
+`status` compares each brief's hash with the `data-brief-hash` in `content/<id>.html`:
+
+| State | Meaning |
+|-------|---------|
+| `missing` | no fragment yet |
+| `fresh` / `stale` | the fragment's hash equals / differs from the brief's |
+| `untracked` | fragment has no `data-brief-hash` (hand-written or older) |
+| `locked` | brief has `locked: true`; generators never write it |
+| `catalog` | brief has `use:`; copied by the catalog resolver, never generated (takes precedence over `locked`) |
+| `no-brief`, `invalid` | `slides/<id>.md` is missing or does not parse (exit status 1) |
+
+`outline` renders a deterministic Markdown table (ID, key message, layout, minutes, owner, status, objectives) with a "generated, do not edit" header, the planned minutes against `deck.yml` `duration`, and objective coverage.
+
 Exit status is 0 on success, 1 on a parse or validation error (message on stderr
-as `file:line: message`) and 2 on bad usage. Cross-file checks (every `slides:`
-ID has a brief, orphan briefs, objective IDs exist, layout IDs exist) belong to
-the lint (WS7).
+as `file:line: message`) and 2 on bad usage (`status` also exits 1 when a slide
+is `no-brief` or `invalid`). Further cross-file checks (objective IDs exist,
+layout IDs exist, `data-slide` matches the file name) belong to the lint (WS7).

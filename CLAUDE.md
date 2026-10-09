@@ -15,6 +15,7 @@ uw-slides-plugin/
 ├── .claude-plugin/          # Plugin metadata (plugin.json, marketplace.json)
 ├── skills/                  # Claude Code skill definitions
 │   ├── new-deck/SKILL.md
+│   ├── generate-slides/SKILL.md
 │   ├── accessibility-check/SKILL.md
 │   ├── apply-visuals/SKILL.md
 │   ├── design-review/SKILL.md
@@ -25,8 +26,8 @@ uw-slides-plugin/
 │   ├── layouts/             # 12 slot-based layout fragments (see references/layouts.md)
 │   ├── build.sh             # Pass-1 build script template
 │   ├── build-visuals.sh     # Pass-2 build script template
+│   ├── outline.sh           # Regenerates the read-only OUTLINE.md (needs python3)
 │   ├── publish.sh           # Pass-3 publish script template (inlines images; needs python3)
-│   ├── SLIDES.md            # Planning document template (legacy; superseded by deck.yml + slides/)
 │   ├── deck.yml             # Deck metadata + slide order template (see references/slide-schema.md)
 │   ├── slides/_example.md   # Slide brief template
 │   ├── VISUALS.md           # Visual additions template
@@ -49,7 +50,7 @@ uw-slides-plugin/
     └── slide-schema.md      # deck.yml + slide brief schema, staleness hash, generation rules
 ```
 
-`tools/deckparse.py` (Python 3 stdlib only; tests: `python3 tools/test_deckparse.py`) parses and validates `deck.yml` and briefs. Build scripts do not use it yet.
+`tools/deckparse.py` (Python 3 stdlib only; tests: `python3 tools/test_deckparse.py`) parses and validates `deck.yml` and briefs, reports per-slide generation state (`status`) and writes the generated `OUTLINE.md` (`outline`). The build scripts use it to read the slide order from `deck.yml` (found via `$UW_SLIDES_HOME`, `<deck>/tools/`, or `~/.claude/plugins/local/uw-slides`; without it they read the plain `slides:` list unvalidated).
 
 ## Slide Fragment Architecture
 
@@ -69,20 +70,22 @@ The `section[data-slide="..."]` scoping is critical — it prevents cascade conf
 
 ## Two-Pass Workflow
 
-**Pass 1 (content):** SLIDES.md → `content/*.html` fragments → `build.sh` → `build/index.html`
+**Pass 1 (content):** `deck.yml` + `slides/<id>.md` briefs → `/uw-slides:generate-slides` → `content/*.html` fragments → `build.sh` → `build/index.html`
 
 **Pass 2 (visuals):** VISUALS.md → `/uw-slides:apply-visuals` → `content-with-visuals/*.html` → `build-visuals.sh` → `build/index-with-visuals.html`
 
 Pass 2 only modifies slides listed in VISUALS.md under `## Per-slide additions`. Unmodified slides are served from `content/` as fallback. Pass 2 never rebuilds from scratch.
 
-## SLIDES.md Is the Source of Truth
+## deck.yml and the Briefs Are the Source of Truth
 
-`SLIDES.md` controls slide ordering and content intent. The build script reads `## slide-id` headings to determine both the slide list and concatenation order. Moving a heading in SLIDES.md reorders the built presentation.
+`deck.yml` holds the slide order (the `slides:` list) and deck metadata; `slides/<id>.md` holds each slide's brief. The build scripts concatenate `content/<id>.html` in `deck.yml` order, so moving a line reorders the deck. `content/*.html` is generated (it records `data-brief-hash`) and is never hand-edited unless the brief has `locked: true`. `OUTLINE.md` is a generated read-only overview (`./outline.sh`).
 
-Key authoring rules for SLIDES.md (enforced by skill behavior, not code):
+Legacy decks that only have `SLIDES.md` still build, with a deprecation warning (removal targeted for v0.3.0). Migration mapping: `references/slide-schema.md`, section 6.
+
+Key authoring rules (full list in `references/slide-schema.md`, section 5; enforced by skill behavior, not code):
 - **Key message** = the one thing shown large on the slide
-- **Bullets** = talking points spoken aloud, not rendered verbatim
-- **Note to self** = speaker-only, never rendered
+- **Talking points** = spoken aloud, not rendered verbatim
+- **Notes** = speaker-only, never rendered
 - Pass 1 uses no photographs or decorative icons — layout/typography/color only
 
 ## Build Commands
@@ -94,17 +97,23 @@ From inside a generated presentation directory:
 ./build-visuals.sh          # Pass 2 → build/index-with-visuals.html
 ```
 
-The build scripts accept an optional directory argument: `./build.sh /path/to/deck`. Add `--strict` to fail on slides listed in SLIDES.md that have no fragment (default: warn and skip). Only `## <kebab-case-id>` headings are treated as slides.
+The build scripts accept an optional directory argument: `./build.sh /path/to/deck`. Add `--strict` to fail on slides listed in `deck.yml` that have no fragment (default: warn and skip). An invalid `deck.yml` (for example a duplicate ID) fails the build with `file:line: message`.
+
+```bash
+./outline.sh                # OUTLINE.md (generated, read-only)
+python3 tools/deckparse.py status <deck-dir>   # missing / stale / untracked / fresh / locked / catalog per slide
+```
 
 ## Available Skills
 
 | Skill | Purpose |
 |-------|---------|
 | `/uw-slides:new-deck <name>` | Scaffold a new presentation directory |
+| `/uw-slides:generate-slides` | Generate `content/*.html` from the briefs (skips locked slides, asks before overwriting stale ones) |
 | `/uw-slides:apply-visuals` | Run pass 2 — add visuals per VISUALS.md |
 | `/uw-slides:accessibility-check` | WCAG 2.1 AA validation |
 | `/uw-slides:design-review` | UW brand compliance check |
-| `/uw-slides:extract-to-markdown` | Convert existing HTML deck → SLIDES.md outline |
+| `/uw-slides:extract-to-markdown` | Convert an existing HTML deck → `deck.yml` + `slides/*.md` briefs |
 
 ## Design System
 
@@ -144,13 +153,17 @@ When `/uw-slides:new-deck` runs, the presentation gets:
 <name>/
 ├── shared/header.html       # CSS variables, font-face, base styles
 ├── shared/footer.html       # Keyboard navigation JS, closing tags
-├── content/                 # Slide HTML fragments (empty initially)
+├── deck.yml                 # Deck metadata + slide order
+├── slides/                  # One brief per slide (slides/<id>.md)
+├── content/                 # Slide HTML fragments (generated from the briefs)
 ├── content-with-visuals/    # Created by apply-visuals (pass 2)
 ├── assets/images/
-├── SLIDES.md                # Planning document (governs build order)
+├── OUTLINE.md               # Generated overview (./outline.sh)
 ├── VISUALS.md               # Pass-2 visual additions spec
 ├── build.sh
-└── build-visuals.sh
+├── build-visuals.sh
+├── outline.sh
+└── publish.sh
 ```
 
 Font paths in the UW brand `shared/header.html` (generated presentations) are relative to the deck's own `assets/fonts/` directory (`../assets/fonts/`). The `new-deck` skill copies Encode Sans fonts from `design-systems/uw-brand/fonts/` into `assets/fonts/` at scaffold time. CloudBank decks use Google Fonts via CDN — no local font copy needed.

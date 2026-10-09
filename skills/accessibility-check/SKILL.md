@@ -16,6 +16,10 @@ Validate WCAG 2.1 Level AA compliance for slide decks.
 5. **Semantic HTML** — Proper heading hierarchy
 6. **Keyboard Navigation** — Arrow keys functional
 
+## Slides
+
+Check the fragments in `content/` (or `content-with-visuals/` when checking pass 2), numbered by their position in `deck.yml` (legacy decks: `SLIDES.md` headings). Fix problems in the brief or by regenerating (`/uw-slides:generate-slides`), not by hand-editing a generated slide, unless its brief has `locked: true`.
+
 ## Brand Resolution
 
 Resolve the brand in this order:

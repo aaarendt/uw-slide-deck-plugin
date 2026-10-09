@@ -20,9 +20,10 @@ The optional `--brand=<uw|cloudbank>` parameter selects the design system. Defau
 
 This skill creates a **fragment-based** presentation:
 - Each slide is a complete HTML `<section>` with inline scoped styles
-- Build process is simple concatenation (no templating, no parsing)
-- Easy reordering via `SLIDES.md` (master planning document)
-- Full LLM creative freedom within UW brand guidelines
+- Build process is simple concatenation in the order listed in `deck.yml`
+- Each slide has a brief in `slides/<id>.md` (message, layout, notes, owner, status); the HTML is generated from it
+- Layouts come from the layout library (`references/layouts.md`), with `layout: custom` as the escape hatch
+- Easy reordering: move a line in `deck.yml`
 
 ## Generated Directory Structure
 
@@ -31,14 +32,17 @@ This skill creates a **fragment-based** presentation:
 ├── shared/
 │   ├── header.html              # Design tokens, base styles
 │   └── footer.html              # Navigation, closing tags
-├── content/                     # Pass-1 slide fragments (LLM writes here)
+├── deck.yml                     # Deck metadata, objectives and slide order (source of truth for order)
+├── slides/                      # One brief per slide: slides/<id>.md (source of truth for content)
+├── content/                     # Pass-1 slide fragments (generate-slides writes here)
 ├── content-with-visuals/        # Pass-2 slide fragments (apply-visuals writes here)
 ├── assets/
 │   ├── images/
 │   └── diagrams/
-├── SLIDES.md                    # Pass 1: slide order, content briefs, render instructions
+├── OUTLINE.md                   # Generated read-only overview (created by ./outline.sh)
 ├── VISUALS.md                   # Pass 2: per-slide visual additions
 ├── build.sh                     # Pass 1: concatenate content/ → build/index.html
+├── outline.sh                   # Regenerate OUTLINE.md from deck.yml + slides/
 ├── build-visuals.sh             # Pass 2: concatenate content-with-visuals/ → build/index-with-visuals.html
 ├── publish.sh                   # Pass 3: inline images as base64 → build/index-published.html
 └── README.md                    # User instructions
@@ -47,10 +51,10 @@ This skill creates a **fragment-based** presentation:
 ## Workflow
 
 1. **Scaffold:** Run this skill to create directory structure
-2. **Plan:** Edit `SLIDES.md` to outline your presentation
-3. **Create slides:** Request slides via conversation (LLM reads SLIDES.md, writes to `content/`)
+2. **Plan:** Edit `deck.yml` (order) and `slides/<id>.md` (one brief per slide)
+3. **Create slides:** Run `/uw-slides:generate-slides` (reads the briefs, writes `content/`)
 4. **Build pass 1:** Run `./build.sh` → `build/index.html`
-5. **Rehearse:** Present from `build/index.html`; revise `SLIDES.md` and rebuild as needed
+5. **Rehearse:** Present from `build/index.html`; revise the briefs, regenerate and rebuild as needed
 6. **Plan visuals:** Edit `VISUALS.md` once content is settled
 7. **Apply visuals:** Run `/uw-slides:apply-visuals` (LLM reads VISUALS.md, writes to `content-with-visuals/`)
 8. **Build pass 2:** Run `./build-visuals.sh` → `build/index-with-visuals.html`
@@ -114,21 +118,18 @@ For `--brand=cloudbank`:
 - Spacing: `--space-1` (8px) through `--space-20` (160px); common: `--space-8` 64px, `--space-16` 128px, `--space-20` 160px
 
 **Design Freedom:**
-- Any HTML structure
-- Any CSS layout (grid, flexbox, absolute positioning, etc.)
-- Custom typography hierarchy
-- Unique layouts per slide type
-- Creative use of space and composition
+- Layouts come from the library (`references/layouts.md`); `layout: custom` allows any HTML structure and CSS layout within the brand rules
+- Within a slide, keep to the brand tokens and the type scale
 
 ## When User Requests a Slide
 
-1. **Read SLIDES.md** to understand the overall presentation plan
-2. **Ask clarifying questions** about content and purpose
-3. **Design the structure** based on content needs (not templates)
-4. **Generate complete HTML fragment** following the pattern above
-5. **Save to** `content/NN-description.html`
-6. **Add slide heading** `## NN-description` to `SLIDES.md` (if not already there)
-7. **Instruct user** to run `./build.sh` to rebuild
+Slides are generated from briefs by `/uw-slides:generate-slides`. If the user asks for a new slide by conversation:
+
+1. **Read `deck.yml` and the existing briefs** to understand the plan
+2. **Ask clarifying questions** about the message and purpose
+3. **Write `slides/<id>.md`** (front matter and `# Key message`; see `references/slide-schema.md`) and **add the ID to `deck.yml`** at the right position
+4. **Run `/uw-slides:generate-slides <id>`** to create `content/<id>.html`
+5. **Instruct user** to run `./build.sh` to rebuild
 
 ## Build and Preview
 
@@ -161,9 +162,11 @@ Brand-agnostic (same for all brands):
 - `shared/footer.html` from `~/.claude/plugins/local/uw-slides/templates/shared/footer.html`
 - `build.sh` from `~/.claude/plugins/local/uw-slides/templates/build.sh`
 - `build-visuals.sh` from `~/.claude/plugins/local/uw-slides/templates/build-visuals.sh`
+- `outline.sh` from `~/.claude/plugins/local/uw-slides/templates/outline.sh`
 - `publish.sh` from `~/.claude/plugins/local/uw-slides/templates/publish.sh`
-- `SLIDES.md` from `~/.claude/plugins/local/uw-slides/templates/SLIDES.md`
 - `VISUALS.md` from `~/.claude/plugins/local/uw-slides/templates/VISUALS.md`
+
+Do **not** create a `SLIDES.md`: `deck.yml` and `slides/` replace it. Keep the scripts executable.
 
 Brand-specific (use the `--brand` value, default: `uw`):
 - `shared/header.html` from `~/.claude/plugins/local/uw-slides/design-systems/${brand}-brand/shared/header.html`
@@ -179,32 +182,39 @@ For `--brand=uw`: copy all Encode Sans fonts from plugin to presentation:
 For `--brand=cloudbank`: **skip font copy.** CloudBank uses Nunito and Open Sans loaded via Google Fonts CDN — no local font files needed.
 
 ### 3. Create empty directories
-- `content/` (empty — pass-1 slides added here via conversation)
+- `content/` (empty — pass-1 slides are written here by generate-slides)
 - `content-with-visuals/` (empty — pass-2 output written here by apply-visuals)
 - `assets/images/`
 - `assets/diagrams/`
 
-### 3. Customize SLIDES.md
+### 4. Create deck.yml and the starter briefs
+Copy `~/.claude/plugins/local/uw-slides/templates/deck.yml` to `deck.yml` and set `title:` to the presentation name. Keep its `slides:` list as `title` then `example-slide`, and create the matching briefs in `slides/`:
+
+- `slides/example-slide.md`: copy `~/.claude/plugins/local/uw-slides/templates/slides/_example.md` (its `id` is already `example-slide`).
+- `slides/title.md`:
+
 ```markdown
-# [Presentation Name]
+---
+id: title
+layout: title
+status: draft
+---
 
-Brief description of the presentation.
+# Key message
+[Presentation Name]
 
-## 01-title
-
-Title slide notes and planning...
-
-## 02-overview
-
-Overview slide content ideas...
+## Slot: subtitle
+Subtitle
 ```
 
-### 4. Create README.md
+Validate: `python3 ~/.claude/plugins/local/uw-slides/tools/deckparse.py deck deck.yml` must succeed. Do not create `content/` fragments here: `/uw-slides:generate-slides` writes them.
+
+### 5. Create README.md
 Copy `~/.claude/plugins/local/uw-slides/templates/README.md`, then replace:
 - `[Presentation Name]` with the actual presentation name
 - `[BRAND_NAME]` with the brand's display name (`UW-branded` or `CloudBank-branded`)
 
-### 5. Create .gitignore
+### 6. Create .gitignore
 ```
 build/
 .DS_Store
@@ -212,12 +222,12 @@ build/
 *~
 ```
 
-### 6. Create AGENTS.md
+### 7. Create AGENTS.md
 Copy `~/.claude/plugins/local/uw-slides/templates/AGENTS.md`, then replace:
 - `[Presentation Name]` with the actual presentation name
 - `[BRAND]` with the brand value (`uw` or `cloudbank`)
 
-### 7. Create CLAUDE.md
+### 8. Create CLAUDE.md
 Copy `~/.claude/plugins/local/uw-slides/templates/CLAUDE.md` verbatim (no substitutions needed).
 
 ## Success Message
@@ -229,11 +239,12 @@ After scaffolding, tell the user:
 
 Pass 1 — content and structure:
 1. cd <presentation-name>
-2. Edit SLIDES.md to outline your presentation
-3. Request slides (e.g., "Create slide 01-title for my talk on...")
+2. Edit deck.yml (title, audience, objectives, slide order) and the briefs in slides/
+3. Run /uw-slides:generate-slides to create the slide HTML in content/
 4. Build: ./build.sh
 5. Preview: open build/index.html
-6. Rehearse and revise until content is settled
+6. Rehearse; revise the briefs, regenerate and rebuild until content is settled
+7. Optional: ./outline.sh writes OUTLINE.md, a read-only overview
 
 Pass 2 — visual additions (after content is settled):
 1. Edit VISUALS.md to specify photos, icons, and diagrammatic accents
@@ -245,6 +256,6 @@ Pass 3 — publish (portable, self-contained file):
 1. Run: ./publish.sh
 2. Share: build/index-published.html (all images inlined as base64)
 
-Each slide is a self-contained HTML fragment with inline scoped styles.
-Full creative freedom within UW brand guidelines.
+Each slide is a self-contained HTML fragment with inline scoped styles,
+generated from its brief using the layout library.
 ```

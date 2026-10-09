@@ -23,23 +23,30 @@ Resolve the brand in this order:
 /uw-slides:apply-visuals --brand=cloudbank
 ```
 
-Run from inside the presentation directory, or with the presentation directory as context. Pass 1 (`build.sh`) must have been run first — `content/` must exist and contain the rendered slide fragments.
+Run from inside the presentation directory, or with the presentation directory as context. Pass 1 must be done first — `content/` must contain the rendered slide fragments (`/uw-slides:generate-slides`, then `./build.sh`). In the commands below, `$PLUGIN` is `$UW_SLIDES_HOME` if set, otherwise `~/.claude/plugins/local/uw-slides`.
 
 ## Behavior
 
 1. Read `VISUALS.md` to understand global styling rules and per-slide additions.
-2. Read `SLIDES.md` to get the authoritative slide list and ordering.
-3. For each slide listed in `VISUALS.md` under `## Per-slide additions`:
+2. Get the authoritative slide list and ordering from `deck.yml` (`python3 "$PLUGIN/tools/deckparse.py" deck deck.yml --format ids`). Legacy decks without `deck.yml` use the `## slide-id` headings of `SLIDES.md` (deprecated).
+3. Run `python3 "$PLUGIN/tools/deckparse.py" status .`. If a slide you are about to modify is `missing` or `stale`, tell the user to run `/uw-slides:generate-slides` first: visuals added to out-of-date pass-1 HTML would be out of date too. `locked` slides are fine (you only read `content/`).
+4. For each slide listed in `VISUALS.md` under `## Per-slide additions`:
    - If the entry says "No additions" — skip. Do not copy the file.
    - Otherwise — read `content/<slide-id>.html`, apply the specified additions, write the result to `content-with-visuals/<slide-id>.html`.
-4. Slides in `SLIDES.md` that are not mentioned under `## Per-slide additions` in `VISUALS.md` — skip. They will be served from `content/` by `build-visuals.sh`.
-5. Run `./build-visuals.sh` to produce `build/index-with-visuals.html`.
+5. Slides in `deck.yml` that are not mentioned under `## Per-slide additions` in `VISUALS.md` — skip. They will be served from `content/` by `build-visuals.sh`.
+6. Run `./build-visuals.sh` to produce `build/index-with-visuals.html`.
+
+To place a visual in free space, read the slide's brief (`slides/<id>.md`) and its `data-layout`: `references/layouts.md` describes each layout's regions (for example `bullets` leaves the right side open). The brief's talking points and notes are never rendered, so a visual must not restate them.
 
 ## Idempotency
 
 Before writing to `content-with-visuals/<slide-id>.html`, check whether the file already exists and already contains a `data-visuals-applied` marker on the root `<section>` element. If it does, skip that slide and report "already applied" — do not add the visual elements a second time.
 
 When writing a modified fragment, add `data-visuals-applied="true"` to the root `<section>` element so subsequent runs can detect it.
+
+**Preserve provenance.** Keep `data-slide`, `data-layout`, `data-brief-hash` and `data-generated-by` on the root `<section>` exactly as they are in `content/<slide-id>.html`. The copy in `content-with-visuals/` keeps the hash of the brief it was derived from.
+
+**Out-of-date copies.** If an existing `content-with-visuals/<slide-id>.html` has a `data-brief-hash` that differs from `python3 "$PLUGIN/tools/deckparse.py" hash slides/<slide-id>.md` (or from `content/<slide-id>.html`), the slide's text changed after pass 2 ran. Report "pass-2 copy is out of date", and re-apply from the current `content/` file only after the user confirms.
 
 ## How to apply visual elements
 
@@ -83,7 +90,8 @@ All paths are relative to the presentation directory:
 
 | File | Role |
 |------|------|
-| `SLIDES.md` | Authoritative slide list and ordering |
+| `deck.yml` | Authoritative slide list and ordering (legacy decks: `SLIDES.md`) |
+| `slides/<id>.md` | Slide briefs (read-only in pass 2) |
 | `VISUALS.md` | Pass-2 additions specification |
 | `content/<id>.html` | Pass-1 source fragments (read-only in pass 2) |
 | `content-with-visuals/<id>.html` | Pass-2 output fragments |
@@ -91,7 +99,7 @@ All paths are relative to the presentation directory:
 
 ## VISUALS.md format
 
-`VISUALS.md` uses `#`-level headings for global sections and `##`-level headings for per-slide entries, matching the `##` convention in `SLIDES.md`:
+`VISUALS.md` uses `#`-level headings for global sections and `##`-level headings for per-slide entries, matching slide IDs in `deck.yml`:
 
 ```markdown
 # Per-slide additions
@@ -105,7 +113,7 @@ No additions.
 **Photographic addition.** Description of the photo and placement...
 ```
 
-Slide identifiers in `VISUALS.md` must match `SLIDES.md` exactly. If a `VISUALS.md` entry references a slide ID that doesn't exist in `content/`, report the mismatch and skip.
+Slide identifiers in `VISUALS.md` must match the IDs in `deck.yml` exactly. If a `VISUALS.md` entry references a slide ID that doesn't exist in `content/`, report the mismatch and skip.
 
 ## Success output
 
