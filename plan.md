@@ -1,6 +1,6 @@
 # Restructuring Plan: uw-slides for Multi-Collaborator, Multi-Training Use
 
-Status: proposed. This document is self-contained so each workstream (WS) can be
+Status: in progress. WS0 done on branch `ws0-baseline-fixes` (see Progress). This document is self-contained so each workstream (WS) can be
 handed to a separate agent/context window. Read **sections 1-4** (shared
 context), then only the WS you are assigned.
 
@@ -97,7 +97,26 @@ Known problems (fix in WS0 unless noted):
 - **O2 Runtime.** Keep homegrown `footer.html` navigation, or adopt reveal.js (vendored single JS/CSS) for scaling, presenter view with notes, overview and PDF export. Recommendation: evaluate in WS8, default to adopting.
 - **O3 PPTX.** Is editable PPTX export required? Recommendation: defer; HTML + PDF first; briefs/layouts keep a future PPTX exporter possible.
 - **O4 Fonts.** Subset to used weights, ship via release asset/LFS/submodule, or keep copying. Check Encode Sans licence (SIL OFL) before redistribution decisions.
-- **O5 Spacing scale** (see problem 4): which of the 4px or doubled scale is canonical.
+- ~~**O5 Spacing scale**~~ **Resolved:** the 8px-base scale rendered by the deck headers is canonical (`--space-4` = 32px, `--space-20` = 160px). DESIGN.md, `colors_and_type.css` and README now match (WS0).
+
+### 3.4 Progress
+
+Update this checklist after each merge so new sessions know the current state.
+
+- [x] WS0 Baseline fixes (branch `ws0-baseline-fixes`; slide heading rule: `## <kebab-case-id>`; `--strict` flag, default warn-and-skip for missing fragments; build scripts assemble output in a temp file)
+- [ ] WS1 Versioning, stamping, paths
+- [ ] WS2 Schemas (deck.yml, briefs)
+- [ ] WS3 Layout library
+- [ ] WS4 plan-deck skill
+- [ ] WS5 Generation + deck.yml build
+- [ ] WS6 Catalog + resolver
+- [ ] WS7 Lint + CI
+- [ ] WS8 Runtime/export
+- [ ] WS9 Collaboration docs
+- [ ] WS10 Series layout
+- [ ] WS11 Migration + docs
+
+WS0 follow-ups for later workstreams: `skills/new-deck/SKILL.md` has two sections numbered "3."; the new-deck skill and `templates/AGENTS.md` still contain hard-coded `~/.claude/plugins/local/uw-slides` paths (WS1).
 
 ## 4. Conventions for every workstream
 
