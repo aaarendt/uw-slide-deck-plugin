@@ -72,9 +72,11 @@ Known problems (fix in WS0 unless noted):
 ├── content-with-visuals/    # pass 2 (unchanged)
 ├── assets/
 ├── shared/                  # header/footer (managed by update-deck)
-├── SLIDES.md                # optional, kept for backward compat / human overview
+├── OUTLINE.md               # generated read-only overview (from deck.yml + briefs); never hand-edited
 └── build/ (ignored)
 ```
+
+Legacy decks have a `SLIDES.md` instead of `deck.yml` + `slides/`. New decks do **not** get a `SLIDES.md` (see D11). Do not keep both as sources of truth.
 
 ### 3.2 Decisions (resolved from discussion)
 
@@ -90,6 +92,7 @@ Known problems (fix in WS0 unless noted):
 | D8 | Decks pin the plugin version (`.uw-slides.json`) and can be refreshed with an `update-deck` action; no silent following of latest. |
 | D9 | Deterministic `lint.sh` is a required CI check; LLM `design-review`/`accessibility-check` remain for judgment. |
 | D10 | Path assumptions removed: use `UW_SLIDES_HOME` (fallback to the repo location / `~/.claude/plugins/local/uw-slides`). |
+| D11 | **`SLIDES.md` is phased out, not kept alongside `deck.yml`** (two sources of truth would drift). Transition: (a) builds use `deck.yml` when present and fall back to `SLIDES.md` for legacy decks; (b) new decks scaffold `deck.yml` + `slides/` and no `SLIDES.md`; (c) migration converts legacy decks; (d) the fallback is deprecated with a warning in v0.2.0 and removed in a later release (target v0.3.0). A one-page outline, if wanted, is **generated** (`OUTLINE.md`, read-only). The generation rules in the `SLIDES.md` template ("How to render this deck") move into the generation skill and schema docs, not into each deck. |
 
 ### 3.3 Decisions still open (ask the user before implementing the affected WS)
 
@@ -191,6 +194,8 @@ Parallelizable after WS0: WS1, WS2, WS7 (basic), WS8. After WS2: WS3, WS5, WS6. 
 3. Define the restricted YAML subset and implement `tools/deckparse.py` (stdlib only) that emits JSON or shell-friendly output for ordered IDs, front matter and params. Include a small test script with fixtures.
 4. Define the staleness hash (`data-brief-hash`): algorithm, which fields/body are hashed, how whitespace is normalized.
 5. Add templates: `templates/deck.yml`, `templates/slides/_example.md`.
+6. Relocate the generation rules from the "How to render this deck" section of `templates/SLIDES.md` into the schema doc (and, in WS5, the generation skill) so they apply to every deck and are no longer copied per deck. Rules to preserve: key message is the headline and the main shown text; bullets are spoken talking points, never rendered verbatim; "Note to self"/notes are never rendered; source lines render as a small footer citation; pass 1 uses no photographs or decorative icons and must look finished without images; default to one anchoring element per slide; consistent type scale, whitespace and gold accent. Map `## Notes` in briefs to the old "Note to self".
+7. Document the SLIDES.md-to-new-schema mapping (needed by WS5 fallback and WS11 migration) and the deprecation timeline from D11.
 
 **Acceptance:** schema doc is unambiguous; parser round-trips fixtures including edge cases (quotes, colons, empty values, missing fields yield clear errors).
 
@@ -232,11 +237,13 @@ Parallelizable after WS0: WS1, WS2, WS7 (basic), WS8. After WS2: WS3, WS5, WS6. 
 
 **Tasks:**
 1. `skills/generate-slides/SKILL.md`: reads `slides/<id>.md` (+ DESIGN.md + layout template), writes `content/<id>.html` with `data-layout`, `data-brief-hash`, `data-generated-by`; skips `locked: true` and `use:` catalog slides; reports stale (hash mismatch) slides and asks before overwriting.
-2. Update `build.sh` and `build-visuals.sh` to read order from `deck.yml` (via `tools/deckparse.py`) and fall back to the SLIDES.md heading logic for legacy decks.
-3. Update `apply-visuals` to read briefs/`deck.yml` where relevant and preserve provenance attributes.
-4. Update `extract-to-markdown` so it can also emit `slides/*.md` + `deck.yml` from an existing deck.
+2. Update `build.sh` and `build-visuals.sh` to read order from `deck.yml` (via `tools/deckparse.py`). If there is no `deck.yml`, fall back to the SLIDES.md heading logic from WS0 and print a **deprecation warning** pointing to the migration guide (D11).
+3. Update `new-deck` so new decks scaffold `deck.yml` + `slides/` and **do not** create `SLIDES.md`; remove or replace `templates/SLIDES.md` (generation rules already moved in WS2). Update all skills that read `SLIDES.md` (`apply-visuals`, `design-review`, `accessibility-check`, `extract-to-markdown`, `templates/AGENTS.md`/`CLAUDE.md`, `VISUALS.md` template wording) to read `deck.yml`/`slides/` first and `SLIDES.md` only for legacy decks.
+4. Add an `outline` script/skill step that generates the read-only `OUTLINE.md` (ID, key message, layout, minutes, owner, status) from `deck.yml` + briefs, with a "generated, do not edit" header.
+5. Update `apply-visuals` to read briefs/`deck.yml` where relevant and preserve provenance attributes.
+6. Update `extract-to-markdown` so it can also emit `slides/*.md` + `deck.yml` from an existing deck.
 
-**Acceptance:** a deck with `deck.yml` builds in the correct order; legacy deck still builds; regenerating skips locked slides; changing a brief marks it stale in lint (WS7).
+**Acceptance:** a deck with `deck.yml` builds in the correct order; a legacy `SLIDES.md` deck still builds but prints the deprecation warning; a newly scaffolded deck contains no `SLIDES.md`; `OUTLINE.md` is generated and reproducible; regenerating skips locked slides; changing a brief marks it stale in lint (WS7).
 
 ### WS6. Slide catalog and resolver
 
@@ -302,9 +309,11 @@ Parallelizable after WS0: WS1, WS2, WS7 (basic), WS8. After WS2: WS3, WS5, WS6. 
 
 **Depends on:** WS5, WS6 (run last).
 
-**Tasks:** migration guide for decks built with the old layout (what to run, what changes), extend `extract-to-markdown` to split SLIDES.md into briefs, update `README.md`, `CLAUDE.md`, `templates/AGENTS.md`, and `templates/CLAUDE.md` for the new workflow, update `.claude-plugin/plugin.json` (skills list, version, keywords), write `CHANGELOG.md`, tag release.
+**Tasks:** migration guide for decks built with the old layout (what to run, what changes), extend `extract-to-markdown` to split SLIDES.md into briefs and `deck.yml` (one-shot `migrate-deck` flow that also stamps `.uw-slides.json` and keeps the old `SLIDES.md` in git history only), update `README.md`, `CLAUDE.md`, `templates/AGENTS.md`, and `templates/CLAUDE.md` for the new workflow, update `.claude-plugin/plugin.json` (skills list, version, keywords), write `CHANGELOG.md` (state the SLIDES.md deprecation and the planned removal release), tag release.
 
-**Acceptance:** an old deck migrates with a documented procedure and still builds; docs have no stale path/command references.
+**SLIDES.md removal milestone (D11):** the legacy fallback ships deprecated in v0.2.0. Remove the fallback, `templates/SLIDES.md` leftovers and legacy wording in a later release (target v0.3.0), after at least one release with the warning and a working migration path. Track it as a separate issue.
+
+**Acceptance:** an old deck migrates with a documented procedure, builds from `deck.yml`, and no longer needs `SLIDES.md`; docs have no stale path/command references and describe SLIDES.md only as legacy.
 
 ---
 
