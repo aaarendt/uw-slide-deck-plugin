@@ -220,30 +220,31 @@ strong, .emphasis {
 
 ### Spacing Scale
 
-The spacing system uses a 4px base unit (with common 8px increments) to create visual rhythm:
+The spacing system uses an 8px base unit, sized for projection on a full-width slide. These are the values the deck's `shared/header.html` defines, so they are what renders:
 
 ```css
---space-1: 4px;    /* Minimal spacing, tight elements */
---space-2: 8px;    /* Base unit, tight layouts */
---space-3: 12px;   /* Small gaps */
---space-4: 16px;   /* Standard spacing between related elements */
---space-5: 20px;   /* Small section spacing */
---space-6: 24px;   /* Medium spacing */
---space-8: 32px;   /* Large spacing between sections */
---space-10: 40px;  /* Extra-large spacing */
---space-12: 48px;  /* Section padding */
---space-16: 64px;  /* Large section padding */
---space-20: 80px;  /* Slide margins, outer padding */
+--space-1: 8px;    /* Minimal spacing, tight elements */
+--space-2: 16px;   /* Tight layouts */
+--space-3: 24px;   /* Small gaps */
+--space-4: 32px;   /* Standard spacing between related elements */
+--space-5: 40px;   /* Small section spacing */
+--space-6: 48px;   /* Medium spacing */
+--space-7: 56px;   /* Medium-large spacing */
+--space-8: 64px;   /* Large spacing between sections */
+--space-10: 80px;  /* Extra-large spacing */
+--space-12: 96px;  /* Section padding */
+--space-16: 128px; /* Large section padding */
+--space-20: 160px; /* Slide margins, outer padding */
 ```
 
 **Usage:**
-- Between elements (e.g., heading to paragraph): `--space-4` (16px) to `--space-6` (24px)
-- Between list items: `--space-4` (16px)
-- Section padding (e.g., content block padding): `--space-8` (32px) to `--space-12` (48px)
-- Slide margins (outer padding): `--space-16` (64px) to `--space-20` (80px)
-- Tight elements (bullets, badges): `--space-2` (8px) to `--space-3` (12px)
+- Between elements (e.g., heading to paragraph): `--space-4` (32px) to `--space-6` (48px)
+- Between list items: `--space-4` (32px)
+- Section padding (e.g., content block padding): `--space-8` (64px) to `--space-12` (96px)
+- Slide margins (outer padding): `--space-16` (128px) to `--space-20` (160px)
+- Tight elements (bullets, badges): `--space-2` (16px) to `--space-3` (24px)
 
-**Spacing Philosophy:** Use the 4px/8px base unit consistently. Avoid arbitrary values (e.g., 35px, 47px). The rhythm created by the mathematical scale makes layouts feel intentional and harmonious.
+**Spacing Philosophy:** Use the token scale consistently (multiples of 8px). Avoid arbitrary values (e.g., 35px, 47px). The rhythm created by the mathematical scale makes layouts feel intentional and harmonious.
 
 ## 5. Components & Patterns
 
@@ -713,18 +714,19 @@ Copy this comprehensive token system into your presentation's header:
   --tracking-wider: 0.1em;
   --tracking-caps: 0.12em;   /* Used on slide titles */
   
-  /* ── SPACING TOKENS (4px base) ───────────────────────────────────── */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-  --space-16: 64px;
-  --space-20: 80px;
+  /* ── SPACING TOKENS (8px base) ───────────────────────────────────── */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-7: 56px;
+  --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+  --space-16: 128px;
+  --space-20: 160px;
   
   /* ── BORDER RADIUS ───────────────────────────────────────────────── */
   --radius-sm: 2px;

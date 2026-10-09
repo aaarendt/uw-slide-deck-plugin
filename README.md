@@ -141,10 +141,10 @@ Key tokens available in all UW slides (injected via `shared/header.html`):
 --uw-husky-purple:  #32006e    /* darker variant */
 --font-display:     Encode Sans
 --font-body:        Open Sans
---space-4:          16px       /* 4px base scale */
---space-8:          32px
---space-16:         64px
---space-20:         80px
+--space-4:          32px       /* 8px base scale */
+--space-8:          64px
+--space-16:         128px
+--space-20:         160px
 ```
 
 For the complete token set (semantic color aliases, weight/leading/tracking tokens, full type scale), see `design-systems/uw-brand/colors_and_type.css`.
