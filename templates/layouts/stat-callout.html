@@ -1,0 +1,84 @@
+<section data-slide="layout-stat-callout"
+         data-layout="stat-callout"
+         aria-label="Slide 7: Stat callout"
+         class="slide">
+
+  <div class="layout">
+    <p class="stat" data-slot="stat">70%</p>
+    <h1 data-slot="key-message">of research compute capacity sits idle</h1>
+    <p class="source" data-slot="source" data-optional>Source: Smith et al., 2024</p>
+  </div>
+
+  <style>
+    section[data-slide="layout-stat-callout"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    section[data-slide="layout-stat-callout"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="layout-stat-callout"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 8vw, 10rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="layout-stat-callout"] .stat {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 15vw, 15rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--head);
+      margin: 0;
+    }
+
+    /* Accent rule between the number and its statement */
+    section[data-slide="layout-stat-callout"] .stat::after {
+      content: "";
+      display: block;
+      width: clamp(4rem, 8vw, 8rem);
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+      margin: var(--space-4) auto;
+    }
+
+    section[data-slide="layout-stat-callout"] h1 {
+      font-family: var(--font-body);
+      font-size: clamp(1.75rem, 2.8vw, 2.75rem);
+      font-weight: 600;
+      line-height: 1.3;
+      text-wrap: balance;
+      color: var(--fg);
+      max-width: 24em;
+      margin: 0;
+    }
+
+    section[data-slide="layout-stat-callout"] .source {
+      position: absolute;
+      left: clamp(2rem, 8vw, 10rem);
+      right: clamp(2rem, 8vw, 10rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+  </style>
+</section>
