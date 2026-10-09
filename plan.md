@@ -115,7 +115,7 @@ Update this checklist after each merge so new sessions know the current state.
 - [x] WS0 Baseline fixes (branch `ws0-baseline-fixes`; slide heading rule: `## <kebab-case-id>`; `--strict` flag, default warn-and-skip for missing fragments; build scripts assemble output in a temp file)
 - [ ] WS1 Versioning, stamping, paths
 - [x] WS2 Schemas (deck.yml, briefs) (branch `ws2-schemas`; `references/slide-schema.md`, `tools/deckparse.py` + tests, `templates/deck.yml`, `templates/slides/_example.md`; durations are integer minutes; `title` kept as optional brief field; front matter `notes` dropped in favour of `## Notes`; the generation rules are copied into the schema doc but remain in `templates/SLIDES.md` until WS5 stops scaffolding it)
-- [ ] WS3 Layout library
+- [x] WS3 Layout library (branch `ws3-layouts`; 12 layouts in `templates/layouts/*.html`, planner doc `references/layouts.md`; brand-neutral `--slide-*` tokens added to both `design-systems/*/shared/header.html`; IDs: title, section-divider, key-message, bullets, two-column, comparison, stat-callout, quote, exercise, code, diagram, closing; scalar options are `params` (`background`, `eyebrow`, `logo`, `logo_alt`), content regions are `## Slot:` names; no `data-slot` text is rendered from talking points)
 - [ ] WS4 plan-deck skill
 - [ ] WS5 Generation + deck.yml build
 - [ ] WS6 Catalog + resolver
@@ -124,6 +124,8 @@ Update this checklist after each merge so new sessions know the current state.
 - [ ] WS9 Collaboration docs
 - [ ] WS10 Series layout
 - [ ] WS11 Migration + docs
+
+WS3 follow-ups: WS5 must implement the fill procedure in `references/layouts.md` §2 (copy, rename `layout-<id>`, fill `data-slot`/`data-param`, add provenance attributes); WS7 lint should check that `layout:` IDs equal a file in `templates/layouts/`, that headers define every `--slide-*` token, and could add a static font-size check (the browser-based fit check used for WS3 is not shipped because it needs playwright); decks scaffolded before WS3 have headers without `--slide-*` tokens and need `update-deck` (WS1) before layouts render correctly; `colors_and_type.css` was not given the `--slide-*` tokens (deck headers only).
 
 WS0 follow-ups for later workstreams: `skills/new-deck/SKILL.md` has two sections numbered "3."; the new-deck skill and `templates/AGENTS.md` still contain hard-coded `~/.claude/plugins/local/uw-slides` paths (WS1).
 

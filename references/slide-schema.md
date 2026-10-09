@@ -126,7 +126,7 @@ Only `id` is required. Defaults apply when a field is omitted.
 |-------|------|---------|---------|
 | `id` | string | — | Slide ID; must equal the file name stem (not enforced for `_*.md` templates). |
 | `title` | string | none | Short label for `aria-label`, outlines and navigation. Not the headline (that is the key message). |
-| `layout` | string | `auto` | `auto` (planner chooses), `custom` (see `layout_intent`), or a layout ID from the layout library (WS3). The parser checks the format; the lint checks the ID exists. |
+| `layout` | string | `auto` | `auto` (planner chooses), `custom` (see `layout_intent`), or a layout ID from the layout library ([layouts.md](layouts.md)). The parser checks the format; the lint checks the ID exists. |
 | `layout_rationale` | string | none | Why this layout fits; written by the planner, informational only. |
 | `layout_intent` | string | none | Required with `layout: custom`, forbidden otherwise: describes the layout wanted. |
 | `objective` | string or list | none | Objective ID(s) from `deck.yml` `objectives:` (the lint checks they exist). |
@@ -151,7 +151,7 @@ before the first heading is an error.
 |---------|----------|---------|
 | `# Key message` | yes, unless `use` is set | The one thing shown large on the slide: a phrase, number or one sentence. |
 | `## Talking points` | no | Bullets the speaker says aloud. Never rendered verbatim. |
-| `## Slot: <name>` | per layout | Content for a named region of the chosen layout (`<name>` is lowercase letters, digits and hyphens, starting with a letter). Slot names are defined by each layout in the library (WS3). |
+| `## Slot: <name>` | per layout | Content for a named region of the chosen layout (`<name>` is lowercase letters, digits and hyphens, starting with a letter). Slot names are defined by each layout in the [layout library](layouts.md). |
 | `## Source` | no | Citation, rendered as a small footer line. |
 | `## Notes` | no | Speaker-only notes. Never rendered on the slide. |
 
@@ -247,7 +247,7 @@ alongside `deck.yml` (two sources of truth drift).
 |-----------|-----|
 | `slide_id` | `id` |
 | `title` | `title` (now optional) |
-| `layout` | `layout` (values must be layout-library IDs, WS3; old names such as `two-column` are mapped there) |
+| `layout` | `layout` (values must be [layout-library](layouts.md) IDs; the old names are mapped in its "Old layout names" section) |
 | `background` | `params: background` |
 | `section` | `section` |
 | `duration_min` | `duration` (minutes) |

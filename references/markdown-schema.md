@@ -55,4 +55,4 @@ Full narration script
 - `transition` — Section breaks
 - `architecture` — Diagrams
 
-See plugin templates for implementation.
+See plugin templates for implementation. The current layout set and the mapping from these names is in [layouts.md](layouts.md).

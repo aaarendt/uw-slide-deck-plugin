@@ -22,6 +22,7 @@ uw-slides-plugin/
 ├── templates/               # Scaffolding source copied to new presentations
 │   ├── shared/              # footer.html (brand-agnostic; header.html comes from design-systems/<brand>/shared/)
 │   ├── examples/            # Reference HTML fragments
+│   ├── layouts/             # 12 slot-based layout fragments (see references/layouts.md)
 │   ├── build.sh             # Pass-1 build script template
 │   ├── build-visuals.sh     # Pass-2 build script template
 │   ├── publish.sh           # Pass-3 publish script template (inlines images; needs python3)
@@ -43,6 +44,7 @@ uw-slides-plugin/
 │       └── shared/header.html   # Header copied into CloudBank decks
 └── references/
     ├── accessibility-requirements.md
+    ├── layouts.md           # Layout library: slots, limits, use/avoid, variety rules, custom
     ├── markdown-schema.md   # Legacy front matter (superseded)
     └── slide-schema.md      # deck.yml + slide brief schema, staleness hash, generation rules
 ```
