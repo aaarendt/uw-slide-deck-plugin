@@ -84,7 +84,7 @@ Legacy decks have a `SLIDES.md` instead of `deck.yml` + `slides/`. New decks do 
 |---|----------|
 | D1 | Slide metadata lives in **separate files** (`slides/<id>.md` front matter), not in HTML comments. HTML is a regenerable artifact. |
 | D2 | HTML carries only **generated provenance** as `data-` attributes: `data-layout`, `data-brief-hash`, `data-generated-by`. |
-| D3 | Brief fields include `id, layout, layout_rationale, objective, owner, status (draft/review/done), duration, locked`. `locked: true` means the HTML is hand-edited and must not be regenerated. |
+| D3 | Brief fields include `id, layout, layout_rationale, objective, owner, status (draft/review/done), duration, locked, use, params`. `locked: true` means the HTML is hand-edited and must not be regenerated. All per-slide data (including `use`/`params` for catalog slides) lives in the brief, not in `deck.yml`. |
 | D4 | Order and deck metadata live in `deck.yml`; filename = `id` = `data-slide` (lint-enforced). |
 | D5 | Layout choice is made by the planner from a closed **layout library** (`layout: auto` by default, user may override), with escape hatch `layout: custom` + `layout_intent`. |
 | D6 | **Catalog slides** (finished, vetted, optionally parameterized) are referenced with `use: catalog/<id>` and copied by a resolver, never regenerated. Pinned by version; `eject` converts to a local locked slide. |
@@ -96,7 +96,13 @@ Legacy decks have a `SLIDES.md` instead of `deck.yml` + `slides/`. New decks do 
 
 ### 3.3 Decisions still open (ask the user before implementing the affected WS)
 
-- **O1 Parser constraint.** Bash cannot parse YAML. Recommendation: restrict deck.yml/front matter to a simple subset (flat scalars, one nested `params:` map, simple lists) and parse with a single stdlib-only `python3` script (`tools/deckparse.py`); `python3` is already required by `publish.sh`. Alternative: keep everything bash and use a line-oriented order file.
+- ~~**O1 Parser constraint**~~ **Resolved: restricted YAML subset parsed by one stdlib-only `python3` script (`tools/deckparse.py`).** Rules:
+  1. The subset must be valid YAML (never invent syntax), so PyYAML can replace the parser later without rewriting any file, and editor YAML tooling keeps working.
+  2. Reject, don't guess: anything outside the subset (anchors, multi-line blocks, flow-style nesting, tabs, duplicate keys, nesting deeper than allowed) fails with file and line number. Tests include valid-YAML-but-unsupported fixtures that must fail.
+  3. Grammar: flat `key: value` scalars (strings quoted or unquoted, integers, `true`/`false`; `yes/no/on/off` are plain strings), lists of scalars, and **one** level of nested map (`params:` in briefs, and `objectives:` as `id: text` in `deck.yml`).
+  4. `deck.yml` holds flat deck metadata plus `slides:` as a plain ordered list of IDs (one per line). Per-slide data lives in the brief front matter (D3).
+  5. Python 3 (stdlib only, no pip) becomes a requirement for lint, the staleness hash, the catalog resolver and `update-deck`. WS5 may keep a dependency-free `sed`/`awk` path in `build.sh` for reading the ID list; that is optional. Update the README's dependency claims accordingly when the parser lands.
+  6. Revisit (switch to PyYAML) only if anchors, deeper nesting or multi-line strings become necessary.
 - **O2 Runtime.** Keep homegrown `footer.html` navigation, or adopt reveal.js (vendored single JS/CSS) for scaling, presenter view with notes, overview and PDF export. Recommendation: evaluate in WS8, default to adopting.
 - **O3 PPTX.** Is editable PPTX export required? Recommendation: defer; HTML + PDF first; briefs/layouts keep a future PPTX exporter possible.
 - **O4 Fonts.** Subset to used weights, ship via release asset/LFS/submodule, or keep copying. Check Encode Sans licence (SIL OFL) before redistribution decisions.
@@ -184,14 +190,14 @@ Parallelizable after WS0: WS1, WS2, WS7 (basic), WS8. After WS2: WS3, WS5, WS6. 
 
 ### WS2. Schemas: deck.yml and slide briefs
 
-**Depends on:** WS0. Needs decision O1.
+**Depends on:** WS0. Decision O1 is resolved (see section 3.3).
 
 **Read:** `references/markdown-schema.md`, `templates/SLIDES.md`, `skills/extract-to-markdown/SKILL.md`, `templates/examples/*.html`.
 
 **Tasks:**
 1. Write `references/slide-schema.md` (extend, do not duplicate, `markdown-schema.md`; reconcile `slide_id` vs `id` and mark the old fields deprecated or mapped). Define the front matter: `id, layout, layout_rationale, objective, owner, status, duration, locked, use, params, section, notes` and the body sections (`# Key message`, columns/regions per layout, `## Notes`).
-2. Define `deck.yml`: title, audience, duration, objectives (ids + text), catalog pin, ordered `slides:` list (each `id`, optional `use`/`params`).
-3. Define the restricted YAML subset and implement `tools/deckparse.py` (stdlib only) that emits JSON or shell-friendly output for ordered IDs, front matter and params. Include a small test script with fixtures.
+2. Define `deck.yml`: flat metadata (title, audience, duration, catalog pin), `objectives:` as an `id: text` map, and `slides:` as a plain ordered list of IDs. Per-slide `use`/`params`/`layout`/`owner`/`status` belong in the brief front matter, not here (D3, O1 rule 4).
+3. Implement the restricted YAML subset from O1 as `tools/deckparse.py` (stdlib only), emitting JSON or shell-friendly output for ordered IDs, front matter and params. Include a test script with fixtures covering valid files, quoting/colon/empty-value edge cases, `yes/no` as strings, and valid-YAML-but-unsupported constructs that must fail with a file and line number.
 4. Define the staleness hash (`data-brief-hash`): algorithm, which fields/body are hashed, how whitespace is normalized.
 5. Add templates: `templates/deck.yml`, `templates/slides/_example.md`.
 6. Relocate the generation rules from the "How to render this deck" section of `templates/SLIDES.md` into the schema doc (and, in WS5, the generation skill) so they apply to every deck and are no longer copied per deck. Rules to preserve: key message is the headline and the main shown text; bullets are spoken talking points, never rendered verbatim; "Note to self"/notes are never rendered; source lines render as a small footer citation; pass 1 uses no photographs or decorative icons and must look finished without images; default to one anchoring element per slide; consistent type scale, whitespace and gold accent. Map `## Notes` in briefs to the old "Note to self".
@@ -320,7 +326,7 @@ Parallelizable after WS0: WS1, WS2, WS7 (basic), WS8. After WS2: WS3, WS5, WS6. 
 ## 7. Suggested execution order
 
 1. WS0 (single agent; unblocks everything). Resolve O5 with the user.
-2. In parallel: WS1, WS2 (resolve O1 first), WS8 investigation, WS7 basic checks.
+2. In parallel: WS1, WS2, WS8 investigation, WS7 basic checks.
 3. In parallel: WS3, WS5, WS6.
 4. WS4, WS7 brief checks, WS9.
 5. WS10, WS11.
