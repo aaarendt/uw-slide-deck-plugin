@@ -4,7 +4,7 @@
 
 ## Pass 1 — Content and structure
 
-1. Edit `deck.yml` (title, audience, objectives, slide order) and one brief per slide in `slides/<id>.md`
+1. Run `/uw-slides:plan-deck` to plan the deck from a topic (it stops for your approval before any HTML), or edit `deck.yml` (title, audience, objectives, slide order) and one brief per slide in `slides/<id>.md` by hand
 2. Run `/uw-slides:generate-slides` (reads the briefs, writes `content/`)
 3. Build: `./build.sh`
 4. Preview: `open build/index.html`

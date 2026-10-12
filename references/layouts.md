@@ -38,6 +38,11 @@ notes are never rendered.
    selectors). Set `aria-label` to `Slide N: <title or key message>`.
 2. Replace the sample text of each element marked `data-slot="<name>"` with the
    brief's content for that slot. The key message fills `data-slot="key-message"`.
+   For list slots (`items`, `steps`, `nodes`) the template holds several sample
+   `<li>` elements: **delete all of them** and write exactly one `<li>` per
+   brief item. The output never contains sample text or more items than the
+   brief. Convert Markdown to HTML (see the table below): no literal `-`, `**`
+   or `1.` may remain in the rendered text.
 3. Elements marked `data-optional` are removed when the brief has no content for
    them. `data-param` elements are filled from `params:` and removed when the
    param is absent. Keeping the `data-slot`, `data-optional` and `data-param`

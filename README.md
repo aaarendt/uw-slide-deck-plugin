@@ -32,11 +32,14 @@ No other dependencies. The plugin is now available in any Claude Code session.
 # Scaffold a new presentation
 /uw-slides:new-deck my-presentation
 
-# Plan your deck — edit deck.yml and the briefs in slides/, then generate the slides:
+# Plan your deck from a topic (writes deck.yml and slides/*.md, stops for your approval):
+cd my-presentation
+/uw-slides:plan-deck "Cloud computing for researchers" --duration=45
+
+# After approving the plan, generate the slides:
 /uw-slides:generate-slides
 
 # Build and preview
-cd my-presentation
 ./build.sh
 open build/index.html
 ```
@@ -122,7 +125,7 @@ The scripts read `deck.yml` with `tools/deckparse.py` (needs `python3`), found v
 ### Two-Pass Workflow
 
 **Pass 1 — content and structure:**
-1. Edit `deck.yml` (order) and one brief per slide in `slides/`
+1. Run `/uw-slides:plan-deck` (or edit `deck.yml` and the briefs in `slides/` by hand). The planner drafts learning objectives, picks a layout per slide, fills the slots and stops for your approval before any HTML is written. Run it again later to add, remove, merge or split slides or to change the length; it leaves locked, owned and `done` slides alone
 2. Run `/uw-slides:generate-slides` → `content/*.html` fragments
 3. Run `./build.sh` → `build/index.html`
 4. The deck should look complete at this stage — no image placeholders
@@ -197,6 +200,7 @@ Omitting `--brand` defaults to `uw`.
 | Skill | Purpose |
 |-------|---------|
 | `new-deck` | Scaffold a new presentation directory |
+| `plan-deck` | Plan a deck from a topic: objectives, layouts, slot content, `deck.yml` + briefs, approval gate before any HTML; also re-plans an existing deck |
 | `generate-slides` | Generate `content/*.html` from the briefs using the layout library; skips locked slides, asks before overwriting stale ones |
 | `apply-visuals` | Pass 2 — add photos, diagrams, and icons per VISUALS.md |
 | `accessibility-check` | WCAG 2.1 AA validation |
