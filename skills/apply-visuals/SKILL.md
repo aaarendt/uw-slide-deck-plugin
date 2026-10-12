@@ -27,20 +27,23 @@ Run from inside the presentation directory, or with the presentation directory a
 
 ## Behavior
 
-1. Read `VISUALS.md` to understand global styling rules and per-slide additions.
+**Start fresh on every invocation.** `VISUALS.md`, `deck.yml` and the files in `content/` and `content-with-visuals/` change between runs: the user adds entries, edits wording and regenerates slides. Re-read them from disk every time this skill runs, even if you read them earlier in the same conversation, and never work from memory of a previous run. Do steps 1-3 before looking at any idempotency marker.
+
+1. Read `VISUALS.md` in full: the global styling rules and **every** `## <slide-id>` entry under `# Per-slide additions`. Write down the complete list of entry IDs; this list, not what was applied last time, defines the work.
 2. Get the authoritative slide list and ordering from `deck.yml` (`python3 "$PLUGIN/tools/deckparse.py" deck deck.yml --format ids`). Legacy decks without `deck.yml` use the `## slide-id` headings of `SLIDES.md` (deprecated).
 3. Run `python3 "$PLUGIN/tools/deckparse.py" status .`. If a slide you are about to modify is `missing` or `stale`, tell the user to run `/uw-slides:generate-slides` first: visuals added to out-of-date pass-1 HTML would be out of date too. `locked` slides are fine (you only read `content/`).
-4. For each slide listed in `VISUALS.md` under `## Per-slide additions`:
+4. For each slide listed in `VISUALS.md` under `## Per-slide additions` (all of them, including entries added since the last run):
    - If the entry says "No additions" — skip. Do not copy the file.
-   - Otherwise — read `content/<slide-id>.html`, apply the specified additions, write the result to `content-with-visuals/<slide-id>.html`.
+   - Otherwise — read `content/<slide-id>.html`, apply the specified additions, write the result to `content-with-visuals/<slide-id>.html`. Only now apply the idempotency check below, per slide: it may skip that one slide, never the whole run.
 5. Slides in `deck.yml` that are not mentioned under `## Per-slide additions` in `VISUALS.md` — skip. They will be served from `content/` by `build-visuals.sh`.
-6. Run `./build-visuals.sh` to produce `build/index-with-visuals.html`.
+6. **Reconcile before reporting.** Every entry ID from step 1 must appear in your report with a disposition: applied, skipped (no additions), skipped (already applied), out of date, conflict, or skipped with a reason (for example an ID that is not in `deck.yml`). If any entry has no disposition, you skipped it by mistake: go back and handle it.
+7. Run `./build-visuals.sh` to produce `build/index-with-visuals.html`.
 
 To place a visual in free space, read the slide's brief (`slides/<id>.md`) and its `data-layout`: `references/layouts.md` describes each layout's regions (for example `bullets` leaves the right side open). The brief's talking points and notes are never rendered, so a visual must not restate them.
 
 ## Idempotency
 
-Before writing to `content-with-visuals/<slide-id>.html`, check whether the file already exists and already contains a `data-visuals-applied` marker on the root `<section>` element. If it does, skip that slide and report "already applied" — do not add the visual elements a second time.
+This check is made **per slide, after** the work list from `VISUALS.md` has been built (Behavior steps 1-4). A slide that is already applied does not mean the others are: a re-run exists precisely to pick up entries added since last time. Before writing to `content-with-visuals/<slide-id>.html`, check whether the file already exists and already contains a `data-visuals-applied` marker on the root `<section>` element. If it does, skip that slide and report "already applied" — do not add the visual elements a second time.
 
 When writing a modified fragment, add `data-visuals-applied="true"` to the root `<section>` element so subsequent runs can detect it.
 

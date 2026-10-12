@@ -37,6 +37,8 @@ Run from inside the presentation directory. In the commands below, `$PLUGIN` is 
 
 ## Procedure
 
+**Start fresh on every invocation.** Briefs, `deck.yml` and `content/` change between runs: the user adds briefs, edits wording and hand-edits HTML. Re-read them from disk every time this skill runs, even if you read them earlier in the same conversation, and never decide what to generate from memory of a previous run. Step 1 gives the current state of every slide.
+
 ### 1. Get the state of every slide
 
 ```bash
