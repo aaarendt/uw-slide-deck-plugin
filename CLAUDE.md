@@ -15,6 +15,7 @@ uw-slides-plugin/
 ├── .claude-plugin/          # Plugin metadata (plugin.json, marketplace.json)
 ├── skills/                  # Claude Code skill definitions
 │   ├── new-deck/SKILL.md
+│   ├── plan-deck/SKILL.md
 │   ├── generate-slides/SKILL.md
 │   ├── accessibility-check/SKILL.md
 │   ├── apply-visuals/SKILL.md
@@ -70,7 +71,7 @@ The `section[data-slide="..."]` scoping is critical — it prevents cascade conf
 
 ## Two-Pass Workflow
 
-**Pass 1 (content):** `deck.yml` + `slides/<id>.md` briefs → `/uw-slides:generate-slides` → `content/*.html` fragments → `build.sh` → `build/index.html`
+**Pass 1 (content):** topic → `/uw-slides:plan-deck` (approval gate) → `deck.yml` + `slides/<id>.md` briefs → `/uw-slides:generate-slides` → `content/*.html` fragments → `build.sh` → `build/index.html`
 
 **Pass 2 (visuals):** VISUALS.md → `/uw-slides:apply-visuals` → `content-with-visuals/*.html` → `build-visuals.sh` → `build/index-with-visuals.html`
 
@@ -109,6 +110,7 @@ python3 tools/deckparse.py status <deck-dir>   # missing / stale / untracked / f
 | Skill | Purpose |
 |-------|---------|
 | `/uw-slides:new-deck <name>` | Scaffold a new presentation directory |
+| `/uw-slides:plan-deck` | Plan the deck (objectives, layouts, slot content) into `deck.yml` + briefs; stops at an approval gate before any HTML; also re-plans |
 | `/uw-slides:generate-slides` | Generate `content/*.html` from the briefs (skips locked slides, asks before overwriting stale ones) |
 | `/uw-slides:apply-visuals` | Run pass 2 — add visuals per VISUALS.md |
 | `/uw-slides:accessibility-check` | WCAG 2.1 AA validation |

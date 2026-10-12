@@ -51,7 +51,7 @@ This skill creates a **fragment-based** presentation:
 ## Workflow
 
 1. **Scaffold:** Run this skill to create directory structure
-2. **Plan:** Edit `deck.yml` (order) and `slides/<id>.md` (one brief per slide)
+2. **Plan:** Run `/uw-slides:plan-deck` (drafts objectives, layouts and briefs, stops for approval), or edit `deck.yml` (order) and `slides/<id>.md` (one brief per slide) by hand
 3. **Create slides:** Run `/uw-slides:generate-slides` (reads the briefs, writes `content/`)
 4. **Build pass 1:** Run `./build.sh` → `build/index.html`
 5. **Rehearse:** Present from `build/index.html`; revise the briefs, regenerate and rebuild as needed
@@ -239,7 +239,7 @@ After scaffolding, tell the user:
 
 Pass 1 — content and structure:
 1. cd <presentation-name>
-2. Edit deck.yml (title, audience, objectives, slide order) and the briefs in slides/
+2. Run /uw-slides:plan-deck to plan the deck from a topic (or edit deck.yml and the briefs in slides/ by hand)
 3. Run /uw-slides:generate-slides to create the slide HTML in content/
 4. Build: ./build.sh
 5. Preview: open build/index.html
