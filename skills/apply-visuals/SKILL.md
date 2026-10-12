@@ -63,16 +63,18 @@ Place the SVG at the location described in the per-slide entry (above a callout,
 
 ### Photographs
 
-Insert an `<img>` tag with the following defaults if no specific file is named:
+**Image paths.** The deck is viewed from `build/index.html`, so every `src` is relative to `build/`: write `../assets/images/<filename>`, never `assets/images/<filename>` (that resolves to `build/assets/...` and shows a broken image; `publish.sh` would also warn "not found"). When `VISUALS.md` names only a file (`team-photo.jpg`), it lives in `assets/images/`; use `../assets/images/team-photo.jpg`. Use `../assets/diagrams/<filename>` for diagram image files. If the entry gives a path (for example `assets/images/team/photo.jpg`), keep its folders and prefix `../`. Do not touch `http(s)` URLs.
+
+If the named file exists in `assets/images/`, insert:
 ```html
-<img src="assets/images/[placeholder]" alt="[description from VISUALS.md]" class="slide-photo">
+<img src="../assets/images/<filename>" alt="[description from VISUALS.md]" class="slide-photo">
 ```
 Add a scoped `.slide-photo` style to position and size the image as described. If a caption is specified, add a `<figcaption>` wrapped in a `<figure>`.
 
-If the specific photo file is not yet available, insert a commented placeholder:
+If no file is named, or the named file is not in `assets/images/` yet, insert a commented placeholder (and list it in the report so the user knows to add the file):
 ```html
 <!-- PHOTO PLACEHOLDER: [description from VISUALS.md] -->
-<!-- Replace src with actual file path when available -->
+<!-- Replace src with ../assets/images/<filename> when the file is available -->
 <img src="" alt="[description]" class="slide-photo" style="display:none">
 ```
 
