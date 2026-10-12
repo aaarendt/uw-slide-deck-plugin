@@ -322,6 +322,8 @@ Parallelizable after WS0: WS1, WS2, WS7 (basic), WS8. After WS2: WS3, WS5, WS6. 
 
 **Tasks:** migration guide for decks built with the old layout (what to run, what changes), extend `extract-to-markdown` to split SLIDES.md into briefs and `deck.yml` (one-shot `migrate-deck` flow that also stamps `.uw-slides.json` and keeps the old `SLIDES.md` in git history only), update `README.md`, `CLAUDE.md`, `templates/AGENTS.md`, and `templates/CLAUDE.md` for the new workflow, update `.claude-plugin/plugin.json` (skills list, version, keywords), write `CHANGELOG.md` (state the SLIDES.md deprecation and the planned removal release), tag release.
 
+**Also in WS11 (docs cleanup):** shrink the "How to use this file (instructions for the slide generator)" preamble in `templates/VISUALS.md` to a one-line pointer. Its rules (modify existing HTML, add only what is listed, first-pass layout wins on conflict, IDs match `deck.yml`) already live in `skills/apply-visuals/SKILL.md`, and a per-deck copy drifts like the old `SLIDES.md` preamble did. Keep the two global styling sections and the per-slide additions entries (deck content). Make `apply-visuals` the stated authority for how pass 2 works.
+
 **SLIDES.md removal milestone (D11):** the legacy fallback ships deprecated in v0.2.0. Remove the fallback, `templates/SLIDES.md` leftovers and legacy wording in a later release (target v0.3.0), after at least one release with the warning and a working migration path. Track it as a separate issue.
 
 **Acceptance:** an old deck migrates with a documented procedure, builds from `deck.yml`, and no longer needs `SLIDES.md`; docs have no stale path/command references and describe SLIDES.md only as legacy.
