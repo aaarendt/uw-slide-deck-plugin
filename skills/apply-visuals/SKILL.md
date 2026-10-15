@@ -23,15 +23,15 @@ Resolve the brand in this order:
 /uw-slides:apply-visuals --brand=cloudbank
 ```
 
-Run from inside the presentation directory, or with the presentation directory as context. Pass 1 must be done first — `content/` must contain the rendered slide fragments (`/uw-slides:generate-slides`, then `./build.sh`). In the commands below, `$PLUGIN` is `$UW_SLIDES_HOME` if set, otherwise `~/.claude/plugins/local/uw-slides`.
+Run from inside the presentation directory, or with the presentation directory as context. Pass 1 must be done first — `content/` must contain the rendered slide fragments (`/uw-slides:generate-slides`, then `./build.sh`). All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put there by `/uw-slides:new-deck`). The recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
 
 ## Behavior
 
 **Start fresh on every invocation.** `VISUALS.md`, `deck.yml` and the files in `content/` and `content-with-visuals/` change between runs: the user adds entries, edits wording and regenerates slides. Re-read them from disk every time this skill runs, even if you read them earlier in the same conversation, and never work from memory of a previous run. Do steps 1-3 before looking at any idempotency marker.
 
 1. Read `VISUALS.md` in full: the global styling rules and **every** `## <slide-id>` entry under `# Per-slide additions`. Write down the complete list of entry IDs; this list, not what was applied last time, defines the work.
-2. Get the authoritative slide list and ordering from `deck.yml` (`python3 "$PLUGIN/tools/deckparse.py" deck deck.yml --format ids`). Legacy decks without `deck.yml` use the `## slide-id` headings of `SLIDES.md` (deprecated).
-3. Run `python3 "$PLUGIN/tools/deckparse.py" status .`. If a slide you are about to modify is `missing` or `stale`, tell the user to run `/uw-slides:generate-slides` first: visuals added to out-of-date pass-1 HTML would be out of date too. `locked` slides are fine (you only read `content/`).
+2. Get the authoritative slide list and ordering from `deck.yml` (`python3 tools/deckparse.py deck deck.yml --format ids`). Legacy decks without `deck.yml` use the `## slide-id` headings of `SLIDES.md` (deprecated).
+3. Run `python3 tools/deckparse.py status .`. If a slide you are about to modify is `missing` or `stale`, tell the user to run `/uw-slides:generate-slides` first: visuals added to out-of-date pass-1 HTML would be out of date too. `locked` slides are fine (you only read `content/`).
 4. For each slide listed in `VISUALS.md` under `## Per-slide additions` (all of them, including entries added since the last run):
    - If the entry says "No additions" — skip. Do not copy the file.
    - Otherwise — read `content/<slide-id>.html`, apply the specified additions, write the result to `content-with-visuals/<slide-id>.html`. Only now apply the idempotency check below, per slide: it may skip that one slide, never the whole run.
@@ -49,7 +49,7 @@ When writing a modified fragment, add `data-visuals-applied="true"` to the root 
 
 **Preserve provenance.** Keep `data-slide`, `data-layout`, `data-brief-hash` and `data-generated-by` on the root `<section>` exactly as they are in `content/<slide-id>.html`. The copy in `content-with-visuals/` keeps the hash of the brief it was derived from.
 
-**Out-of-date copies.** If an existing `content-with-visuals/<slide-id>.html` has a `data-brief-hash` that differs from `python3 "$PLUGIN/tools/deckparse.py" hash slides/<slide-id>.md` (or from `content/<slide-id>.html`), the slide's text changed after pass 2 ran. Report "pass-2 copy is out of date", and re-apply from the current `content/` file only after the user confirms.
+**Out-of-date copies.** If an existing `content-with-visuals/<slide-id>.html` has a `data-brief-hash` that differs from `python3 tools/deckparse.py hash slides/<slide-id>.md` (or from `content/<slide-id>.html`), the slide's text changed after pass 2 ran. Report "pass-2 copy is out of date", and re-apply from the current `content/` file only after the user confirms.
 
 ## How to apply visual elements
 

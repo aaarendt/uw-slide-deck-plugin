@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Plugin Does
 
-This is a Claude Code plugin (`uw-slides`) for creating University of Washington branded HTML presentations. The plugin lives in `~/.claude/plugins/local/uw-slides/` (symlinked) and exposes skills to Claude Code sessions in any project directory.
+This is a Claude Code plugin (`uw-slides`) for creating University of Washington branded HTML presentations. The plugin is typically installed by symlinking the repo to `~/.claude/plugins/local/uw-slides/` and exposes skills to Claude Code sessions in any project directory. Set `UW_SLIDES_HOME` to point to the plugin if it lives elsewhere.
 
 No build system, no dependencies — just bash scripts and HTML fragments. (`publish.sh` and `tools/deckparse.py` additionally need `python3`, standard library only.)
 
@@ -51,7 +51,7 @@ uw-slides-plugin/
     └── slide-schema.md      # deck.yml + slide brief schema, staleness hash, generation rules
 ```
 
-`tools/deckparse.py` (Python 3 stdlib only; tests: `python3 tools/test_deckparse.py`) parses and validates `deck.yml` and briefs, reports per-slide generation state (`status`) and writes the generated `OUTLINE.md` (`outline`). The build scripts use it to read the slide order from `deck.yml` (found via `$UW_SLIDES_HOME`, `<deck>/tools/`, or `~/.claude/plugins/local/uw-slides`; without it they read the plain `slides:` list unvalidated).
+`tools/deckparse.py` (Python 3 stdlib only; tests: `python3 tools/test_deckparse.py`) parses and validates `deck.yml` and briefs, reports per-slide generation state (`status`) and writes the generated `OUTLINE.md` (`outline`). New decks receive a vendored copy at `<deck>/tools/deckparse.py` (written by `/uw-slides:new-deck`); skills run `python3 tools/deckparse.py ...` from the deck directory. The build scripts also search `$UW_SLIDES_HOME/tools/` and `~/.claude/plugins/local/uw-slides/tools/` as fallbacks; without a parser they read the plain `slides:` list unvalidated.
 
 ## Slide Fragment Architecture
 

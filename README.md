@@ -120,7 +120,7 @@ Both scripts accept an optional path argument: `./build.sh /path/to/deck`
 
 By default a slide listed in `deck.yml` with no fragment yet is skipped with a warning, so you can build while the deck is in progress. Use `--strict` (`./build.sh --strict`) to fail instead, for example in CI. An invalid `deck.yml` (such as a duplicate ID) always fails the build, and fragments in `content/` that `deck.yml` doesn't list are reported as warnings.
 
-The scripts read `deck.yml` with `tools/deckparse.py` (needs `python3`), found via `$UW_SLIDES_HOME`, `<deck>/tools/` or `~/.claude/plugins/local/uw-slides`. If it can't be found they still read the plain `slides:` list, without validation.
+The scripts read `deck.yml` with `tools/deckparse.py` (needs `python3`). New decks ship a vendored copy in `<deck>/tools/deckparse.py` (put there by `/uw-slides:new-deck`); the scripts also check `$UW_SLIDES_HOME/tools/` and `~/.claude/plugins/local/uw-slides/tools/` as fallbacks. If none is found they still read the plain `slides:` list, without validation.
 
 ### Two-Pass Workflow
 

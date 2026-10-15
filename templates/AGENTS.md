@@ -1,13 +1,15 @@
 # [Presentation Name]
 
-Built with the `uw-slides` plugin.
+Built with the `uw-slides` plugin (version in `.uw-slides.json`).
 
-Before writing any slide HTML, read:
-- `~/.claude/plugins/local/uw-slides/CLAUDE.md` — architecture, build workflow, skill list
-- `~/.claude/plugins/local/uw-slides/design-systems/[BRAND]-brand/DESIGN.md` — colors, type, spacing, patterns
-- `~/.claude/plugins/local/uw-slides/references/accessibility-requirements.md`
-- `~/.claude/plugins/local/uw-slides/references/slide-schema.md` — `deck.yml` and `slides/<id>.md` format, generation rules
-- `~/.claude/plugins/local/uw-slides/references/layouts.md` — the layout library
+**Plugin location.** The plugin is at `$UW_SLIDES_HOME` if that variable is set; otherwise at `~/.claude/plugins/local/uw-slides`. Before writing any slide HTML, read from the plugin:
+- `<plugin>/CLAUDE.md` — architecture, build workflow, skill list
+- `<plugin>/design-systems/[BRAND]-brand/DESIGN.md` — colors, type, spacing, patterns
+- `<plugin>/references/accessibility-requirements.md`
+- `<plugin>/references/slide-schema.md` — `deck.yml` and `slides/<id>.md` format, generation rules
+- `<plugin>/references/layouts.md` — the layout library
+
+**deckparse.py.** This deck ships a vendored copy at `tools/deckparse.py`. Run all deckparse commands from the deck directory as `python3 tools/deckparse.py ...` (no variable expansion). The recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
 
 ## Source of truth
 

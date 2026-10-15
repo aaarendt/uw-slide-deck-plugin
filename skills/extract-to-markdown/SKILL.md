@@ -13,7 +13,7 @@ Turn an existing HTML slide deck into the planning files of a fragment-based dec
 /uw-slides:extract-to-markdown path/to/index.html                    # deck.yml + slides/*.md (default)
 /uw-slides:extract-to-markdown path/to/index.html --format=slides-md # legacy SLIDES.md outline (deprecated)
 ```
-In the commands below, `$PLUGIN` is `$UW_SLIDES_HOME` if set, otherwise `~/.claude/plugins/local/uw-slides`.
+All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put there by `/uw-slides:new-deck`). The recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
 
 ## What It Does
 1. Parses the HTML deck into slides (each `<section>`, or the deck's own slide element).
@@ -26,7 +26,7 @@ In the commands below, `$PLUGIN` is `$UW_SLIDES_HOME` if set, otherwise `~/.clau
    - `## Notes`: speaker notes or "note to self" text, if present
    - `status: draft`
 3. Writes `deck.yml` with `title` (the document title or first heading) and `slides:` in the original order.
-4. Validates everything: `python3 "$PLUGIN/tools/deckparse.py" deck deck.yml` and `... brief slides/<id>.md` for each brief; fixes any error it reports before finishing.
+4. Validates everything: `python3 tools/deckparse.py deck deck.yml` and `... brief slides/<id>.md` for each brief; fixes any error it reports before finishing.
 5. Reports image references per slide (not written to the briefs: visuals belong in `VISUALS.md`, pass 2).
 
 ## Rules
