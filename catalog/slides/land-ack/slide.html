@@ -1,0 +1,80 @@
+<section data-slide="land-ack"
+         data-layout="catalog"
+         data-catalog="land-ack@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <p class="eyebrow">Land Acknowledgement</p>
+    <blockquote>
+      <p>PLACEHOLDER — Replace this text with the approved UW land
+      acknowledgement before presenting. Contact the UW Office of Minority
+      Affairs &amp; Diversity (OMA&amp;D) or the Office of the President for
+      the current approved language.</p>
+    </blockquote>
+    <p class="note">This slide requires approved institutional wording.</p>
+  </div>
+
+  <style>
+    section[data-slide="land-ack"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text-on-light);
+      --fg-muted: var(--slide-text-muted-on-light);
+      --accent: var(--slide-accent);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+    }
+
+    section[data-slide="land-ack"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--accent);
+    }
+
+    section[data-slide="land-ack"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 8vw, 10rem);
+      gap: var(--space-4);
+    }
+
+    section[data-slide="land-ack"] .eyebrow {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    section[data-slide="land-ack"] blockquote {
+      margin: 0;
+      padding-left: clamp(1.5rem, 3vw, 3rem);
+      border-left: 4px solid var(--accent);
+    }
+
+    section[data-slide="land-ack"] blockquote p {
+      font-family: var(--font-body);
+      font-size: clamp(1.5rem, 2.2vw, 2.125rem);
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--fg);
+      font-style: italic;
+      margin: 0;
+    }
+
+    section[data-slide="land-ack"] .note {
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      color: var(--fg-muted);
+      margin: 0;
+    }
+  </style>
+</section>

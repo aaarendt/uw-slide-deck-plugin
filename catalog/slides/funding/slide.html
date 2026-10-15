@@ -1,0 +1,72 @@
+<section data-slide="funding"
+         data-layout="catalog"
+         data-catalog="funding@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <p class="eyebrow">Acknowledgement</p>
+    <p class="statement">This work was supported by {{agency}}, award {{grant-id}}: {{grant-title}}.</p>
+    <p class="disclaimer">{{disclaimer}}</p>
+  </div>
+
+  <style>
+    section[data-slide="funding"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text-on-light);
+      --fg-muted: var(--slide-text-muted-on-light);
+      --accent: var(--slide-accent);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+    }
+
+    section[data-slide="funding"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--accent);
+    }
+
+    section[data-slide="funding"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 8vw, 10rem);
+      gap: var(--space-5);
+    }
+
+    section[data-slide="funding"] .eyebrow {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    section[data-slide="funding"] .statement {
+      font-family: var(--font-body);
+      font-size: clamp(1.5rem, 2.4vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1.35;
+      text-wrap: balance;
+      color: var(--fg);
+      margin: 0;
+    }
+
+    section[data-slide="funding"] .disclaimer {
+      font-family: var(--font-body);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.5;
+      color: var(--fg-muted);
+      margin: 0;
+      max-width: 60em;
+    }
+  </style>
+</section>

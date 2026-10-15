@@ -1,0 +1,86 @@
+<section data-slide="feedback"
+         data-layout="catalog"
+         data-catalog="feedback@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>{{heading}}</h1>
+    <p class="prompt">{{prompt}}</p>
+    <p class="url-line"><a href="{{url}}" class="survey-link">{{url-label}}</a></p>
+    <p class="url-text">{{url}}</p>
+  </div>
+
+  <style>
+    section[data-slide="feedback"] {
+      --bg: var(--slide-bg-dark);
+      --fg: var(--slide-text-on-dark);
+      --fg-muted: var(--slide-text-muted-on-dark);
+      --accent: var(--slide-accent);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+    }
+
+    section[data-slide="feedback"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--accent);
+    }
+
+    section[data-slide="feedback"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 8vw, 10rem);
+      gap: var(--space-4);
+      text-align: center;
+    }
+
+    section[data-slide="feedback"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 4vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: var(--slide-heading-transform);
+      text-wrap: balance;
+      color: var(--fg);
+      margin: 0;
+    }
+
+    section[data-slide="feedback"] .prompt {
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      line-height: 1.4;
+      color: var(--fg-muted);
+      text-wrap: balance;
+      margin: 0;
+      max-width: 40em;
+    }
+
+    section[data-slide="feedback"] .url-line {
+      margin: 0;
+    }
+
+    section[data-slide="feedback"] .survey-link {
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    section[data-slide="feedback"] .url-text {
+      font-family: var(--font-mono, monospace);
+      font-size: clamp(1rem, 1.4vw, 1.5rem);
+      color: var(--fg-muted);
+      word-break: break-all;
+      margin: 0;
+    }
+  </style>
+</section>

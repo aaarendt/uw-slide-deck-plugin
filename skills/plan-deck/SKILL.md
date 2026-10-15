@@ -19,7 +19,7 @@ deck.yml + slides/*.md            (validated with deckparse.py)
 content/*.html
 ```
 
-Catalog slides (`use: catalog/<id>`) are not planned yet: the catalog and its resolver do not exist. Plan every slide as a layout slide, and treat any slide that already has `use:` as fixed (see Re-plan).
+Catalog slides (`use: catalog/<id>`) are supported. Read `catalog/catalog.yml` before planning and choose catalog slides first when they fit (see step 3). Slides that already have `use:` in a re-plan are left as-is (see Re-plan).
 
 ## Usage
 
@@ -55,6 +55,7 @@ Read these from disk on every invocation (never rely on an earlier read in the c
 
 - `references/slide-schema.md`: deck and brief fields, YAML subset, body sections, generation rules
 - `references/layouts.md`: catalogue (section 1), per-layout limits and example briefs (section 4), choosing a layout and variety rules (section 5), `custom` rules (section 6)
+- `catalog/catalog.yml`: catalog index (if present at `$UW_SLIDES_HOME/catalog/catalog.yml` or the plugin default); read each `catalog/slides/<id>/slide.md` for the slides you are considering to see its params. **Brand filter:** skip any slide whose `brand:` field is neither `any` nor the deck's brand (from the `.brand` file in the deck root; default `uw`).
 - the source material the user named, if any
 - for a re-plan: `deck.yml`, every `slides/*.md`, and the `status` output (below)
 
@@ -83,7 +84,12 @@ Decide, for each slide, its ID, the message, the objective it serves, its layout
 
 **Structure.** First slide `title`, last slide `closing`. Open the content with why the topic matters to this audience, end with the recap. Every objective is covered by at least one slide, and every content slide serves an objective (`objective:`; the title, dividers and closing may have none).
 
-**Layouts.** Choose with `references/layouts.md`, section 5, and apply all its variety rules across the whole deck (no more than two identical layouts in a row, `bullets` at most a third of the slides, a number becomes `stat-callout`, audience action becomes `exercise`, dividers only in decks of 8+ slides, at most two `quote`s, `custom` at most one slide in six). Never write `layout: auto`: the planner resolves it. Use `layout: custom` last, only when section 6 allows it, with a one-sentence `layout_intent`. Fill `layout_rationale` for every slide in one short sentence (why this layout fits this message).
+**Catalog slides.** Before choosing layouts, check `catalog/catalog.yml` for slides that match a structural role in the deck (title, land acknowledgement, funding, agenda, feedback, closing). Use a catalog slide when:
+- the slide's purpose matches the catalog description exactly, AND
+- the catalog slide's `status` is `ready`.
+Write `use: catalog/<id>` in the brief front matter (no `layout:` — catalog slides bring their own), and fill `params:` from the catalog slide's `slide.md` (omit params you want to use their defaults). `status: draft` catalog slides may be used but flag them in the VERIFY list. Catalog slides that are verbatim (kind: verbatim) need no params; parameterized ones need the params the deck author should supply.
+
+**Layouts.** For non-catalog slides, choose with `references/layouts.md`, section 5, and apply all its variety rules across the whole deck (no more than two identical layouts in a row, `bullets` at most a third of the slides, a number becomes `stat-callout`, audience action becomes `exercise`, dividers only in decks of 8+ slides, at most two `quote`s, `custom` at most one slide in six). Never write `layout: auto`: the planner resolves it. Use `layout: custom` last, only when section 6 allows it, with a one-sentence `layout_intent`. Fill `layout_rationale` for every slide in one short sentence (why this layout fits this message).
 
 **IDs.** Lowercase kebab-case, descriptive, no number prefixes (the order lives in `deck.yml`): `title`, `why-cloud`, `launch-vm`, `closing`. Unique, and equal to the file name.
 
@@ -93,7 +99,8 @@ Check the plan against these rules before writing anything. Fix violations; do n
 
 For each slide write the real content, not placeholders:
 
-- **`# Key message`**: the one thing shown large. It must fit the layout's limit (`layouts.md`, section 4).
+- **Catalog slides** (`use: catalog/<id>`): no `# Key message` or slots — just front matter with `use:` and `params:` (omit params you want defaults for). Write a brief description in `## Notes` so a reviewer knows what the slide shows.
+- **`# Key message`** (layout slides): the one thing shown large. It must fit the layout's limit (`layouts.md`, section 4).
 - **Required slots** (the layout cannot render without them): `bullets` needs `items`; `two-column` needs `main` and `side`; `comparison` needs `left` and `right` (each with a `###` heading); `stat-callout` needs `stat`; `quote` needs `attribution`; `exercise` needs `time` and `steps`; `code` needs `code`; `diagram` needs `nodes`. Fill the optional slots when they help (`support`, `caption`, `deliverable`, `subtitle`, `action`) and leave them out otherwise. `title` reads `presenter` and `date` from `deck.yml`, so set those there rather than as slots.
 - **Slot format**: write each slot exactly as in the example briefs of `layouts.md`, section 4. Lists are plain `- text` lines (`steps` may be `1.`), with no bold, no sub-bullets and one line per item. A `nodes` item is `- Label: short description` on one line, with a label of at most 2 words and a description of at most 6, and 3-4 nodes in total. A `diagram` is a sequence; a mapping or translation between two things ("what you know → the cloud") is a `comparison` (two columns, a heading each) or, for more rows than it holds, `custom`.
 - **Respect every limit** in the layout's section: words per heading, items per list, characters in a stat, lines of code. If content does not fit, shorten it or split the slide. Never rely on the generator to cut text.
@@ -148,7 +155,11 @@ Then ask the user (with the ask-user tool when available) to **approve**, **requ
 
 - Run `./outline.sh` to refresh the generated `OUTLINE.md` (read-only; never edit it).
 - Leave `status: draft` on every brief (`review` and `done` are for the people working on the slides).
-- Tell the user the next step: `/uw-slides:generate-slides`, then `./build.sh`. Do not run them.
+- Tell the user the next steps:
+  1. If the deck has catalog slides: `python3 tools/resolve-catalog.py resolve .` (copies catalog fragments to `content/`)
+  2. `/uw-slides:generate-slides` (generates layout slides; skips catalog ones)
+  3. `./build.sh`
+  Do not run them.
 
 ## Re-plan
 
@@ -162,7 +173,7 @@ Used when `deck.yml` already holds a plan the user wants to change: `replan "<ch
    | `locked: true` | Its HTML is hand-edited. Never change its brief content, layout or ID; never remove, merge or split it. It may be moved. |
    | `status: done` | Finished. Content, layout and ID are fixed; removing, merging or splitting it needs the user's explicit confirmation naming the slide. |
    | `owner:` set | Someone else's slide unless the user says they are that person. Changing or removing it needs explicit confirmation naming the slide and its owner. |
-   | `use:` set | A catalog slide. Leave it as it is; it may be moved. |
+   | `use:` set | A catalog slide. Leave its `use:`, `params:` and `id` as-is; it may be moved. To replace it with a different catalog slide or a layout slide, first eject it (`python3 tools/resolve-catalog.py eject . <id>`) and then edit it. |
    | otherwise | Free to change. |
 
    `status: review` slides are free, but list them in the summary because someone is reviewing them.
