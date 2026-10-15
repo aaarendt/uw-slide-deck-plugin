@@ -47,7 +47,10 @@ uw-slides-plugin/
 └── references/
     ├── accessibility-requirements.md
     ├── layouts.md           # Layout library: slots, limits, use/avoid, variety rules, custom
+    ├── accessibility-requirements.md
+    ├── layouts.md           # Layout library: slots, limits, use/avoid, variety rules, custom
     ├── markdown-schema.md   # Legacy front matter (superseded)
+    ├── migration-guide.md   # How to migrate a SLIDES.md deck to deck.yml + slides/
     └── slide-schema.md      # deck.yml + slide brief schema, staleness hash, generation rules
 ```
 
@@ -81,7 +84,7 @@ Pass 2 only modifies slides listed in VISUALS.md under `## Per-slide additions`.
 
 `deck.yml` holds the slide order (the `slides:` list) and deck metadata; `slides/<id>.md` holds each slide's brief. The build scripts concatenate `content/<id>.html` in `deck.yml` order, so moving a line reorders the deck. `content/*.html` is generated (it records `data-brief-hash`) and is never hand-edited unless the brief has `locked: true`. `OUTLINE.md` is a generated read-only overview (`./outline.sh`).
 
-Legacy decks that only have `SLIDES.md` still build, with a deprecation warning (removal targeted for v0.3.0). Migration mapping: `references/slide-schema.md`, section 6.
+Legacy decks that only have `SLIDES.md` still build, with a deprecation warning (removal targeted for v0.3.0). Migration: `references/migration-guide.md`; schema mapping: `references/slide-schema.md`, section 6.
 
 Key authoring rules (full list in `references/slide-schema.md`, section 5; enforced by skill behavior, not code):
 - **Key message** = the one thing shown large on the slide
@@ -115,7 +118,8 @@ python3 tools/deckparse.py status <deck-dir>   # missing / stale / untracked / f
 | `/uw-slides:apply-visuals` | Run pass 2 — add visuals per VISUALS.md |
 | `/uw-slides:accessibility-check` | WCAG 2.1 AA validation |
 | `/uw-slides:design-review` | UW brand compliance check |
-| `/uw-slides:extract-to-markdown` | Convert an existing HTML deck → `deck.yml` + `slides/*.md` briefs |
+| `/uw-slides:extract-to-markdown` | Convert an existing HTML deck → `deck.yml` + `slides/*.md` briefs; `--migrate` migrates a legacy SLIDES.md deck in place |
+| `/uw-slides:update-deck` | Diff and update managed files (build scripts, shared templates, `tools/deckparse.py`) against the current plugin; never touches `content/`, `slides/`, or `assets/` |
 
 ## Design System
 
