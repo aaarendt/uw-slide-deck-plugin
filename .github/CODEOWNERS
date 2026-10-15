@@ -1,0 +1,24 @@
+# Plugin code owners.
+# GitHub will request review from these owners on every pull request
+# that touches the matched paths.
+#
+# Syntax: <path-pattern>  <owner> [<owner> ...]
+# Owners are GitHub usernames (@user) or team slugs (@org/team).
+
+# Default: everything not matched below
+*                                   @aaarendt
+
+# Skills are owned by the plugin maintainers
+skills/                             @aaarendt
+
+# Design systems need sign-off from brand-aware owners
+design-systems/                     @aaarendt
+
+# Tools (parser, linter, resolver) need review for any logic change
+tools/                              @aaarendt
+
+# Schema and layout references are high-impact; require maintainer sign-off
+references/                         @aaarendt
+
+# Templates are copied into every new deck; review changes carefully
+templates/                          @aaarendt

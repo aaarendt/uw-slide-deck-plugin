@@ -1,0 +1,31 @@
+# Deck CODEOWNERS
+#
+# GitHub requests review from these owners for pull requests that touch
+# the matched paths. Update this file after running /uw-slides:plan-deck
+# to reflect who owns which slides.
+#
+# Pattern: each slides/<id>.md maps to the person responsible for that slide's
+# content — the "owner:" field in the brief's front matter. GitHub CODEOWNERS
+# uses the last matching rule, so slide-specific lines below override the
+# default.
+#
+# Syntax: <path-pattern>  @github-username
+#
+# Example after planning a deck with four owners:
+#
+#   slides/                       @project-lead        # fallback for unlisted slides
+#   slides/01-title.md            @project-lead
+#   slides/02-land-ack.md         @project-lead
+#   slides/03-overview.md         @presenter-a
+#   slides/04-methods.md          @presenter-b
+#   slides/05-results.md          @presenter-b
+#   slides/06-discussion.md       @presenter-a
+#   slides/07-next-steps.md       @project-lead
+#   slides/08-closing.md          @project-lead
+#
+# Generated fragments (content/) are not listed: they are owned by whoever
+# owns the brief they were generated from, and reviews are done through the
+# brief, not the HTML.
+
+# Default: all slides go to the deck owner until specific owners are assigned
+slides/                             @change-me

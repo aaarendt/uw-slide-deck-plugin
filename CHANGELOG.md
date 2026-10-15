@@ -24,6 +24,12 @@ This release completes the restructuring started in v0.1.x (WS0–WS5). Breaking
 - **WS3 — Layout library** (12 layouts in `templates/layouts/*.html`, `references/layouts.md`)
 - **WS4 — plan-deck skill** (`skills/plan-deck/SKILL.md`)
 - **WS5 — Generation and deck.yml build** (`skills/generate-slides/SKILL.md`, updated build scripts, `outline.sh`, `OUTLINE.md` generation)
+- **WS6 — Slide catalog and resolver** (`catalog/catalog.yml`, 6 seeded slides, `tools/resolve-catalog.py`, `catalog/CURATION.md`)
+- **WS7 — Lint and CI** (`tools/lint.py`, `templates/lint.sh`, `templates/status.sh`, `templates/.github/workflows/deck.yml`)
+- **WS9 — Collaboration process**
+  - `CONTRIBUTING.md`: prerequisites, clone-to-preview guide, roles (brief vs HTML), branch/PR workflow, how to lock a slide, regenerating on a branch, model/prompt context in commits, license and attribution notes for Encode Sans (SIL OFL), Open Sans (Apache 2.0), UW brand assets, and deck images.
+  - `.github/CODEOWNERS` and `.github/pull_request_template.md` for the plugin repo.
+  - `templates/.github/CODEOWNERS` (pattern for slide ownership) and `templates/.github/pull_request_template.md` scaffolded into new decks by `new-deck`.
 
 ### Deprecated
 - **`SLIDES.md`** as a slide-ordering source. Decks that only have `SLIDES.md` still build but print a deprecation warning pointing to the migration guide (`references/slide-schema.md`, section 6). Scheduled removal: v0.3.0.

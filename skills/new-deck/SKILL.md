@@ -277,6 +277,19 @@ Copy `<PLUGIN>/templates/AGENTS.md`, then replace:
 ### 10. Create CLAUDE.md
 Copy `<PLUGIN>/templates/CLAUDE.md` verbatim (no substitutions needed).
 
+### 11. Scaffold .github/ collaboration files
+
+Copy these two files from the plugin templates to the deck:
+
+- `<PLUGIN>/templates/.github/CODEOWNERS` → `.github/CODEOWNERS`
+- `<PLUGIN>/templates/.github/pull_request_template.md` → `.github/pull_request_template.md`
+
+Also copy the CI workflow if not already present:
+
+- `<PLUGIN>/templates/.github/workflows/deck.yml` → `.github/workflows/deck.yml`
+
+Tell the user to update `.github/CODEOWNERS` with real GitHub usernames once the slide plan is agreed (the `owner:` field in each brief is the reference). These files should be git-tracked.
+
 ## Success Message
 
 After scaffolding, tell the user:
