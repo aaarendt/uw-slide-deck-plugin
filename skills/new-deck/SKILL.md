@@ -195,18 +195,20 @@ For `--brand=cloudbank`: **skip font copy.** CloudBank uses Nunito and Open Sans
 - `assets/images/`
 - `assets/diagrams/`
 
-### 4. Vendor tools/deckparse.py and tools/lint.py
+### 4. Vendor tools/deckparse.py, tools/lint.py and tools/resolve-catalog.py
 
 Copy from the plugin into the deck's `tools/` directory:
 - `<PLUGIN>/tools/deckparse.py` → `tools/deckparse.py`
 - `<PLUGIN>/tools/lint.py` → `tools/lint.py`
+- `<PLUGIN>/tools/resolve-catalog.py` → `tools/resolve-catalog.py`
 
-This gives the deck self-contained copies of the parser and linter. Skills run `python3 tools/deckparse.py ...` and `python3 tools/lint.py ...` as simple, permission-friendly commands (no variable expansion, no path lookup at runtime).
+This gives the deck self-contained copies of the parser, linter and catalog resolver. Skills run these as simple, permission-friendly commands (no variable expansion, no path lookup at runtime).
 
 Recommended allow rules (add to the deck's `.claude/settings.json` or the project settings):
 ```
 Bash(python3 tools/deckparse.py *)
 Bash(python3 tools/lint.py *)
+Bash(python3 tools/resolve-catalog.py *)
 ```
 
 These files should be git-tracked so the deck is fully self-contained.

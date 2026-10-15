@@ -9,6 +9,12 @@ description: Generate content/<id>.html slide fragments from slides/<id>.md brie
 
 Turn the briefs in `slides/<id>.md` (ordered by `deck.yml`) into HTML fragments in `content/<id>.html`. The brief is the source of truth; the HTML is a regenerable artifact that records which version of the brief it came from.
 
+This skill handles **layout slides** only. Catalog slides (`use: catalog/<id>`) are resolved by the catalog resolver and must be run first:
+
+```bash
+python3 tools/resolve-catalog.py resolve .
+```
+
 This skill replaces the old "read SLIDES.md and write slides by conversation" step. Legacy decks that only have `SLIDES.md` are not handled here: migrate them first (mapping in `references/slide-schema.md`, section 6), or keep writing fragments by hand.
 
 ## Brand Resolution
@@ -96,7 +102,7 @@ Then run `/uw-slides:design-review` and `/uw-slides:accessibility-check`, and re
 ↻ Regenerated: 03-costs (stale, confirmed)
 ⏭ Fresh:       01-title
 🔒 Locked:      04-diagram (hand-edited; not touched)
-📦 Catalog:     06-intro (catalog resolver)
+📦 Catalog:     06-intro (use: catalog/uw-title — run `python3 tools/resolve-catalog.py resolve .`)
 ⚠ Skipped:     07-recap (slides/07-recap.md:12: unknown field 'colour')
 Layout choices written back to briefs: 02-why-cloud (auto -> bullets)
 ```
