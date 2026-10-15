@@ -9,12 +9,18 @@ description: Validate WCAG 2.1 Level AA compliance. Checks contrast ratios, font
 Validate WCAG 2.1 Level AA compliance for slide decks.
 
 ## What Gets Checked
-1. **Color Contrast** — 4.5:1 for text, 3:1 for large text
-2. **Font Sizes** — Minimum 24px
-3. **Alt Text** — All images must have descriptions
-4. **ARIA Labels** — All slides have aria-label
-5. **Semantic HTML** — Proper heading hierarchy
-6. **Keyboard Navigation** — Arrow keys functional
+
+**Deterministic checks (run `./lint.sh` first — these are already covered):**
+- Alt text on all `<img>` elements (`lint.py` checks `img-missing-alt`)
+- `aria-label` on every `<section>` (`lint.py` checks `missing-aria-label`)
+- Font-size floor of 1.5rem for body text, 1rem absolute minimum (`lint.py` checks `font-size-too-small` / `font-size-below-minimum`)
+
+**Judgment checks (unique to this skill — run after lint passes):**
+1. **Color Contrast** — 4.5:1 for normal text, 3:1 for large text; verify token pairings in the slides match approved brand combinations
+2. **Semantic HTML** — Proper heading hierarchy (`<h1>` for key message, `<h2>`/`<h3>` for sub-sections); no skipped heading levels
+3. **Keyboard Navigation** — Arrow keys navigate slides (via `shared/footer.html`); no keyboard traps
+4. **Focus Management** — Visible focus indicator present; interactive elements reachable
+5. **Reading Order** — DOM order matches visual order for screen readers
 
 ## Slides
 
