@@ -23,15 +23,5 @@
         "reveal-js",
         "catalog",
         "migration"
-    ],
-    "skills": [
-        "new-deck",
-        "plan-deck",
-        "generate-slides",
-        "apply-visuals",
-        "accessibility-check",
-        "design-review",
-        "extract-to-markdown",
-        "update-deck"
     ]
 }
