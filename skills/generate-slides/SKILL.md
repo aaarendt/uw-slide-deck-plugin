@@ -25,7 +25,7 @@ Resolve the brand in this order:
 /uw-slides:generate-slides <id> [<id>...]  # only these slides
 ```
 
-Run from inside the presentation directory. In the commands below, `$PLUGIN` is `$UW_SLIDES_HOME` if set, otherwise `~/.claude/plugins/local/uw-slides`.
+Run from inside the presentation directory. All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put there by `/uw-slides:new-deck`). The recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
 
 ## Read first
 
@@ -42,7 +42,7 @@ Run from inside the presentation directory. In the commands below, `$PLUGIN` is 
 ### 1. Get the state of every slide
 
 ```bash
-python3 "$PLUGIN/tools/deckparse.py" status .
+python3 tools/deckparse.py status .
 ```
 
 It prints one line per slide in `deck.yml` order. Act on the state, never on guesses:
@@ -63,7 +63,7 @@ If the user named slide IDs, restrict to those. If `deck.yml` itself does not pa
 
 For every slide you are going to write:
 
-1. **Read the brief**: `python3 "$PLUGIN/tools/deckparse.py" brief slides/<id>.md` (JSON: front matter and body).
+1. **Read the brief**: `python3 tools/deckparse.py brief slides/<id>.md` (JSON: front matter and body).
 2. **Resolve the layout.**
    - A layout ID: it must be a file in `templates/layouts/` (`layouts.md`, section 1). Unknown ID: stop and report.
    - `auto`: choose with `layouts.md`, section 5, **write the chosen ID and a `layout_rationale` back into the brief's front matter**, and only then continue (the hash covers `layout`).
@@ -78,7 +78,7 @@ For every slide you are going to write:
    - `aria-label` is `Slide N: <title, else key message>`, where N is the position in `deck.yml`.
 6. **Stamp provenance** on the root `<section>`, after any write-back to the brief:
    - `data-layout="<layout id or custom>"`
-   - `data-brief-hash="<output of python3 "$PLUGIN/tools/deckparse.py" hash slides/<id>.md>"`
+   - `data-brief-hash="<output of python3 tools/deckparse.py hash slides/<id>.md>"`
    - `data-generated-by="uw-slides@<plugin version>"` (version from `$PLUGIN/.claude-plugin/plugin.json`)
 7. **Write** `content/<id>.html` (create `content/` if needed).
 

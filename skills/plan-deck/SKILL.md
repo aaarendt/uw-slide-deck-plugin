@@ -41,12 +41,12 @@ Options (all optional; ask only for what is missing and essential):
 
 Run from inside a presentation directory created by `/uw-slides:new-deck` (it must contain `deck.yml` and `slides/`). If there is no `deck.yml`, stop and tell the user to run `/uw-slides:new-deck <name>` first. The brand comes from the `.brand` file; layouts are brand-neutral, so planning does not depend on it.
 
-## Setup: locate the plugin once
+## Setup
 
 Do this once per invocation, before anything else.
 
-1. Find the plugin directory: the value of `UW_SLIDES_HOME` (check with `printenv UW_SLIDES_HOME`), otherwise `~/.claude/plugins/local/uw-slides`. Confirm it by reading `<plugin>/tools/deckparse.py` with the file-read tool.
-2. The commands below are written for the fallback location. If the plugin is elsewhere, substitute that path **literally** (expand it; do not introduce a variable). Every command must be a single command of the exact form shown: no leading `VAR=...` assignment, no `cd`, no `&&` chain, no loop, no `${...}` expansion. Run it from the deck directory with deck-relative arguments, one `deckparse.py` call per command. (Claude Code cannot check a braced variable expansion, and an allow rule such as `Bash(python3 ~/.claude/plugins/local/uw-slides/tools/deckparse.py *)` only matches commands of that shape.)
+1. Confirm `tools/deckparse.py` exists in the deck directory (put there by `/uw-slides:new-deck`). If it is missing, ask the user to run `/uw-slides:new-deck` first, or copy it from `$UW_SLIDES_HOME/tools/deckparse.py` (default: `~/.claude/plugins/local/uw-slides/tools/deckparse.py`).
+2. Every `deckparse.py` command below is a single, literal command of this exact form — no leading `VAR=...` assignment, no `cd`, no `&&` chain, no loop, no `${...}` expansion. Run from the deck directory; the recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
 3. Read and write files with the file tools, not shell redirection.
 
 ## Read first
@@ -117,9 +117,9 @@ Use the file tools.
 Run these, one command per call, from the deck directory:
 
 ```bash
-python3 ~/.claude/plugins/local/uw-slides/tools/deckparse.py deck deck.yml
-python3 ~/.claude/plugins/local/uw-slides/tools/deckparse.py brief slides/<id>.md
-python3 ~/.claude/plugins/local/uw-slides/tools/deckparse.py status .
+python3 tools/deckparse.py deck deck.yml
+python3 tools/deckparse.py brief slides/<id>.md
+python3 tools/deckparse.py status .
 ```
 
 Run `brief` once for each brief you wrote or changed. `status` must list every slide as `missing` (fresh plan) or `stale`/`fresh`/`locked`/`catalog`, none as `no-brief` or `invalid`, and no `orphan-brief`. Fix every `file:line: message` error in the file it names and re-run until clean.
@@ -137,7 +137,7 @@ Then check what the parser does not (cross-file rules belong to the lint, which 
 Show, and then **stop**:
 
 1. The assumptions and the objectives.
-2. The outline, from `python3 ~/.claude/plugins/local/uw-slides/tools/deckparse.py outline .`: print its table (ID, key message, layout, minutes, owner, status, objectives), the planned-minutes line and the objective coverage.
+2. The outline, from `python3 tools/deckparse.py outline .`: print its table (ID, key message, layout, minutes, owner, status, objectives), the planned-minutes line and the objective coverage.
 3. For each slide, the filled slot content next to its layout (`stat`, `items`, `steps`, ...): one line or a short list per slide. Talking points and notes stay in the briefs.
 4. The `VERIFY:` list: every claim a subject expert should check, with its slide ID.
 5. Any slide you could not make fit a limit, and any decision you want the user to take.

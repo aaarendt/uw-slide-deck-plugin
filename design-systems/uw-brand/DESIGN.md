@@ -773,7 +773,7 @@ h1 {
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 ```
 
-Note: Encode Sans must be loaded locally (45 font files available in the plugin directory at `~/.claude/plugins/local/uw-slides/fonts/`).
+Note: Encode Sans must be loaded locally (45 font files included in the plugin under `design-systems/uw-brand/fonts/`, copied to `assets/fonts/` in each deck by `/uw-slides:new-deck`).
 
 **Local Loading:**
 ```css
@@ -826,7 +826,7 @@ Note: Encode Sans must be loaded locally (45 font files available in the plugin 
 /* ... (repeat for all weights 100-900) */
 ```
 
-**Note:** All 45 Encode Sans font files (5 width families × 9 weights) are included in the plugin at `~/.claude/plugins/local/uw-slides/fonts/`. Each width family has all weights from 100 (Thin) to 900 (Black).
+**Note:** All 45 Encode Sans font files (5 width families × 9 weights) are included in the plugin under `design-systems/uw-brand/fonts/` and copied to `assets/fonts/` in each deck. Each width family has all weights from 100 (Thin) to 900 (Black).
 
 ## 10. Common Slide Layout Patterns
 

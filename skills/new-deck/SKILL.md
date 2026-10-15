@@ -155,27 +155,33 @@ Every slide must meet WCAG 2.1 Level AA:
 
 When this skill is invoked, create the following files:
 
+### 0. Find the plugin directory
+
+Do this once before copying any files.
+
+Check `printenv UW_SLIDES_HOME`. If set and the directory exists, use it. Otherwise use `~/.claude/plugins/local/uw-slides` (the documented default). Confirm by reading `<plugin>/tools/deckparse.py` with the file-read tool. Store this path as `PLUGIN` for the steps below.
+
 ### 1. Copy shared templates
 Brand-agnostic files come from the root templates directory; only `header.html` is brand-specific.
 
 Brand-agnostic (same for all brands):
-- `shared/footer.html` from `~/.claude/plugins/local/uw-slides/templates/shared/footer.html`
-- `build.sh` from `~/.claude/plugins/local/uw-slides/templates/build.sh`
-- `build-visuals.sh` from `~/.claude/plugins/local/uw-slides/templates/build-visuals.sh`
-- `outline.sh` from `~/.claude/plugins/local/uw-slides/templates/outline.sh`
-- `publish.sh` from `~/.claude/plugins/local/uw-slides/templates/publish.sh`
-- `VISUALS.md` from `~/.claude/plugins/local/uw-slides/templates/VISUALS.md`
+- `shared/footer.html` from `<PLUGIN>/templates/shared/footer.html`
+- `build.sh` from `<PLUGIN>/templates/build.sh`
+- `build-visuals.sh` from `<PLUGIN>/templates/build-visuals.sh`
+- `outline.sh` from `<PLUGIN>/templates/outline.sh`
+- `publish.sh` from `<PLUGIN>/templates/publish.sh`
+- `VISUALS.md` from `<PLUGIN>/templates/VISUALS.md`
 
 Do **not** create a `SLIDES.md`: `deck.yml` and `slides/` replace it. Keep the scripts executable.
 
 Brand-specific (use the `--brand` value, default: `uw`):
-- `shared/header.html` from `~/.claude/plugins/local/uw-slides/design-systems/${brand}-brand/shared/header.html`
+- `shared/header.html` from `<PLUGIN>/design-systems/${brand}-brand/shared/header.html`
 
 Write a `.brand` file to the presentation root containing just the brand name and a trailing newline (e.g. `uw\n` or `cloudbank\n`). This file is read by all other skills to auto-detect the brand without requiring a `--brand=` flag on every invocation. It should be git-tracked.
 
 ### 2. Copy brand fonts (UW only)
 For `--brand=uw`: copy all Encode Sans fonts from plugin to presentation:
-- Copy `~/.claude/plugins/local/uw-slides/design-systems/uw-brand/fonts/*` to `assets/fonts/`
+- Copy `<PLUGIN>/design-systems/uw-brand/fonts/*` to `assets/fonts/`
 - This includes 45 .ttf files (~9MB total) for all Encode Sans variants
 - Ensures presentations are self-contained and portable
 
@@ -187,10 +193,16 @@ For `--brand=cloudbank`: **skip font copy.** CloudBank uses Nunito and Open Sans
 - `assets/images/`
 - `assets/diagrams/`
 
-### 4. Create deck.yml and the starter briefs
-Copy `~/.claude/plugins/local/uw-slides/templates/deck.yml` to `deck.yml` and set `title:` to the presentation name. Keep its `slides:` list as `title` then `example-slide`, and create the matching briefs in `slides/`:
+### 4. Vendor tools/deckparse.py
 
-- `slides/example-slide.md`: copy `~/.claude/plugins/local/uw-slides/templates/slides/_example.md` (its `id` is already `example-slide`).
+Copy `<PLUGIN>/tools/deckparse.py` to `tools/deckparse.py` in the deck directory. This gives the deck a self-contained copy of the parser and lets every skill run `python3 tools/deckparse.py ...` as a simple, permission-friendly command (no variable expansion, no path lookup at runtime).
+
+Add `tools/deckparse.py` to the deck's `.gitignore` only if the user explicitly asks for it; by default it should be tracked so the deck is fully self-contained.
+
+### 5. Create deck.yml and the starter briefs
+Copy `<PLUGIN>/templates/deck.yml` to `deck.yml` and set `title:` to the presentation name. Keep its `slides:` list as `title` then `example-slide`, and create the matching briefs in `slides/`:
+
+- `slides/example-slide.md`: copy `<PLUGIN>/templates/slides/_example.md` (its `id` is already `example-slide`).
 - `slides/title.md`:
 
 ```markdown
@@ -207,14 +219,35 @@ status: draft
 Subtitle
 ```
 
-Validate: `python3 ~/.claude/plugins/local/uw-slides/tools/deckparse.py deck deck.yml` must succeed. Do not create `content/` fragments here: `/uw-slides:generate-slides` writes them.
+Validate — run from the deck directory, one call per command:
 
-### 5. Create README.md
-Copy `~/.claude/plugins/local/uw-slides/templates/README.md`, then replace:
+```
+python3 tools/deckparse.py deck deck.yml
+```
+
+This is the recommended allow rule: `Bash(python3 tools/deckparse.py *)`. Do not create `content/` fragments here: `/uw-slides:generate-slides` writes them.
+
+### 6. Write .uw-slides.json
+
+Write this file to the deck root:
+
+```json
+{
+  "plugin_version": "<version from <PLUGIN>/.claude-plugin/plugin.json>",
+  "brand": "<brand>",
+  "scaffolded_at": "<ISO 8601 date, e.g. 2026-10-15>",
+  "catalog": null
+}
+```
+
+This stamps the deck with the plugin version it was built with. `/uw-slides:update-deck` uses it to detect drift.
+
+### 7. Create README.md
+Copy `<PLUGIN>/templates/README.md`, then replace:
 - `[Presentation Name]` with the actual presentation name
 - `[BRAND_NAME]` with the brand's display name (`UW-branded` or `CloudBank-branded`)
 
-### 6. Create .gitignore
+### 8. Create .gitignore
 ```
 build/
 .DS_Store
@@ -222,13 +255,13 @@ build/
 *~
 ```
 
-### 7. Create AGENTS.md
-Copy `~/.claude/plugins/local/uw-slides/templates/AGENTS.md`, then replace:
+### 9. Create AGENTS.md
+Copy `<PLUGIN>/templates/AGENTS.md`, then replace:
 - `[Presentation Name]` with the actual presentation name
 - `[BRAND]` with the brand value (`uw` or `cloudbank`)
 
-### 8. Create CLAUDE.md
-Copy `~/.claude/plugins/local/uw-slides/templates/CLAUDE.md` verbatim (no substitutions needed).
+### 10. Create CLAUDE.md
+Copy `<PLUGIN>/templates/CLAUDE.md` verbatim (no substitutions needed).
 
 ## Success Message
 
