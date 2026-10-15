@@ -39,6 +39,13 @@ This release completes the restructuring started in v0.1.x (WS0–WS5). Breaking
   - `CONTRIBUTING.md`: prerequisites, clone-to-preview guide, roles (brief vs HTML), branch/PR workflow, how to lock a slide, regenerating on a branch, model/prompt context in commits, license and attribution notes for Encode Sans (SIL OFL), Open Sans (Apache 2.0), UW brand assets, and deck images.
   - `.github/CODEOWNERS` and `.github/pull_request_template.md` for the plugin repo.
   - `templates/.github/CODEOWNERS` (pattern for slide ownership) and `templates/.github/pull_request_template.md` scaffolded into new decks by `new-deck`.
+- **WS11 — Migration and documentation**
+  - `references/migration-guide.md`: step-by-step guide for migrating a legacy `SLIDES.md` deck to `deck.yml` + `slides/<id>.md` briefs. Covers the one-shot skill path and manual migration.
+  - `/uw-slides:extract-to-markdown --migrate`: new migrate-deck flow — reads `SLIDES.md`, writes `deck.yml` + briefs + `.uw-slides.json`, validates with `deckparse.py`, then removes `SLIDES.md` (keeps it in git history). Full rules in the updated `skills/extract-to-markdown/SKILL.md`.
+  - `templates/VISUALS.md`: "How to use this file" preamble replaced with a one-line pointer to `skills/apply-visuals/SKILL.md`, which is the stated authority for pass-2 rules. Deck-specific content (global styling sections, per-slide entries) is unchanged.
+  - `references/migration-guide.md` added to `references/` index in `CLAUDE.md`.
+  - `.claude-plugin/plugin.json`: `skills` array added listing all eight skill names; `keywords` updated to include `catalog`, `reveal-js` and `migration`.
+  - `README.md`: "Migrating from SLIDES.md" section added; Skills table updated to include `update-deck`.
 
 ### Deprecated
 - **`SLIDES.md`** as a slide-ordering source. Decks that only have `SLIDES.md` still build but print a deprecation warning pointing to the migration guide (`references/slide-schema.md`, section 6). Scheduled removal: v0.3.0.

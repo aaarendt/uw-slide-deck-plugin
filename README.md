@@ -78,7 +78,7 @@ A slide ID is lowercase letters, digits and single hyphens (`03-approach`). IDs 
 
 `content/*.html` is generated from the briefs and records which version of the brief it came from (`data-brief-hash`). `/uw-slides:generate-slides` skips slides with `locked: true` (hand-edited HTML) and asks before replacing a slide whose brief changed. To check the state of every slide: `python3 tools/deckparse.py status <deck-dir>`. `./outline.sh` writes `OUTLINE.md`, a generated overview that is never edited by hand.
 
-**Legacy decks** with only a `SLIDES.md` still build (headings `## <kebab-case-id>` give the order) and print a deprecation warning; the fallback is planned for removal in v0.3.0. Migration mapping: `references/slide-schema.md`, section 6.
+**Legacy decks** with only a `SLIDES.md` still build (headings `## <kebab-case-id>` give the order) and print a deprecation warning; the fallback is planned for removal in v0.3.0. See [Migrating from SLIDES.md](#migrating-from-slidesmd) below.
 
 ### Fragment Pattern
 
@@ -205,7 +205,28 @@ Omitting `--brand` defaults to `uw`.
 | `apply-visuals` | Pass 2 — add photos, diagrams, and icons per VISUALS.md |
 | `accessibility-check` | WCAG 2.1 AA validation |
 | `design-review` | Brand compliance review |
-| `extract-to-markdown` | Convert an existing HTML deck to `deck.yml` + `slides/*.md` briefs |
+| `extract-to-markdown` | Convert an existing HTML deck to `deck.yml` + `slides/*.md` briefs; `--migrate` migrates a legacy SLIDES.md deck in place |
+| `update-deck` | Diff and update managed files (build scripts, shared templates, `tools/deckparse.py`) against the current plugin; never touches slides, content, or assets |
+
+---
+
+## Migrating from SLIDES.md
+
+Decks built before v0.2.0 use `SLIDES.md` as the slide-ordering source. The build scripts still accept `SLIDES.md` (with a deprecation warning) but support is scheduled for removal in v0.3.0.
+
+**One-shot migration** (from inside the deck directory):
+
+```
+/uw-slides:extract-to-markdown --migrate
+```
+
+This reads `SLIDES.md`, writes `deck.yml` + one `slides/<id>.md` brief per slide,
+stamps `.uw-slides.json`, validates the output with `deckparse.py`, and removes
+`SLIDES.md` (it stays in git history). Existing HTML fragments in `content/` are not
+touched.
+
+For step-by-step instructions, verification, and the manual path: see
+`references/migration-guide.md` in the plugin directory.
 
 ---
 
