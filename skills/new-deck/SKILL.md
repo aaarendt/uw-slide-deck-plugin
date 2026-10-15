@@ -165,7 +165,9 @@ Check `printenv UW_SLIDES_HOME`. If set and the directory exists, use it. Otherw
 Brand-agnostic files come from the root templates directory; only `header.html` is brand-specific.
 
 Brand-agnostic (same for all brands):
-- `shared/footer.html` from `<PLUGIN>/templates/shared/footer.html`
+- `shared/footer.html` from `<PLUGIN>/templates/shared/footer-reveal.html`
+- `setup-reveal.sh` from `<PLUGIN>/templates/setup-reveal.sh`
+- `export.sh` from `<PLUGIN>/templates/export.sh`
 - `build.sh` from `<PLUGIN>/templates/build.sh`
 - `build-visuals.sh` from `<PLUGIN>/templates/build-visuals.sh`
 - `lint.sh` from `<PLUGIN>/templates/lint.sh`
@@ -177,7 +179,7 @@ Brand-agnostic (same for all brands):
 Do **not** create a `SLIDES.md`: `deck.yml` and `slides/` replace it. Keep the scripts executable.
 
 Brand-specific (use the `--brand` value, default: `uw`):
-- `shared/header.html` from `<PLUGIN>/design-systems/${brand}-brand/shared/header.html`
+- `shared/header.html` from `<PLUGIN>/design-systems/${brand}-brand/shared/header-reveal.html`
 
 Write a `.brand` file to the presentation root containing just the brand name and a trailing newline (e.g. `uw\n` or `cloudbank\n`). This file is read by all other skills to auto-detect the brand without requiring a `--brand=` flag on every invocation. It should be git-tracked.
 
@@ -213,7 +215,20 @@ Bash(python3 tools/resolve-catalog.py *)
 
 These files should be git-tracked so the deck is fully self-contained.
 
-### 5. Create deck.yml and the starter briefs
+### 5. Download reveal.js
+
+Run `setup-reveal.sh` (which was copied in step 1) to download the vendored reveal.js assets into `assets/reveal/`:
+
+```bash
+bash setup-reveal.sh <presentation-name>
+```
+
+This requires internet access. If the download fails (offline), tell the user:
+> reveal.js assets could not be downloaded. Run `./setup-reveal.sh` when you have internet access. Until then the legacy footer will not load reveal.js and you can use a manually installed copy at `assets/reveal/`.
+
+The assets (`reveal.min.js`, `reveal.min.css`) should be git-tracked so the deck works offline after the first download.
+
+### 6. Create deck.yml and the starter briefs
 Copy `<PLUGIN>/templates/deck.yml` to `deck.yml` and set `title:` to the presentation name. Keep its `slides:` list as `title` then `example-slide`, and create the matching briefs in `slides/`:
 
 - `slides/example-slide.md`: copy `<PLUGIN>/templates/slides/_example.md` (its `id` is already `example-slide`).
@@ -241,7 +256,7 @@ python3 tools/deckparse.py deck deck.yml
 
 This is the recommended allow rule: `Bash(python3 tools/deckparse.py *)`. Do not create `content/` fragments here: `/uw-slides:generate-slides` writes them.
 
-### 6. Write .uw-slides.json
+### 7. Write .uw-slides.json
 
 Write this file to the deck root:
 
@@ -256,12 +271,12 @@ Write this file to the deck root:
 
 This stamps the deck with the plugin version it was built with. `/uw-slides:update-deck` uses it to detect drift.
 
-### 7. Create README.md
+### 8. Create README.md
 Copy `<PLUGIN>/templates/README.md`, then replace:
 - `[Presentation Name]` with the actual presentation name
 - `[BRAND_NAME]` with the brand's display name (`UW-branded` or `CloudBank-branded`)
 
-### 8. Create .gitignore
+### 9. Create .gitignore
 ```
 build/
 .DS_Store
@@ -269,15 +284,15 @@ build/
 *~
 ```
 
-### 9. Create AGENTS.md
+### 10. Create AGENTS.md
 Copy `<PLUGIN>/templates/AGENTS.md`, then replace:
 - `[Presentation Name]` with the actual presentation name
 - `[BRAND]` with the brand value (`uw` or `cloudbank`)
 
-### 10. Create CLAUDE.md
+### 11. Create CLAUDE.md
 Copy `<PLUGIN>/templates/CLAUDE.md` verbatim (no substitutions needed).
 
-### 11. Scaffold .github/ collaboration files
+### 12. Scaffold .github/ collaboration files
 
 Copy these two files from the plugin templates to the deck:
 
@@ -315,6 +330,16 @@ Pass 2 — visual additions (after content is settled):
 Pass 3 — publish (portable, self-contained file):
 1. Run: ./publish.sh
 2. Share: build/index-published.html (all images inlined as base64)
+
+PDF export (requires Playwright + Node):
+1. ./export.sh → build/deck.pdf
+2. Or open build/index.html?print-pdf in Chrome and print to PDF
+
+Keyboard shortcuts in the browser (reveal.js):
+  Arrow keys / Space  — navigate
+  S                   — presenter view (speaker notes)
+  Esc                 — slide overview
+  ?                   — keyboard help
 
 Each slide is a self-contained HTML fragment with inline scoped styles,
 generated from its brief using the layout library.

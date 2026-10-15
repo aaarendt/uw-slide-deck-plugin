@@ -26,6 +26,15 @@ This release completes the restructuring started in v0.1.x (WS0–WS5). Breaking
 - **WS5 — Generation and deck.yml build** (`skills/generate-slides/SKILL.md`, updated build scripts, `outline.sh`, `OUTLINE.md` generation)
 - **WS6 — Slide catalog and resolver** (`catalog/catalog.yml`, 6 seeded slides, `tools/resolve-catalog.py`, `catalog/CURATION.md`)
 - **WS7 — Lint and CI** (`tools/lint.py`, `templates/lint.sh`, `templates/status.sh`, `templates/.github/workflows/deck.yml`)
+- **WS8 — Runtime and export**
+  - Adopted reveal.js 6.0.2 (MIT, ~169 KB) as the presentation runtime. Replaces the homegrown `footer.html` navigation for new decks.
+  - `design-systems/uw-brand/shared/header-reveal.html` and `design-systems/cloudbank-brand/shared/header-reveal.html`: reveal-compatible headers (`.reveal > .slides` wrapper; `display: flex` slide system; speaker-notes hide rule).
+  - `templates/shared/footer-reveal.html`: initialises reveal.js with `width: '100%', height: '100%'` to preserve `vw`-based font sizes.
+  - `templates/setup-reveal.sh`: downloads `reveal.min.js` + `reveal.min.css` from jsDelivr into `assets/reveal/`.
+  - `templates/export.sh`: Playwright-based PDF export (optional dependency).
+  - `skills/generate-slides/SKILL.md`: `## Notes` brief sections now render as `<aside class="notes">` for reveal.js presenter view.
+  - `skills/new-deck/SKILL.md`: new decks use reveal variants and run `setup-reveal.sh` at scaffold time.
+  - `docs/runtime-evaluation.md`: decision record, compatibility analysis, migration guide, vw/font-size note.
 - **WS9 — Collaboration process**
   - `CONTRIBUTING.md`: prerequisites, clone-to-preview guide, roles (brief vs HTML), branch/PR workflow, how to lock a slide, regenerating on a branch, model/prompt context in commits, license and attribution notes for Encode Sans (SIL OFL), Open Sans (Apache 2.0), UW brand assets, and deck images.
   - `.github/CODEOWNERS` and `.github/pull_request_template.md` for the plugin repo.
