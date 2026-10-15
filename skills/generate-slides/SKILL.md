@@ -78,7 +78,8 @@ For every slide you are going to write:
 4. **Fill the layout** exactly as in `layouts.md`, section 2: copy `templates/layouts/<layout>.html`, rename `layout-<layout>` to the slide ID in `data-slide` and every CSS selector, fill each `data-slot` / `data-param`, remove optional elements the brief leaves empty. Replace every sample list item (never append to the template's `<li>`s) and render Markdown to HTML. Before writing, check the output: the number of list items equals the brief's, none of the template's sample text remains, and no literal `-`, `**` or `1.` is left in a text node. `custom` slides are written from scratch to the same standard (scoped `section[data-slide="<id>"]` styles, brand tokens, one `<h1>`, accent bar).
 5. **Apply the generation rules** (`slide-schema.md`, section 5):
    - the key message is the headline and usually the main text shown;
-   - talking points and notes are **never** rendered;
+   - talking points are **never** rendered verbatim;
+   - **speaker notes**: if the brief has a `## Notes` section, render its content as `<aside class="notes">` as the **last child** of the `<section>` element. This is the only place notes appear; they are never rendered in the main slide view. reveal.js shows them in presenter view (S key); the legacy footer ignores them.
    - the source renders as the small footer line;
    - pass 1 uses no photographs and no decorative icons: it must look finished without images;
    - `aria-label` is `Slide N: <title, else key message>`, where N is the position in `deck.yml`.
