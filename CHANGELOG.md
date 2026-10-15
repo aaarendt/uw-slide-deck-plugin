@@ -10,7 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ---
 
-## [0.2.0] — in progress
+## [0.2.0] — 2026-10-15
 
 This release completes the restructuring started in v0.1.x (WS0–WS5). Breaking changes are limited to the deprecated `SLIDES.md` fallback.
 
