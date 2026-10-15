@@ -11,7 +11,7 @@ Thumbs.db
 *.sublime-*
 
 # Local agent settings
-.claude/settings.local.json
+.claude/
 
 # Build artifacts
 build/
