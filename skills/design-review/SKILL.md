@@ -9,16 +9,23 @@ description: Validate UW brand compliance. Checks color tokens, fonts, layout pa
 Ensure slide deck follows UW brand guidelines.
 
 ## What Gets Checked
-1. **Color Tokens** — Use CSS variables, not hardcoded hex
-2. **Font Usage** — Only approved fonts for the brand
-3. **Font Size Floor** — All visible text must use `clamp()` with a minimum of `1.5rem` (24pt). Exception: source/citation lines and decorative uppercase labels may use `1rem` minimum. Hard-coded values below `1.5rem` for content text are a violation. Presentations are projected — small text is unreadable past the third row of an audience.
-4. **Layout Patterns** — Use approved templates: a generated slide's `data-layout` is a layout-library ID (`templates/layouts/`) or `custom`
-5. **Logo Treatment** — Correct inversion on dark backgrounds
-6. **Accent Bar** — Every slide must have a brand accent bar:
+
+**Deterministic checks (run `./lint.sh` first — these are already covered):**
+- Font-size floor: `clamp()` minimum below 1.5rem for body text, or below 1rem for any text (`lint.py` checks `font-size-below-minimum` / `font-size-too-small`)
+- CSS selector scoping to `section[data-slide="..."]` (`lint.py` checks `css-not-scoped`)
+- `<img>` alt text (`lint.py` checks `img-missing-alt`)
+- `aria-label` on `<section>` (`lint.py` checks `missing-aria-label`)
+
+**Judgment checks (unique to this skill — run after lint passes):**
+1. **Color Tokens** — CSS variables used consistently; no hardcoded hex for brand colors
+2. **Font Usage** — Only approved fonts for the brand; no system-font fallbacks used as primary
+3. **Layout Patterns** — `data-layout` is a layout-library ID or `custom`; layout matches slide purpose
+4. **Logo Treatment** — Correct inversion on dark backgrounds
+5. **Accent Bar** — Every slide has a brand accent bar:
    - `--brand=uw`: 8px `--uw-spirit-gold` bar
    - `--brand=cloudbank`: 4px `--cb-signal-blue` bar
-7. **Type Scale** — Follow brand hierarchy
-8. **CloudBank contrast rule** *(brand=cloudbank only)* — Any text element whose computed foreground is `--cb-signal-blue` and whose background is `--cb-deep-navy` or `--bg-primary` → **FAIL** with: "Signal Blue on Deep Navy fails WCAG AA (2.25:1). Use `--cb-mist` (7.86:1) for subtitles on dark, or `--cb-white` (13.79:1) for titles."
+6. **Type Scale** — Brand hierarchy respected; display font used for headlines
+7. **CloudBank contrast rule** *(brand=cloudbank only)* — Any text element whose computed foreground is `--cb-signal-blue` and whose background is `--cb-deep-navy` or `--bg-primary` → **FAIL** with: "Signal Blue on Deep Navy fails WCAG AA (2.25:1). Use `--cb-mist` (7.86:1) for subtitles on dark, or `--cb-white` (13.79:1) for titles."
 
 ## Slides
 

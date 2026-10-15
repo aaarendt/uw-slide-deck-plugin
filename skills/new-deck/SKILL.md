@@ -168,6 +168,8 @@ Brand-agnostic (same for all brands):
 - `shared/footer.html` from `<PLUGIN>/templates/shared/footer.html`
 - `build.sh` from `<PLUGIN>/templates/build.sh`
 - `build-visuals.sh` from `<PLUGIN>/templates/build-visuals.sh`
+- `lint.sh` from `<PLUGIN>/templates/lint.sh`
+- `status.sh` from `<PLUGIN>/templates/status.sh`
 - `outline.sh` from `<PLUGIN>/templates/outline.sh`
 - `publish.sh` from `<PLUGIN>/templates/publish.sh`
 - `VISUALS.md` from `<PLUGIN>/templates/VISUALS.md`
@@ -193,11 +195,21 @@ For `--brand=cloudbank`: **skip font copy.** CloudBank uses Nunito and Open Sans
 - `assets/images/`
 - `assets/diagrams/`
 
-### 4. Vendor tools/deckparse.py
+### 4. Vendor tools/deckparse.py and tools/lint.py
 
-Copy `<PLUGIN>/tools/deckparse.py` to `tools/deckparse.py` in the deck directory. This gives the deck a self-contained copy of the parser and lets every skill run `python3 tools/deckparse.py ...` as a simple, permission-friendly command (no variable expansion, no path lookup at runtime).
+Copy from the plugin into the deck's `tools/` directory:
+- `<PLUGIN>/tools/deckparse.py` → `tools/deckparse.py`
+- `<PLUGIN>/tools/lint.py` → `tools/lint.py`
 
-Add `tools/deckparse.py` to the deck's `.gitignore` only if the user explicitly asks for it; by default it should be tracked so the deck is fully self-contained.
+This gives the deck self-contained copies of the parser and linter. Skills run `python3 tools/deckparse.py ...` and `python3 tools/lint.py ...` as simple, permission-friendly commands (no variable expansion, no path lookup at runtime).
+
+Recommended allow rules (add to the deck's `.claude/settings.json` or the project settings):
+```
+Bash(python3 tools/deckparse.py *)
+Bash(python3 tools/lint.py *)
+```
+
+These files should be git-tracked so the deck is fully self-contained.
 
 ### 5. Create deck.yml and the starter briefs
 Copy `<PLUGIN>/templates/deck.yml` to `deck.yml` and set `title:` to the presentation name. Keep its `slides:` list as `title` then `example-slide`, and create the matching briefs in `slides/`:

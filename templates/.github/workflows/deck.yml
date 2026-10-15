@@ -1,0 +1,61 @@
+# CI workflow for a uw-slides presentation deck.
+#
+# Copy this file to <deck>/.github/workflows/deck.yml.
+# It requires no secrets and no extra setup beyond a Python 3 runner.
+#
+# What it does on every push and PR:
+#   1. Build   — concatenate fragments into build/index.html (./build.sh)
+#   2. Lint    — check fragments, CSS scoping, font sizes, alt text, staleness
+#   3. Publish — inline all images as base64 (./publish.sh)
+#   4. Upload  — attach build/index-published.html as a workflow artifact
+#
+# Optional: GitHub Pages
+#   Uncomment the "Deploy to Pages" step and enable Pages in repo settings
+#   (Source: GitHub Actions). The artifact URL in the Actions summary is also
+#   a convenient preview link for pull requests.
+
+name: Deck CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-lint-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build (pass 1)
+        run: ./build.sh --strict
+
+      - name: Lint
+        run: python3 tools/lint.py .
+
+      - name: Publish (pass 3)
+        run: ./publish.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deck
+          path: build/index-published.html
+          if-no-files-found: error
+
+      # --- Optional: deploy to GitHub Pages ---
+      # Uncomment the two steps below, then enable Pages in repo settings
+      # (Settings → Pages → Source: GitHub Actions).
+      #
+      # - name: Upload Pages artifact
+      #   uses: actions/upload-pages-artifact@v3
+      #   with:
+      #     path: build/
+      #
+      # - name: Deploy to Pages
+      #   uses: actions/deploy-pages@v4

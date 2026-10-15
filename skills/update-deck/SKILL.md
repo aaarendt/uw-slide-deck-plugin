@@ -12,11 +12,14 @@ Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-dec
 **Managed files** (the only files this skill may touch):
 - `build.sh`
 - `build-visuals.sh`
+- `lint.sh`
+- `status.sh`
 - `outline.sh`
 - `publish.sh`
 - `shared/footer.html`
 - `shared/header.html` (brand-specific)
 - `tools/deckparse.py`
+- `tools/lint.py`
 
 **Never touched:** `content/`, `content-with-visuals/`, `slides/`, `assets/`, `deck.yml`, `VISUALS.md`, `OUTLINE.md`, `.brand`, `*.md` files.
 
@@ -50,11 +53,14 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 |-----------|--------------|
 | `build.sh` | `<plugin>/templates/build.sh` |
 | `build-visuals.sh` | `<plugin>/templates/build-visuals.sh` |
+| `lint.sh` | `<plugin>/templates/lint.sh` |
+| `status.sh` | `<plugin>/templates/status.sh` |
 | `outline.sh` | `<plugin>/templates/outline.sh` |
 | `publish.sh` | `<plugin>/templates/publish.sh` |
 | `shared/footer.html` | `<plugin>/templates/shared/footer.html` |
 | `shared/header.html` | `<plugin>/design-systems/<brand>-brand/shared/header.html` |
 | `tools/deckparse.py` | `<plugin>/tools/deckparse.py` |
+| `tools/lint.py` | `<plugin>/tools/lint.py` |
 
 Read both versions and note whether they differ. A file the deck is missing counts as a diff.
 
