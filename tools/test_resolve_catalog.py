@@ -604,21 +604,37 @@ class TestAssetPathRewrite(unittest.TestCase):
 
 class TestBrandCompatibility(unittest.TestCase):
 
+    def test_norm_brand_strips_suffix(self):
+        self.assertEqual(rc._norm_brand("uw-brand"), "uw")
+        self.assertEqual(rc._norm_brand("cloudbank-brand"), "cloudbank")
+        self.assertEqual(rc._norm_brand("uw"), "uw")
+        self.assertEqual(rc._norm_brand("cloudbank"), "cloudbank")
+        self.assertEqual(rc._norm_brand(""), "")
+        self.assertEqual(rc._norm_brand(None), "")
+
     def test_brands_match_any(self):
+        self.assertTrue(rc._brands_match("any", "uw"))
         self.assertTrue(rc._brands_match("any", "uw-brand"))
-        self.assertTrue(rc._brands_match("any", "cloudbank-brand"))
+        self.assertTrue(rc._brands_match("any", "cloudbank"))
 
-    def test_brands_match_uw_alias(self):
-        self.assertTrue(rc._brands_match("uw", "uw-brand"))
-        self.assertFalse(rc._brands_match("uw", "cloudbank-brand"))
+    def test_brands_match_short_form(self):
+        # new-deck writes short form in both .uw-slides.json and .brand
+        self.assertTrue(rc._brands_match("uw", "uw"))
+        self.assertFalse(rc._brands_match("uw", "cloudbank"))
+        self.assertTrue(rc._brands_match("cloudbank", "cloudbank"))
+        self.assertFalse(rc._brands_match("cloudbank", "uw"))
 
-    def test_brands_match_cloudbank_alias(self):
-        self.assertTrue(rc._brands_match("cloudbank", "cloudbank-brand"))
-        self.assertFalse(rc._brands_match("cloudbank", "uw-brand"))
-
-    def test_brands_match_full_form(self):
+    def test_brands_match_long_form(self):
+        # older .uw-slides.json may write the long form
         self.assertTrue(rc._brands_match("uw-brand", "uw-brand"))
         self.assertFalse(rc._brands_match("uw-brand", "cloudbank-brand"))
+
+    def test_brands_match_mixed_forms(self):
+        # short catalog brand vs long deck brand and vice versa must both work
+        self.assertTrue(rc._brands_match("uw", "uw-brand"))
+        self.assertTrue(rc._brands_match("uw-brand", "uw"))
+        self.assertFalse(rc._brands_match("uw", "cloudbank-brand"))
+        self.assertFalse(rc._brands_match("uw-brand", "cloudbank"))
 
 
 class TestBrandMismatchWarning(unittest.TestCase):
@@ -633,19 +649,34 @@ class TestBrandMismatchWarning(unittest.TestCase):
         _make_deck(self.tmpdir, ["title"], {
             "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
         })
-        # Stamp deck as cloudbank
+        # new-deck writes the short form in .uw-slides.json
         _write(os.path.join(self.tmpdir, ".uw-slides.json"),
-               '{"plugin_version": "0.2.0", "brand": "cloudbank-brand", '
+               '{"plugin_version": "0.2.0", "brand": "cloudbank", '
                '"scaffolded_at": "2026-01-01", "catalog": null}')
         import io
         import contextlib
         buf = io.StringIO()
         with contextlib.redirect_stderr(buf):
             rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
-        self.assertIn("brand=", buf.getvalue())
-        self.assertIn("cloudbank-brand", buf.getvalue())
+        self.assertIn("may render incorrectly", buf.getvalue())
 
     def test_uw_slide_in_uw_deck_no_brand_warning(self):
+        _make_deck(self.tmpdir, ["title"], {
+            "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
+        })
+        # Short form stamp — what new-deck actually writes
+        _write(os.path.join(self.tmpdir, ".uw-slides.json"),
+               '{"plugin_version": "0.2.0", "brand": "uw", '
+               '"scaffolded_at": "2026-01-01", "catalog": null}')
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        self.assertNotIn("may render incorrectly", buf.getvalue())
+
+    def test_uw_slide_in_uw_deck_long_form_no_warning(self):
+        # Older decks may have the long form in .uw-slides.json — must not warn
         _make_deck(self.tmpdir, ["title"], {
             "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
         })
@@ -657,7 +688,31 @@ class TestBrandMismatchWarning(unittest.TestCase):
         buf = io.StringIO()
         with contextlib.redirect_stderr(buf):
             rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
-        # No brand warning; only possible output is empty-param warnings
+        self.assertNotIn("may render incorrectly", buf.getvalue())
+
+    def test_brand_read_from_dot_brand_file(self):
+        # Older decks have a .brand file but no .uw-slides.json
+        _make_deck(self.tmpdir, ["title"], {
+            "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
+        })
+        _write(os.path.join(self.tmpdir, ".brand"), "cloudbank\n")
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        self.assertIn("may render incorrectly", buf.getvalue())
+
+    def test_no_brand_files_defaults_to_uw_no_warning(self):
+        # Deck with no .uw-slides.json and no .brand defaults to uw — no spurious warning
+        _make_deck(self.tmpdir, ["title"], {
+            "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
+        })
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
         self.assertNotIn("may render incorrectly", buf.getvalue())
 
 
