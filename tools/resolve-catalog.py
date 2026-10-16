@@ -250,32 +250,54 @@ def _strip_empty_para_elements(fragment):
 # Brand compatibility helpers
 # ---------------------------------------------------------------------------
 
-# Catalog slide.md files use short brand identifiers ("uw", "cloudbank", "any").
-# .uw-slides.json uses the full form ("uw-brand", "cloudbank-brand").
-_BRAND_ALIASES = {"uw": "uw-brand", "cloudbank": "cloudbank-brand"}
+# Brand identifiers appear in three forms across the codebase:
+#   short   "uw" / "cloudbank"          — catalog slide.md, .brand file, .uw-slides.json (new-deck)
+#   long    "uw-brand" / "cloudbank-brand" — older .uw-slides.json writes
+#   special "any"                        — slide works with every brand
+#
+# Always compare normalised (short) forms so callers don't need to know which
+# form a particular file uses.
+
+def _norm_brand(b):
+    """Normalise a brand string to its short form by stripping a '-brand' suffix."""
+    return (b or "").strip().removesuffix("-brand")
 
 
 def _read_deck_brand(deck_dir, deck):
-    """Return the deck's brand string, preferring .uw-slides.json over deck.yml."""
+    """Return the deck's brand string (short form), checking sources in priority order:
+    1. .uw-slides.json  (written by new-deck; may be short or long form)
+    2. .brand file      (written by new-deck alongside .uw-slides.json; short form)
+    3. deck.yml front matter
+    4. fallback: "uw"
+    """
     uw_json = os.path.join(deck_dir, ".uw-slides.json")
     if os.path.isfile(uw_json):
         try:
             with open(uw_json, encoding="utf-8") as fh:
                 data = json.load(fh)
-            brand = data.get("brand", "")
+            brand = (data.get("brand") or "").strip()
             if brand:
-                return brand
+                return _norm_brand(brand)
         except (json.JSONDecodeError, OSError):
             pass
-    return deck.get("front_matter", {}).get("brand", "uw-brand")
+    brand_file = os.path.join(deck_dir, ".brand")
+    if os.path.isfile(brand_file):
+        try:
+            with open(brand_file, encoding="utf-8") as fh:
+                brand = fh.read().strip()
+            if brand:
+                return _norm_brand(brand)
+        except OSError:
+            pass
+    fm_brand = deck.get("front_matter", {}).get("brand", "")
+    if fm_brand:
+        return _norm_brand(fm_brand)
+    return "uw"
 
 
 def _brands_match(catalog_brand, deck_brand):
     """Return True when catalog_brand is compatible with deck_brand."""
-    if catalog_brand == "any":
-        return True
-    normalized = _BRAND_ALIASES.get(catalog_brand, catalog_brand)
-    return normalized == deck_brand
+    return catalog_brand == "any" or _norm_brand(catalog_brand) == _norm_brand(deck_brand)
 
 
 # ---------------------------------------------------------------------------
