@@ -217,6 +217,67 @@ def _inject_data_catalog(fragment, catalog_id, catalog_version):
     return SECTION_TAG_RE.sub(patch_section, fragment, count=1)
 
 
+def _strip_empty_para_elements(fragment):
+    """Remove <p> elements that would produce invisible but focusable broken links.
+
+    Handles two cases that CSS :empty cannot catch:
+    - <p><a href=""></a></p> or <p><a href="">any text</a></p>: empty href is never
+      a valid destination; the link has no target regardless of its label.
+    - <p><a href="mailto:"></a></p>: mailto: with no recipient and no link text is
+      not focusable-accessible (WCAG 2.4.4 / 4.1.2 failure).
+    - <p></p> (whitespace only): rendered by an empty scalar param substitution.
+    """
+    # href="" — no destination; strip regardless of link text
+    fragment = re.sub(
+        r'<p\b[^>]*>\s*<a\b[^>]*\bhref=["\']["\'][^>]*>.*?</a>\s*</p>',
+        "",
+        fragment,
+        flags=re.S,
+    )
+    # href="mailto:" with empty link text — no recipient, no accessible name
+    fragment = re.sub(
+        r'<p\b[^>]*>\s*<a\b[^>]*\bhref=["\']mailto:["\'][^>]*>\s*</a>\s*</p>',
+        "",
+        fragment,
+        flags=re.S,
+    )
+    # Whitespace-only <p> — empty scalar param left nothing behind
+    fragment = re.sub(r'<p\b[^>]*>\s*</p>', "", fragment, flags=re.S)
+    return fragment
+
+
+# ---------------------------------------------------------------------------
+# Brand compatibility helpers
+# ---------------------------------------------------------------------------
+
+# Catalog slide.md files use short brand identifiers ("uw", "cloudbank", "any").
+# .uw-slides.json uses the full form ("uw-brand", "cloudbank-brand").
+_BRAND_ALIASES = {"uw": "uw-brand", "cloudbank": "cloudbank-brand"}
+
+
+def _read_deck_brand(deck_dir, deck):
+    """Return the deck's brand string, preferring .uw-slides.json over deck.yml."""
+    uw_json = os.path.join(deck_dir, ".uw-slides.json")
+    if os.path.isfile(uw_json):
+        try:
+            with open(uw_json, encoding="utf-8") as fh:
+                data = json.load(fh)
+            brand = data.get("brand", "")
+            if brand:
+                return brand
+        except (json.JSONDecodeError, OSError):
+            pass
+    return deck.get("front_matter", {}).get("brand", "uw-brand")
+
+
+def _brands_match(catalog_brand, deck_brand):
+    """Return True when catalog_brand is compatible with deck_brand."""
+    if catalog_brand == "any":
+        return True
+    normalized = _BRAND_ALIASES.get(catalog_brand, catalog_brand)
+    return normalized == deck_brand
+
+
 # ---------------------------------------------------------------------------
 # Derived slide generators
 # ---------------------------------------------------------------------------
@@ -274,6 +335,15 @@ def _resolve_one(deck_dir, deck, briefs, sid, slide_pos, catalog_path):
     except (FileNotFoundError, ValueError) as e:
         return False, f"  ✗ {sid}: {e}"
 
+    # Warn when a brand-specific slide is used in a mismatched deck
+    deck_brand = _read_deck_brand(deck_dir, deck)
+    if not _brands_match(meta["brand"], deck_brand):
+        print(
+            f"  ⚠ {sid}: catalog/{catalog_id} requires brand={meta['brand']!r} "
+            f"but this deck is brand={deck_brand!r} — the slide may render incorrectly",
+            file=sys.stderr,
+        )
+
     # Load the HTML template
     html_path = os.path.join(catalog_path, "slides", catalog_id, "slide.html")
     if not os.path.isfile(html_path):
@@ -312,6 +382,9 @@ def _resolve_one(deck_dir, deck, briefs, sid, slide_pos, catalog_path):
     # Param substitution
     fragment = _substitute_params(fragment, params, raw_keys=raw_keys)
 
+    # Remove <p> elements that became empty or contain broken links after substitution
+    fragment = _strip_empty_para_elements(fragment)
+
     # Rewrite data-slide and CSS selectors
     fragment = _rewrite_data_slide(fragment, catalog_id, sid)
 
@@ -327,11 +400,13 @@ def _resolve_one(deck_dir, deck, briefs, sid, slide_pos, catalog_path):
     if os.path.isdir(assets_src):
         assets_dst = os.path.join(deck_dir, "assets", "images", f"catalog-{catalog_id}")
         shutil.copytree(assets_src, assets_dst, dirs_exist_ok=True)
-        # Rewrite relative asset paths from catalog/slides/<id>/assets/ to
-        # the build-relative path ../assets/images/catalog-<id>/
-        fragment = fragment.replace(
-            "assets/",
-            f"../assets/images/catalog-{catalog_id}/",
+        # Rewrite relative asset paths in src=, href=, and url() references.
+        # A broad str.replace would mangle URL params that happen to contain
+        # "assets/" (e.g. a logo URL passed as a param).
+        fragment = re.sub(
+            r'((?:src|href)=["\']|url\(["\']?)assets/',
+            rf'\1../assets/images/catalog-{catalog_id}/',
+            fragment,
         )
 
     # Write to content/<deck-slide-id>.html

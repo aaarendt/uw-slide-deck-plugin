@@ -99,7 +99,10 @@
 
     section[data-slide="thank-you"] .contact .presenter:empty,
     section[data-slide="thank-you"] .contact .email:empty,
-    section[data-slide="thank-you"] .contact .url:empty {
+    section[data-slide="thank-you"] .contact .url:empty,
+    section[data-slide="thank-you"] .contact .email:has(a:empty),
+    section[data-slide="thank-you"] .contact .email:has(a[href="mailto:"]),
+    section[data-slide="thank-you"] .contact .url:has(a[href=""]) {
       display: none;
     }
   </style>
