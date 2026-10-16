@@ -177,6 +177,9 @@
       display: flex;
       position: relative;
       box-sizing: border-box;
+      /* reveal.css centers all slide text; layouts assume left alignment
+         and opt in to centering themselves (title, closing, stat-callout). */
+      text-align: left;
     }
 
     /* Speaker notes: hidden in main view; shown in presenter view (press S). */

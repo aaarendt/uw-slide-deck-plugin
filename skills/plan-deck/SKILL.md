@@ -84,7 +84,7 @@ Decide, for each slide, its ID, the message, the objective it serves, its layout
 
 **Structure.** First slide `title`, last slide `closing`. Open the content with why the topic matters to this audience, end with the recap. Every objective is covered by at least one slide, and every content slide serves an objective (`objective:`; the title, dividers and closing may have none).
 
-**Catalog slides.** Before choosing layouts, check `catalog/catalog.yml` for slides that match a structural role in the deck (title, land acknowledgement, funding, agenda, feedback, closing). Use a catalog slide when:
+**Catalog slides.** Before choosing layouts, check `catalog/catalog.yml` for slides that match a structural role in the deck (title, land acknowledgement, funding, agenda, feedback, closing). For a deck in a program's brand, also check that brand's program slides (for example the `cb-` slides in a CloudBank deck) against each planned content slide: use one in place of writing that slide when its description covers the slide's message. Use a catalog slide when:
 - the slide's purpose matches the catalog description exactly, AND
 - the catalog slide's `status` is `ready`.
 Write `use: catalog/<id>` in the brief front matter (no `layout:` — catalog slides bring their own), and fill `params:` from the catalog slide's `slide.md` (omit params you want to use their defaults). `status: draft` catalog slides may be used but flag them in the VERIFY list. Catalog slides that are verbatim (kind: verbatim) need no params; parameterized ones need the params the deck author should supply.

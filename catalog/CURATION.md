@@ -1,22 +1,29 @@
 # Catalog Curation Rules
 
 The slide catalog (`catalog/`) holds finished, vetted, optionally parameterized
-slides that are used across many decks. Only framing slides belong here:
-opening, closing, legal/administrative, and structural slides that are the same
-regardless of topic.
+slides that are used across many decks. Two kinds belong here: framing slides
+(opening, closing, legal/administrative and structural slides that are the
+same regardless of topic) and program slides (standard slides for a program
+such as CloudBank, reused across that program's talks).
 
 ## What belongs in the catalog
 
 - **Framing slides** that appear in virtually every UW training deck: title,
   land acknowledgement, funding credit, agenda, feedback, closing.
+- **Program slides** that a program presents the same way in most of its
+  talks, such as CloudBank's eligibility and recommended uses. They carry the
+  program's brand (`brand: cloudbank`, never `any`) and an ID prefix for that
+  program (`cb-`), so they sort together and the planner only offers them to
+  that program's decks.
 - Slides where the wording has been reviewed and approved (land acknowledgement,
-  funding, disclaimer language).
+  funding, disclaimer language, program policy).
 - Slides that would otherwise be rebuilt from scratch for every deck.
 
 ## What does not belong
 
-- Topic-specific content slides: those belong in individual decks.
-- Slides that are only useful in one training series.
+- Topic-specific content slides that are not a program's standard slides:
+  those belong in individual decks.
+- Slides that are only useful in one training series or one talk.
 - Slides that duplicate a layout: if the `title` layout template already
   handles a need, a catalog slide is not necessary.
 
@@ -96,8 +103,16 @@ After ejecting, edit the brief and regenerate normally.
 
 ## Size guideline
 
-Keep the catalog to about 10–15 slides. It is meant for near-universal framing
-slides, not a library of every possible layout.
+Keep the framing slides to about 10–15, and each program's slides to about
+10–15 as well. The catalog is meant for slides that are reused nearly
+unchanged, not a library of every possible layout.
+
+## Program policy wording
+
+Program slides often state policy that changes: eligibility, allocation sizes,
+award numbers. Keep a program slide at `status: review` until its owner has
+checked it against the program's current pages, list those pages in the
+slide's `slide.md`, and bump the slide's `version` whenever the wording changes.
 
 ## Institutional wording
 
