@@ -11,6 +11,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ### Added
 - Catalog slide `cb-eligibility` (CloudBank brand, verbatim, `status: review`): who can lead a CloudBank project and recommended uses. Full source wording is kept in the speaker notes.
 
+### Changed
+- `catalog/CURATION.md` now admits program slides (standard slides for a program such as CloudBank) alongside framing slides, with a brand and ID prefix per program, a size guideline per program, and rules for policy wording that changes.
+- `plan-deck` checks a program's catalog slides against planned content slides in decks of that program's brand, not only framing roles.
+
+### Fixed
+- Slide text was centered on every slide in reveal.js decks, because `reveal.css` centers slide text and neither brand header overrode it. Both `header-reveal.html` files now set `text-align: left` on `section.slide`. Layouts meant to be centered (`title`, `closing`, `stat-callout` and the centered catalog slides) set it themselves and are unchanged. Existing decks pick this up with `/uw-slides:update-deck`.
+
 ---
 
 ## [0.2.0] — 2026-10-15
