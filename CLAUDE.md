@@ -47,8 +47,6 @@ uw-slides-plugin/
 └── references/
     ├── accessibility-requirements.md
     ├── layouts.md           # Layout library: slots, limits, use/avoid, variety rules, custom
-    ├── accessibility-requirements.md
-    ├── layouts.md           # Layout library: slots, limits, use/avoid, variety rules, custom
     ├── markdown-schema.md   # Legacy front matter (superseded)
     ├── migration-guide.md   # How to migrate a SLIDES.md deck to deck.yml + slides/
     └── slide-schema.md      # deck.yml + slide brief schema, staleness hash, generation rules
