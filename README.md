@@ -39,6 +39,9 @@ cd my-presentation
 # After approving the plan, generate the slides:
 /uw-slides:generate-slides
 
+# Download the reveal.js runtime (once per deck):
+./setup-reveal.sh
+
 # Build and preview
 ./build.sh
 open build/index.html
@@ -137,12 +140,36 @@ The scripts read `deck.yml` with `tools/deckparse.py` (needs `python3`). New dec
 
 Pass 2 is additive. Slides not listed in VISUALS.md are served unchanged from `content/`. Pass 2 never modifies pass-1 files.
 
-### Navigation
+### Runtime (reveal.js)
 
-- Arrow keys, Space, PageUp/PageDown: advance/retreat
-- Home/End: jump to first/last slide
-- Click anywhere: advance to next slide
-- Slide counter: bottom right
+New decks use [reveal.js](https://revealjs.com/) 6.0.2 as the presentation runtime. Run `setup-reveal.sh` once after scaffolding to download the assets:
+
+```bash
+./setup-reveal.sh        # downloads assets/reveal/ (reveal.min.js, reveal.min.css, plugin/notes/notes.js)
+git add assets/reveal/   # track so the deck is offline-capable
+./build.sh
+open build/index.html
+```
+
+**Keyboard shortcuts:**
+
+| Key | Action |
+|-----|--------|
+| `→` / `Space` | Next slide |
+| `←` | Previous slide |
+| `S` | Presenter view (current slide, next slide, speaker notes, timer) |
+| `Esc` | Slide overview (bird's-eye grid) |
+| `F` | Fullscreen |
+| `B` | Blackout screen |
+| `?` | All keyboard shortcuts |
+
+**Speaker notes** — add a `## Notes` section to a slide's brief; it renders as `<aside class="notes">` and appears only in presenter view, never on the main slide.
+
+**PDF export** — requires [Playwright](https://playwright.dev/) (optional):
+
+```bash
+./export.sh              # writes build/deck.pdf, one page per slide
+```
 
 ---
 
