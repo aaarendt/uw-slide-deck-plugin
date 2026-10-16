@@ -13,6 +13,7 @@ funding: "Funding credit slide — agency, grant ID, grant title (placeholder wo
 agenda: "Auto-generated agenda built from the deck.yml slide titles"
 feedback: "Session feedback slide — configurable URL for survey or QR code"
 thank-you: "Closing thank-you slide with presenter name and contact info"
+cb-eligibility: "CloudBank eligibility (who can lead a project) and recommended uses (good fit vs. better elsewhere)"
 
 # Ordered list of slide IDs included in this catalog.
 slides:
@@ -22,3 +23,4 @@ slides:
   - agenda
   - feedback
   - thank-you
+  - cb-eligibility

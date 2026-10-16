@@ -1,0 +1,208 @@
+<section data-slide="cb-eligibility"
+         data-layout="catalog"
+         data-catalog="cb-eligibility@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>Eligibility and recommended uses</h1>
+
+    <dl class="criteria">
+      <div>
+        <dt>Who</dt>
+        <dd>U.S.-based researchers and educators, graduate student or above</dd>
+      </div>
+      <div>
+        <dt>What</dt>
+        <dd>Projects with a scientific focus, or that support a scientific study</dd>
+      </div>
+    </dl>
+
+    <div class="columns">
+      <div class="column">
+        <h2>Good fit</h2>
+        <ul>
+          <li>Modest-scale AI workloads</li>
+          <li>Testing software scalability</li>
+          <li>Unique hardware or cloud services</li>
+          <li>Distributed-cloud and network studies</li>
+          <li>Hosting tools, datasets and gateways</li>
+        </ul>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <div class="column">
+        <h2>Better elsewhere</h2>
+        <ul>
+          <li>Large-scale compute</li>
+          <li>GPU-intensive workloads</li>
+        </ul>
+        <p class="redirect">Use on-premises ACCESS or NAIRR resources instead</p>
+      </div>
+    </div>
+
+    <p class="source">Sources:
+      <a href="https://allocations.access-ci.org/allocations-policy#eligibility">ACCESS allocations policy</a> ·
+      <a href="https://www.cloudbank.org/request-access-commercial-cloud-resources">CloudBank recommended uses</a></p>
+  </div>
+
+  <aside class="notes">
+    ACCESS eligibility, verbatim: "To qualify to lead an allocated project, you
+    must be a U.S.-based researcher or educator, at the graduate-student level or
+    higher." CloudBank recommended uses, verbatim: the application must have a
+    scientific focus or support a scientific study; AI workloads that are modest
+    in scale; validating and testing the scalability of software tools or
+    systems; accessing unique hardware or specialized cloud tools and services;
+    studying the behavior of regionally or globally distributed cloud
+    environments, including network performance; hosting community tools,
+    datasets, or science gateways. CloudBank is not intended to support
+    large-scale compute or GPU-intensive workloads, which can be executed more
+    cost-effectively on other on-premises ACCESS/NAIRR resources.
+  </aside>
+
+  <style>
+    section[data-slide="cb-eligibility"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-eligibility"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-eligibility"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-eligibility"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-eligibility"] .criteria {
+      background: var(--slide-bg-subtle);
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      padding: var(--space-3) var(--space-4);
+      margin: 0 0 var(--space-4);
+      font-size: clamp(1.5rem, 2.1vw, 2rem);
+      line-height: 1.35;
+    }
+
+    section[data-slide="cb-eligibility"] .criteria > div {
+      display: flex;
+      gap: var(--space-3);
+    }
+
+    section[data-slide="cb-eligibility"] .criteria > div + div {
+      margin-top: var(--space-1);
+    }
+
+    section[data-slide="cb-eligibility"] dt {
+      flex: 0 0 4.5em;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-eligibility"] dd {
+      margin: 0;
+      min-width: 0;
+    }
+
+    section[data-slide="cb-eligibility"] .columns {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 3fr 2px 2fr;
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+
+    section[data-slide="cb-eligibility"] .column {
+      min-width: 0;
+      font-size: clamp(1.5rem, 2.1vw, 2rem);
+      line-height: 1.35;
+    }
+
+    section[data-slide="cb-eligibility"] .divider {
+      align-self: stretch;
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-eligibility"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-eligibility"] ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="cb-eligibility"] li {
+      position: relative;
+      padding-left: 1.4em;
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-eligibility"] li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: 0.55em;
+      height: 0.55em;
+      border-radius: 50%;
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-eligibility"] .redirect {
+      font-weight: 600;
+      color: var(--head);
+      margin: var(--space-3) 0 0;
+    }
+
+    section[data-slide="cb-eligibility"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-eligibility"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+  </style>
+</section>
