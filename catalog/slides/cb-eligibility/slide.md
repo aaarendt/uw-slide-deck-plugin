@@ -15,29 +15,9 @@ A shaded strip states the two entry criteria (who and what); below it, two
 columns contrast good-fit workloads with workloads better run on on-premises
 ACCESS or NAIRR resources. Sources are linked in the footer line.
 
-## Content source
-
-- Adapted from slide 8 of the CloudBank 10-minute workshop overview deck.
-- Eligibility: ACCESS allocations policy,
-  https://allocations.access-ci.org/allocations-policy#eligibility
-- Recommended uses: CloudBank, "Request access to commercial cloud resources",
-  https://www.cloudbank.org/request-access-commercial-cloud-resources
-
-The on-slide text is condensed to meet the catalog's 1.5rem minimum font size
-and layout word limits. The full original wording of both sources is kept,
-verbatim, in the speaker notes (`<aside class="notes">`, shown in presenter
-view), so the presenter can quote it exactly.
-
-## Changes from the original slide
-
-- Seven long bullets → five short "good fit" items plus a separate
-  "better elsewhere" column, so the exclusion reads as a contrast, not a
-  footnote.
-- "Must have a scientific focus" moved from the bullet list into the entry
-  criteria strip, because it is a requirement, not a use.
-- CloudBank logo dropped. A logo on every CloudBank slide belongs in the
-  brand's shared header, not in individual catalog slides.
-- Google Analytics tracking parameters removed from the ACCESS link.
+The on-slide text is condensed to fit the 1.5rem minimum font size. The
+full wording of both sources is in the speaker notes (presenter view), so
+the presenter can quote it exactly.
 
 ## Tags
 
@@ -47,8 +27,14 @@ cloudbank, eligibility, access, allocations, recommended-uses, program
 
 `status: review`. Eligibility and recommended uses are program policy and can
 change. Before setting `status: ready`, the owner checks both source pages
-and confirms the condensed wording still matches. Re-check whenever the
-ACCESS policy or CloudBank's request page changes, and bump `version`.
+and confirms the condensed wording still matches:
+
+- ACCESS allocations policy (eligibility):
+  https://allocations.access-ci.org/allocations-policy#eligibility
+- CloudBank, "Request access to commercial cloud resources" (recommended uses):
+  https://www.cloudbank.org/request-access-commercial-cloud-resources
+
+Re-check whenever either page changes, and bump `version`.
 
 ## Usage
 
