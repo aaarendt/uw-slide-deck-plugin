@@ -57,12 +57,16 @@ open build/index.html
 presentation-name/
 ├── shared/
 │   ├── header.html            # Design tokens, fonts, base styles
-│   └── footer.html            # Navigation JS, closing tags
+│   └── footer.html            # reveal.js initialisation, closing tags
 ├── content/                   # Pass-1 slide fragments (text, layout, color)
 ├── content-with-visuals/      # Pass-2 slide fragments (adds photos, diagrams)
 ├── assets/
 │   ├── images/
-│   └── diagrams/
+│   ├── diagrams/
+│   └── reveal/                # reveal.js runtime (downloaded by setup-reveal.sh)
+├── tools/
+│   └── deckparse.py           # Vendored parser/validator (stdlib only)
+├── .uw-slides.json            # Plugin version stamp and brand
 ├── deck.yml                   # Deck metadata, objectives and slide order
 ├── slides/                    # One brief per slide (slides/<id>.md)
 ├── OUTLINE.md                 # Generated read-only overview (./outline.sh)
@@ -70,6 +74,8 @@ presentation-name/
 ├── build.sh                   # Pass-1 build: content/ → build/index.html
 ├── build-visuals.sh           # Pass-2 build: content-with-visuals/ → build/index-with-visuals.html
 ├── outline.sh                 # Regenerates OUTLINE.md
+├── setup-reveal.sh            # Downloads reveal.js assets (run once after scaffold)
+├── export.sh                  # PDF export via Playwright (optional)
 └── publish.sh                 # Pass-3: inline images into one portable file
 ```
 
@@ -175,7 +181,7 @@ open build/index.html
 
 ## Design System
 
-Read **`design-systems/uw-brand/DESIGN.md`** before generating any slide HTML. It is the authoritative UW brand reference (~5,500 words) covering color tokens, typography, layout patterns, component examples, accessibility requirements, and a pre-commit checklist.
+**`design-systems/uw-brand/DESIGN.md`** is the authoritative UW brand reference (~5,500 words) covering color tokens, typography, layout patterns, component examples, accessibility requirements, and a pre-commit checklist.
 
 Key tokens available in all UW slides (injected via `shared/header.html`):
 
@@ -270,20 +276,11 @@ To change defaults for all future presentations, edit the plugin's files. They a
 ```
 design-systems/uw-brand/shared/header.html          # UW header (tokens, fonts, base styles)
 design-systems/cloudbank-brand/shared/header.html   # CloudBank header
-templates/shared/footer.html                        # Navigation JS (shared by all brands)
+templates/shared/footer.html                        # reveal.js initialisation (shared by all brands)
+templates/setup-reveal.sh                           # reveal.js asset downloader
 ```
 
-Build scripts (`templates/*.sh`), `deck.yml`, `slides/`, `VISUALS.md` and `AGENTS.md` templates are copied the same way. Existing decks are not updated; they keep the copy they were scaffolded with.
-
----
-
-## Tips
-
-- Write the briefs before generating HTML. A clear key message per slide produces better slides than generating ad hoc.
-- Be specific: "Create a two-column comparison slide with purple background and gold accent on the left column."
-- If a slide feels visually sparse, the right response is stronger typography or layout — not adding a placeholder image.
-- Text must fit the slide. If content overflows, reduce the amount of text, not the font size. All visible text must be at least `1.5rem` (24pt) — anything smaller is invisible past the third row.
-- Always include `alt` text on images and use semantic HTML (`<h1>`, `<ul>`, etc.).
+Build scripts (`templates/*.sh`), `deck.yml`, `slides/`, `VISUALS.md` and `AGENTS.md` templates are copied the same way. Existing decks are not updated automatically — run `/uw-slides:update-deck` inside a deck to pull in changes from the current plugin version.
 
 ---
 
@@ -307,6 +304,14 @@ Build scripts (`templates/*.sh`), `deck.yml`, `slides/`, `VISUALS.md` and `AGENT
 - Confirm `shared/header.html` and `shared/footer.html` exist
 - Confirm `deck.yml` has a `slides:` list (the error message gives the file and line)
 - Check permissions: `chmod +x build.sh build-visuals.sh outline.sh`
+
+**Presenter view not working (press S)**
+- Run `./setup-reveal.sh` if you haven't already — it downloads `plugin/notes/notes.js` which is required for presenter view
+- If the deck was scaffolded before v0.2.0, run `/uw-slides:update-deck` to pull in the updated `footer.html` that registers the notes plugin, then re-run `./setup-reveal.sh` and rebuild
+
+**reveal.js assets not found**
+- Run `./setup-reveal.sh` from inside the deck directory; it creates `assets/reveal/`
+- If offline, download `reveal.min.js`, `reveal.min.css` and `plugin/notes/notes.js` manually from `https://cdn.jsdelivr.net/npm/reveal.js@6.0.2/` and place them in `assets/reveal/`
 
 ---
 
