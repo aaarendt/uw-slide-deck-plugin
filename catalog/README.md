@@ -181,6 +181,22 @@ params:
 
 ---
 
+### `cb-eligibility` — CloudBank eligibility and recommended uses
+**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+
+> **Program policy wording.** Check the condensed text against the ACCESS allocations policy and CloudBank's request-access page before setting `status: ready`, and again whenever either changes.
+
+Who can lead a project and what CloudBank is for: a who/what criteria strip, then "Good fit" and "Better elsewhere" columns. The full original wording of both sources is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: eligibility
+use: catalog/cb-eligibility
+---
+```
+
+---
+
 ## Adding new catalog slides
 
 See [CURATION.md](CURATION.md) for the full process. In brief:

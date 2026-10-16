@@ -8,6 +8,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Added
+- Catalog slide `cb-eligibility` (CloudBank brand, verbatim, `status: review`): who can lead a CloudBank project and recommended uses, adapted from the CloudBank 10-minute overview deck. Full source wording is kept in the speaker notes.
+
 ---
 
 ## [0.2.0] — 2026-10-15
