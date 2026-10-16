@@ -404,6 +404,264 @@ class TestCatalogSlideHtml(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
+# Tests for _strip_empty_para_elements
+# ---------------------------------------------------------------------------
+
+class TestStripEmptyParaElements(unittest.TestCase):
+
+    def test_removes_empty_href_link(self):
+        html = '<p class="url"><a href=""></a></p>'
+        self.assertEqual(rc._strip_empty_para_elements(html), "")
+
+    def test_removes_empty_href_link_with_text(self):
+        # href="" is a broken link regardless of label text
+        html = '<p class="url-line"><a href="" class="survey-link">feedback survey</a></p>'
+        self.assertEqual(rc._strip_empty_para_elements(html), "")
+
+    def test_removes_bare_mailto_with_no_text(self):
+        html = '<p class="email"><a href="mailto:"></a></p>'
+        self.assertEqual(rc._strip_empty_para_elements(html), "")
+
+    def test_keeps_mailto_with_address(self):
+        html = '<p class="email"><a href="mailto:a@b.com">a@b.com</a></p>'
+        result = rc._strip_empty_para_elements(html)
+        self.assertIn("a@b.com", result)
+
+    def test_keeps_real_url(self):
+        html = '<p class="url"><a href="https://example.com">https://example.com</a></p>'
+        result = rc._strip_empty_para_elements(html)
+        self.assertIn("example.com", result)
+
+    def test_removes_whitespace_only_para(self):
+        html = '<p class="url-text">   </p>'
+        self.assertEqual(rc._strip_empty_para_elements(html).strip(), "")
+
+    def test_removes_truly_empty_para(self):
+        html = '<p class="url-text"></p>'
+        self.assertEqual(rc._strip_empty_para_elements(html), "")
+
+    def test_leaves_para_with_content(self):
+        html = '<p class="presenter">Jane Doe</p>'
+        self.assertEqual(rc._strip_empty_para_elements(html), html)
+
+
+# ---------------------------------------------------------------------------
+# Integration: thank-you empty params strip links
+# ---------------------------------------------------------------------------
+
+class TestThankYouEmptyParams(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp(prefix="uw-test-thankyou-")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _resolve(self):
+        return rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+
+    def test_empty_email_strips_link_element(self):
+        _make_deck(self.tmpdir, ["ty"], {
+            "ty": (
+                "---\n"
+                "id: ty\n"
+                "use: catalog/thank-you\n"
+                "params:\n"
+                "  message: Thank you\n"
+                "  presenter: Jane Doe\n"
+                "  email: \"\"\n"
+                "  url: https://example.com\n"
+                "---\n"
+            ),
+        })
+        self.assertEqual(self._resolve(), 0)
+        out = _read(os.path.join(self.tmpdir, "content", "ty.html"))
+        # The <p class="email"> element must be absent — check for the HTML tag,
+        # not the string "mailto:" which also appears inside the CSS :has() selector.
+        self.assertNotIn('<p class="email">', out)
+
+    def test_empty_url_strips_link_element(self):
+        _make_deck(self.tmpdir, ["ty"], {
+            "ty": (
+                "---\n"
+                "id: ty\n"
+                "use: catalog/thank-you\n"
+                "params:\n"
+                "  message: Thank you\n"
+                "  presenter: Jane Doe\n"
+                "  email: user@example.com\n"
+                "  url: \"\"\n"
+                "---\n"
+            ),
+        })
+        self.assertEqual(self._resolve(), 0)
+        out = _read(os.path.join(self.tmpdir, "content", "ty.html"))
+        # The <p class="url"> element must be absent — check for the HTML tag,
+        # not 'href=""' which also appears inside the CSS :has() selector.
+        self.assertNotIn('<p class="url">', out)
+        # Provided email must survive
+        self.assertIn("user@example.com", out)
+
+
+# ---------------------------------------------------------------------------
+# Integration: feedback empty url strips link and text
+# ---------------------------------------------------------------------------
+
+class TestFeedbackEmptyUrl(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp(prefix="uw-test-feedback-")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def test_empty_url_strips_link_and_text_paras(self):
+        _make_deck(self.tmpdir, ["fb"], {
+            "fb": (
+                "---\n"
+                "id: fb\n"
+                "use: catalog/feedback\n"
+                "params:\n"
+                '  url: ""\n'
+                "---\n"
+            ),
+        })
+        self.assertEqual(rc.cmd_resolve(self.tmpdir, CATALOG_DIR), 0)
+        out = _read(os.path.join(self.tmpdir, "content", "fb.html"))
+        # Check for the HTML elements, not 'href=""' which also appears in the
+        # CSS :has() selector.  Both <p> wrappers must be stripped by the resolver.
+        self.assertNotIn('<p class="url-line">', out)
+        self.assertNotIn('<p class="url-text">', out)
+
+
+# ---------------------------------------------------------------------------
+# Tests for asset path rewrite (fix 3)
+# ---------------------------------------------------------------------------
+
+class TestAssetPathRewrite(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp(prefix="uw-test-assets-")
+        # Build a minimal catalog with an assets/ dir
+        self.catalog_dir = os.path.join(self.tmpdir, "catalog")
+        slide_dir = os.path.join(self.catalog_dir, "slides", "mock-asset")
+        os.makedirs(slide_dir, exist_ok=True)
+        # Write catalog.yml
+        _write(os.path.join(self.catalog_dir, "catalog.yml"),
+               "slides:\n  - id: mock-asset\n")
+        # Write slide.md
+        _write(os.path.join(slide_dir, "slide.md"),
+               "---\n"
+               "id: mock-asset\n"
+               "description: Test slide with assets\n"
+               "kind: parameterized\n"
+               "brand: any\n"
+               "version: 1.0.0\n"
+               "status: stable\n"
+               "owner: test\n"
+               "params:\n"
+               "  logo_url: https://example.com/assets/logo.png\n"
+               "---\n")
+        # Write slide.html — one real asset ref + one param that contains "assets/"
+        _write(os.path.join(slide_dir, "slide.html"),
+               '<section data-slide="mock-asset" aria-label="{{aria-label}}" class="slide">\n'
+               '  <img src="assets/logo.png" alt="logo">\n'
+               '  <a href="{{logo_url}}">link</a>\n'
+               '  <style>\n'
+               '    section[data-slide="mock-asset"] { background: url(\'assets/bg.png\'); }\n'
+               '  </style>\n'
+               '</section>\n')
+        # Create actual assets dir so the copy branch runs
+        assets_src = os.path.join(slide_dir, "assets")
+        os.makedirs(assets_src)
+        _write(os.path.join(assets_src, "logo.png"), "PNG")
+        # Create deck
+        self.deck_dir = os.path.join(self.tmpdir, "deck")
+        _make_deck(self.deck_dir, ["mock"], {
+            "mock": "---\nid: mock\nuse: catalog/mock-asset\n---\n",
+        })
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def test_src_and_css_url_are_rewritten(self):
+        rc.cmd_resolve(self.deck_dir, self.catalog_dir)
+        out = _read(os.path.join(self.deck_dir, "content", "mock.html"))
+        self.assertIn('src="../assets/images/catalog-mock-asset/logo.png"', out)
+        self.assertIn("url('../assets/images/catalog-mock-asset/bg.png')", out)
+
+    def test_param_url_containing_assets_is_not_mangled(self):
+        rc.cmd_resolve(self.deck_dir, self.catalog_dir)
+        out = _read(os.path.join(self.deck_dir, "content", "mock.html"))
+        # The logo_url param value "https://example.com/assets/logo.png"
+        # must arrive verbatim — not rewritten
+        self.assertIn("https://example.com/assets/logo.png", out)
+
+
+# ---------------------------------------------------------------------------
+# Tests for brand compatibility check (fix 4)
+# ---------------------------------------------------------------------------
+
+class TestBrandCompatibility(unittest.TestCase):
+
+    def test_brands_match_any(self):
+        self.assertTrue(rc._brands_match("any", "uw-brand"))
+        self.assertTrue(rc._brands_match("any", "cloudbank-brand"))
+
+    def test_brands_match_uw_alias(self):
+        self.assertTrue(rc._brands_match("uw", "uw-brand"))
+        self.assertFalse(rc._brands_match("uw", "cloudbank-brand"))
+
+    def test_brands_match_cloudbank_alias(self):
+        self.assertTrue(rc._brands_match("cloudbank", "cloudbank-brand"))
+        self.assertFalse(rc._brands_match("cloudbank", "uw-brand"))
+
+    def test_brands_match_full_form(self):
+        self.assertTrue(rc._brands_match("uw-brand", "uw-brand"))
+        self.assertFalse(rc._brands_match("uw-brand", "cloudbank-brand"))
+
+
+class TestBrandMismatchWarning(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp(prefix="uw-test-brand-")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def test_uw_slide_in_cloudbank_deck_warns(self):
+        _make_deck(self.tmpdir, ["title"], {
+            "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
+        })
+        # Stamp deck as cloudbank
+        _write(os.path.join(self.tmpdir, ".uw-slides.json"),
+               '{"plugin_version": "0.2.0", "brand": "cloudbank-brand", '
+               '"scaffolded_at": "2026-01-01", "catalog": null}')
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        self.assertIn("brand=", buf.getvalue())
+        self.assertIn("cloudbank-brand", buf.getvalue())
+
+    def test_uw_slide_in_uw_deck_no_brand_warning(self):
+        _make_deck(self.tmpdir, ["title"], {
+            "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
+        })
+        _write(os.path.join(self.tmpdir, ".uw-slides.json"),
+               '{"plugin_version": "0.2.0", "brand": "uw-brand", '
+               '"scaffolded_at": "2026-01-01", "catalog": null}')
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        # No brand warning; only possible output is empty-param warnings
+        self.assertNotIn("may render incorrectly", buf.getvalue())
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
