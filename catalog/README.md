@@ -114,7 +114,7 @@ params:
 ### `agenda` — Agenda
 **Kind:** derived · **Brand:** any · **Status:** ready
 
-Auto-generated from `deck.yml`. Lists slide titles (falling back to ID when no title is set) in deck order, with durations where set. Structural layouts (`title`, `section-divider`, `closing`) and hidden slides (`section: hidden`) are excluded. Re-run the resolver after changing slide titles or durations.
+Auto-generated from `deck.yml`, in deck order, with minutes where briefs set `duration:`. Slides that share a `section:` become one item named after the section (or, without sections, each `section-divider` and the slides after it). Title and closing slides, hidden slides (`section: hidden`) and the framing catalog slides are left out. Up to 7 items fit in one column and 12 in two; past that the resolver warns. Re-run the resolver after changing titles, sections or durations.
 
 | Param | Required | Default |
 |-------|----------|---------|

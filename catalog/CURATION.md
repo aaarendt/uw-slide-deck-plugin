@@ -49,6 +49,7 @@ catalog/slides/<id>/
 | `version` | yes | Semantic version (`"1.0.0"`) |
 | `status` | yes | `draft`, `review`, or `ready` |
 | `owner` | yes | Team or handle responsible for the slide |
+| `in_agenda` | no | `false` keeps the slide out of the generated agenda (framing slides); default `true` |
 | `params` | no | Map of param names to default values |
 
 ## Kinds

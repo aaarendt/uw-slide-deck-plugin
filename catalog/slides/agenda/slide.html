@@ -1,12 +1,12 @@
 <section data-slide="agenda"
          data-layout="catalog"
-         data-catalog="agenda@1.0.0"
+         data-catalog="agenda@1.1.0"
          aria-label="{{aria-label}}"
          class="slide">
 
   <div class="layout">
     <h1>{{heading}}</h1>
-    <ol class="agenda-list">
+    <ol class="{{agenda_class}}">
       {{agenda_items}}
     </ol>
   </div>
@@ -14,12 +14,14 @@
   <style>
     section[data-slide="agenda"] {
       --bg: var(--slide-bg-light);
-      --fg: var(--slide-text-on-light);
-      --fg-muted: var(--slide-text-muted-on-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
       --accent: var(--slide-accent);
       background: var(--bg);
       color: var(--fg);
       position: relative;
+      text-align: left;
     }
 
     section[data-slide="agenda"]::before {
@@ -44,11 +46,11 @@
     section[data-slide="agenda"] h1 {
       font-family: var(--font-display);
       font-size: clamp(2.25rem, 3.5vw, 4rem);
-      font-weight: 900;
+      font-weight: var(--slide-heading-weight);
       line-height: 1.1;
       letter-spacing: -0.01em;
       text-transform: var(--slide-heading-transform);
-      color: var(--fg);
+      color: var(--head);
       margin: 0;
     }
 
@@ -56,9 +58,14 @@
       list-style: none;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
+    }
+
+    /* More than 7 items: two balanced columns, read top to bottom. The
+       resolver caps the list at 12 items, which is what fits at 1280x720
+       when labels wrap to two lines. */
+    section[data-slide="agenda"] .agenda-list.two-columns {
+      columns: 2;
+      column-gap: var(--space-8);
     }
 
     section[data-slide="agenda"] .agenda-list li {
@@ -70,13 +77,19 @@
       display: flex;
       align-items: baseline;
       gap: var(--space-2);
+      margin: 0 0 var(--space-3);
+      break-inside: avoid;
+    }
+
+    section[data-slide="agenda"] .agenda-list .label {
+      min-width: 0;
     }
 
     section[data-slide="agenda"] .agenda-list li::before {
       content: "";
       display: inline-block;
-      width: 6px;
-      height: 6px;
+      width: 0.4em;
+      height: 0.4em;
       border-radius: 50%;
       background: var(--accent);
       flex-shrink: 0;
