@@ -5,6 +5,7 @@ kind: verbatim
 brand: uw
 version: "1.0.0"
 status: draft
+in_agenda: false
 owner: plugin
 ---
 

@@ -5,6 +5,7 @@ kind: parameterized
 brand: any
 version: "1.0.0"
 status: ready
+in_agenda: false
 owner: plugin
 params:
   message: "Thank You"

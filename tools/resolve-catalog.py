@@ -35,7 +35,12 @@ Param substitution:
 
 Derived slides (kind: derived):
   The agenda slide is the only built-in derived kind. Its {{agenda_items}}
-  placeholder is replaced with <li> elements built from the deck's briefs.
+  placeholder is replaced with <li> elements built from the deck's briefs, and
+  {{agenda_class}} with the list's classes ("agenda-list", plus "two-columns"
+  when it needs two columns).
+  Slides are grouped by `section:` (or by section-divider slides) when the
+  deck uses them; catalog slides with `in_agenda: false` in slide.md are left
+  out; at most 12 items are shown.
 """
 
 import html
@@ -83,6 +88,7 @@ def _find_catalog(override=None):
 
 SLIDE_MD_FIELDS = {
     "id", "description", "kind", "brand", "version", "status", "owner", "params",
+    "in_agenda",
 }
 SLIDE_MD_KINDS = ("verbatim", "parameterized", "derived")
 
@@ -117,7 +123,11 @@ def _load_catalog_slide_meta(catalog_path, catalog_id):
         raise ValueError(
             f"{meta_path}: kind must be one of {', '.join(SLIDE_MD_KINDS)}, got {data['kind']!r}"
         )
+    in_agenda = data.get("in_agenda", True)
+    if not isinstance(in_agenda, bool):
+        raise ValueError(f"{meta_path}: in_agenda must be true or false, got {in_agenda!r}")
     return {
+        "in_agenda": in_agenda,
         "id": data["id"],
         "description": data.get("description", ""),
         "kind": data["kind"],
@@ -163,7 +173,7 @@ def _substitute_params(template, params, raw_keys=()):
 
 def _warn_empty_params(template, catalog_defaults, merged_params, slide_id):
     """Warn when a {{key}} resolves to '' and the catalog default was also ''."""
-    internal = {"aria-label", "agenda_items"}
+    internal = {"aria-label", "agenda_items", "agenda_class"}
     warned = []
     seen = set()
     for m in PARAM_RE.finditer(template):
@@ -307,10 +317,42 @@ def _brands_match(catalog_brand, deck_brand):
 
 _AGENDA_EXCLUDED_LAYOUTS = {"title", "section-divider", "closing"}
 
+# Items that fit the agenda slide at the 1.5rem minimum font size, measured in
+# both brands at 1280x720 (the tightest common screen), 1920x1080 and 1024x768:
+# a full-width column holds 7 one-line items; a half-width column holds 6 items
+# whose labels wrap to two lines, which typical titles do there. Beyond
+# _AGENDA_MAX the list is cut and the author warned.
+_AGENDA_ONE_COLUMN_MAX = 7
+_AGENDA_MAX = 12
 
-def _build_agenda_items(deck_dir, deck, briefs, self_id):
-    """Build <li> elements for the agenda slide. Excludes structural slides and self."""
-    items = []
+H1_RE = re.compile(r"<h1\b[^>]*>(.*?)</h1>", re.S)
+TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _catalog_heading(catalog_path, catalog_id):
+    """Return the plain-text <h1> of a catalog slide, or None.
+
+    None when the slide has no <h1> or its heading is a {{param}} (the
+    resolved text is not known here)."""
+    path = os.path.join(catalog_path, "slides", catalog_id, "slide.html")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            m = H1_RE.search(fh.read())
+    except OSError:
+        return None
+    if not m or "{{" in m.group(1):
+        return None
+    text = html.unescape(TAG_RE.sub("", m.group(1)))
+    return " ".join(text.split()) or None
+
+
+def _agenda_entries(deck, briefs, self_id, catalog_path):
+    """Return the deck's agenda entries in deck order.
+
+    Each entry is a dict: label, duration (int or None), section (str or
+    None) and divider (True for a section-divider slide, which starts a
+    group but is not itself an item)."""
+    entries = []
     for sid in deck["slides"]:
         if sid == self_id:
             continue
@@ -318,19 +360,92 @@ def _build_agenda_items(deck_dir, deck, briefs, self_id):
         if b is None or isinstance(b, deckparse.DeckParseError):
             continue
         f = b["front_matter"]
-        if f.get("layout") in _AGENDA_EXCLUDED_LAYOUTS:
+        section = f.get("section")
+        if section == "hidden":
             continue
-        label = f.get("title") or b["body"].get("key_message") or sid
-        # Truncate key message to first line only
-        label = label.split("\n")[0].strip()
-        label_esc = html.escape(label)
-        duration = f.get("duration")
-        if duration:
-            dur_html = f'<span class="duration">{html.escape(str(duration))} min</span>'
+        layout = f.get("layout")
+        use = f.get("use") or ""
+        heading = None
+        if use.startswith("catalog/"):
+            catalog_id = use[len("catalog/"):]
+            try:
+                meta = _load_catalog_slide_meta(catalog_path, catalog_id)
+            except (FileNotFoundError, ValueError):
+                meta = None
+            if meta is not None and not meta["in_agenda"]:
+                continue
+            heading = _catalog_heading(catalog_path, catalog_id)
+        elif layout in ("title", "closing"):
+            continue
+        label = f.get("title") or heading or b["body"].get("key_message") or sid
+        entries.append({
+            "label": label.split("\n")[0].strip(),
+            "duration": f.get("duration"),
+            "section": section,
+            "divider": layout == "section-divider",
+        })
+    return entries
+
+
+def _group_agenda(entries):
+    """Collapse entries into agenda items: (label, minutes or None).
+
+    Sections win: when any slide sets `section:`, consecutive slides that
+    share a section become one item named after it. Otherwise, when the deck
+    has section-divider slides, each divider and the slides after it become
+    one item named after the divider. Dividers are skipped when sections are
+    in use, since the sections already name the parts. Slides outside any group are listed on
+    their own. A group's minutes are the sum of the minutes its slides set."""
+    use_sections = any(e["section"] for e in entries)
+    use_dividers = not use_sections and any(e["divider"] for e in entries)
+    items = []          # [label, minutes, key]; key identifies the open group
+    current = None
+    for e in entries:
+        if use_sections:
+            if e["divider"]:
+                continue    # sections already name the parts
+            key = ("section", e["section"]) if e["section"] else None
+            label = e["section"]
+        elif use_dividers:
+            if e["divider"]:
+                current = ("divider", len(items))
+                items.append([e["label"], None, current])
+                continue
+            key, label = current, None
         else:
-            dur_html = ""
-        items.append(f"      <li>{label_esc}{dur_html}</li>")
-    return "\n".join(items) if items else "      <li>(no slides found)</li>"
+            if e["divider"]:
+                continue
+            key, label = None, None
+        if key is not None and items and items[-1][2] == key:
+            if e["duration"]:
+                items[-1][1] = (items[-1][1] or 0) + e["duration"]
+            continue
+        items.append([label or e["label"], e["duration"] or None, key])
+    return [(label, minutes) for label, minutes, _ in items]
+
+
+def _build_agenda_items(deck_dir, deck, briefs, self_id, catalog_path):
+    """Build the agenda's <li> elements and the list's CSS classes.
+
+    Returns (items_html, list_class)."""
+    items = _group_agenda(_agenda_entries(deck, briefs, self_id, catalog_path))
+    if not items:
+        return "      <li>(no slides found)</li>", "agenda-list"
+    if len(items) > _AGENDA_MAX:
+        hidden = len(items) - (_AGENDA_MAX - 1)
+        print(
+            f"  ⚠ {self_id}: the agenda has {len(items)} items but only {_AGENDA_MAX} fit; "
+            f"showing {_AGENDA_MAX - 1} and \"and {hidden} more\". Group slides with "
+            "`section:` in their briefs, or add section-divider slides, to shorten it",
+            file=sys.stderr,
+        )
+        items = items[:_AGENDA_MAX - 1] + [(f"and {hidden} more", None)]
+    rows = []
+    for label, minutes in items:
+        dur_html = f'<span class="duration">{minutes} min</span>' if minutes else ""
+        rows.append(f"      <li><span class=\"label\">{html.escape(label)}</span>{dur_html}</li>")
+    list_class = "agenda-list two-columns" if len(items) > _AGENDA_ONE_COLUMN_MAX else "agenda-list"
+    return "\n".join(rows), list_class
 
 
 # ---------------------------------------------------------------------------
@@ -382,6 +497,8 @@ def _resolve_one(deck_dir, deck, briefs, sid, slide_pos, catalog_path):
     aria_title = (
         f.get("title")
         or params.get("title")
+        or params.get("heading")
+        or _catalog_heading(catalog_path, catalog_id)
         or meta.get("description", catalog_id)
     )
     aria_label = f"Slide {slide_pos}: {aria_title}"
@@ -391,8 +508,8 @@ def _resolve_one(deck_dir, deck, briefs, sid, slide_pos, catalog_path):
     raw_keys = set()
     if meta["kind"] == "derived":
         if catalog_id == "agenda":
-            params["agenda_items"] = _build_agenda_items(
-                deck_dir, deck, briefs, sid
+            params["agenda_items"], params["agenda_class"] = _build_agenda_items(
+                deck_dir, deck, briefs, sid, catalog_path
             )
             raw_keys.add("agenda_items")
         else:
