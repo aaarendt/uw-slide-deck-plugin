@@ -10,27 +10,31 @@
     <ol class="flow">
       <li>
         <h2>Estimate costs</h2>
-        <span class="tags"><span class="tag prov">Providers</span></span>
+        <p>Use the cloud cost calculators to estimate expenses.</p>
+        <span class="tags"><span class="tag prov">Cloud provider</span></span>
       </li>
       <li>
         <h2>Request allocation</h2>
+        <p>Create an ACCESS account and request credits.</p>
         <span class="tags"><span class="tag acc">ACCESS</span></span>
       </li>
       <li>
         <h2>Exchange credits</h2>
+        <p>Turn ACCESS credits into CloudBank dollars.</p>
         <span class="tags"><span class="tag acc">ACCESS</span></span>
       </li>
       <li>
         <h2>Onboard</h2>
+        <p>Follow the instructions in your onboarding email.</p>
         <span class="tags"><span class="tag cb">CloudBank</span></span>
       </li>
-      <li>
-        <h2>Manage and use</h2>
-        <span class="tags"><span class="tag acc">ACCESS</span><span class="tag cb">CloudBank</span><span class="tag prov">Providers</span></span>
+      <li class="goal">
+        <h2>Start working in the cloud</h2>
+        <span class="tags"><span class="tag prov">Cloud provider</span></span>
       </li>
     </ol>
 
-    <p class="caption">Tags show where each step happens.</p>
+    <p class="caption">Tags show where each step happens. Cloud providers: AWS, Google, Azure, IBM.</p>
   </div>
   <aside class="notes">
     PROCESS: <1 week from application to account. ACCESS CloudBank for
@@ -107,27 +111,30 @@
     section[data-slide="cb-process"] .flow {
       list-style: none;
       counter-reset: step;
-      margin: var(--space-2) 0 var(--space-5);
+      margin: var(--space-1) 0 var(--space-3);
       padding: 0;
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 0.95fr);
       gap: clamp(1.5rem, 2.6vw, 2.75rem);
     }
 
     section[data-slide="cb-process"] .flow li {
-      counter-increment: step;
       position: relative;
       min-width: 0;
       display: flex;
       flex-direction: column;
       gap: var(--space-2);
-      padding: var(--space-3) var(--space-2) var(--space-3);
+      padding: var(--space-2);
       background: var(--slide-bg-subtle);
       border-top: var(--slide-accent-size) solid var(--slide-accent);
       border-radius: var(--radius-md);
     }
 
-    section[data-slide="cb-process"] .flow li::before {
+    section[data-slide="cb-process"] .flow li:not(.goal) {
+      counter-increment: step;
+    }
+
+    section[data-slide="cb-process"] .flow li:not(.goal)::before {
       content: counter(step);
       display: flex;
       align-items: center;
@@ -171,10 +178,23 @@
       gap: var(--space-1);
     }
 
+    section[data-slide="cb-process"] .flow p {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-process"] .flow .goal {
+      background: var(--cb-deep-navy);
+      border-top-color: var(--cb-deep-navy);
+    }
+
+    section[data-slide="cb-process"] .flow .goal h2 { color: var(--slide-text-on-dark); }
+
     section[data-slide="cb-process"] .tag {
       display: inline-block;
       padding: 2px 12px;
-      border-radius: 999px;
+      border-radius: 1.1rem;
       border: 2px solid var(--head);
       font-size: 1.5rem;
       line-height: 1.3;
@@ -184,6 +204,7 @@
     section[data-slide="cb-process"] .tag.acc { background: var(--slide-accent); border-color: var(--slide-accent); color: var(--slide-text-on-dark); }
     section[data-slide="cb-process"] .tag.cb { background: var(--cb-deep-navy); border-color: var(--cb-deep-navy); color: var(--slide-text-on-dark); }
     section[data-slide="cb-process"] .tag.prov { background: var(--slide-bg-light); color: var(--head); }
+    section[data-slide="cb-process"] .goal .tag.prov { border-color: var(--slide-bg-light); }
 
     section[data-slide="cb-process"] .caption {
       font-size: clamp(1.5rem, 1.9vw, 1.75rem);

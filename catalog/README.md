@@ -266,7 +266,7 @@ use: catalog/cb-award-tiers
 
 > **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
 
-A left-to-right flow of five numbered steps, with a text tag under each (ACCESS, CloudBank, Providers) showing which system it happens in. The full original wording is in the speaker notes. No params; eject to customise.
+A left-to-right flow of four numbered, described steps ending in a "Start working in the cloud" card, with a text tag under each (ACCESS, CloudBank, Cloud provider) showing which system it happens in. The full original wording is in the speaker notes. No params; eject to customise.
 
 ```markdown
 ---
