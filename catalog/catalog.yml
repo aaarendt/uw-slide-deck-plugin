@@ -14,6 +14,11 @@ agenda: "Auto-generated agenda built from the deck.yml slide titles"
 feedback: "Session feedback slide — configurable URL for survey or QR code"
 thank-you: "Closing thank-you slide with presenter name and contact info"
 cb-eligibility: "CloudBank eligibility (who can lead a project) and recommended uses (good fit vs. better elsewhere)"
+cb-what-is: "What CloudBank is: who runs it, which clouds, the 2025 NSF award and the NAIRR link"
+cb-programs: "CloudBank's six standard services: no cost, helpdesk, accounts, multiple clouds, monitoring, training"
+cb-why-choose: "Why a researcher would choose a CloudBank account: no card, one bill, spending cap, grant dollars"
+cb-award-tiers: "CloudBank grant award tiers (Explore, Discover, Accelerate): dollar ranges, averages, who each fits"
+cb-process: "CloudBank onboarding process in five steps, from cost estimate to using the clouds, in under a week"
 
 # Ordered list of slide IDs included in this catalog.
 slides:
@@ -24,3 +29,8 @@ slides:
   - feedback
   - thank-you
   - cb-eligibility
+  - cb-what-is
+  - cb-programs
+  - cb-why-choose
+  - cb-award-tiers
+  - cb-process

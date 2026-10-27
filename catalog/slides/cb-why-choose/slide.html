@@ -1,0 +1,129 @@
+<section data-slide="cb-why-choose"
+         data-layout="catalog"
+         data-catalog="cb-why-choose@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>Why choose CloudBank for an account?</h1>
+
+    <ul class="reasons">
+      <li>No credit card or university purchase agreement</li>
+      <li>One billing account, multiple clouds: AWS, Google, Azure, IBM</li>
+      <li>Automatic cost monitoring and a spending cap</li>
+    </ul>
+
+    <div class="callout">
+      <h2>Grant dollars, not credits</h2>
+      <p>Usable for marketplace services: third-party applications and LLM model access</p>
+    </div>
+  </div>
+  <aside class="notes">
+    WHY CHOOSE CLOUDBANK FOR AN ACCOUNT? No Credit Card or University purchase
+    agreement required! One billing account, multiple clouds: AWS, Google, Azure,
+    IBM. Peace of mind with automatic cost monitoring & spending cap. These are
+    *grant dollars* not credits, and therefore can be used for marketplace
+    services: 3rd party applications; LLM model access.
+  </aside>
+
+  <style>
+    section[data-slide="cb-why-choose"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-why-choose"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-why-choose"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-why-choose"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-why-choose"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-why-choose"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+
+    section[data-slide="cb-why-choose"] .reasons {
+      list-style: none;
+      margin: 0 0 var(--space-5);
+      padding: 0;
+      font-size: clamp(1.5rem, 2.3vw, 2.125rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-why-choose"] li {
+      position: relative;
+      padding-left: 1.4em;
+      margin: 0 0 var(--space-3);
+    }
+
+    section[data-slide="cb-why-choose"] li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.45em;
+      width: 0.55em;
+      height: 0.55em;
+      border-radius: 50%;
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-why-choose"] .callout {
+      background: var(--slide-bg-subtle);
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      padding: var(--space-3) var(--space-4);
+      font-size: clamp(1.5rem, 2.3vw, 2.125rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-why-choose"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 var(--space-1);
+    }
+
+    section[data-slide="cb-why-choose"] .callout p { margin: 0; }
+  </style>
+</section>

@@ -1,0 +1,141 @@
+<section data-slide="cb-programs"
+         data-layout="catalog"
+         data-catalog="cb-programs@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>CloudBank programs</h1>
+
+    <div class="grid">
+      <div class="item">
+        <h2>No cost</h2>
+        <p>NSF sponsors access through ACCESS and the NAIRR Pilot</p>
+      </div>
+      <div class="item">
+        <h2>Consulting and helpdesk</h2>
+        <p>Experts help estimate costs, onboard and troubleshoot</p>
+      </div>
+      <div class="item">
+        <h2>Account management</h2>
+        <p>Quick provisioning, familiar logins, shared access</p>
+      </div>
+      <div class="item">
+        <h2>Multiple clouds</h2>
+        <p>Explore several clouds with pay-by-use charges</p>
+      </div>
+      <div class="item">
+        <h2>Monitoring and optimization</h2>
+        <p>Balance alerts and tips on unused resources</p>
+      </div>
+      <div class="item">
+        <h2>Curated training</h2>
+        <p>Videos and materials for getting started</p>
+      </div>
+    </div>
+
+    <p class="source">Sources:
+      <a href="https://operations.access-ci.org/node/905">ACCESS resource page: CloudBank Research</a> ·
+      <a href="https://support.access-ci.org/node/11714">ACCESS announcement</a></p>
+  </div>
+  <aside class="notes">
+    CLOUDBANK PROGRAMS. No cost: NSF sponsors access to commercial cloud
+    resources through ACCESS and the NAIRR Pilot for researchers and educators.
+    Consulting and helpdesk support: Experts are available to help estimate
+    costs, onboard, and troubleshoot issues. Facilitated cloud access and
+    account management: Cloud accounts are provisioned quickly, allow log in to
+    cloud consoles with familiar credentials, and share access with
+    collaborators. Multiple clouds: Researchers can explore and access multiple
+    clouds to find the right services with CloudBank's pay by use charge model.
+    Monitoring and resource usage optimization: Spending is monitored across
+    multiple clouds and triggers automated email balance alerts. Cost
+    optimization recommendations detect unused or underutilized resources.
+    Curated training materials: CloudBank training videos and curated cloud
+    training materials help researchers get started with cloud services.
+  </aside>
+
+  <style>
+    section[data-slide="cb-programs"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-programs"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-programs"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-programs"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-programs"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-programs"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+
+    section[data-slide="cb-programs"] .grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4) clamp(2rem, 4vw, 4rem);
+      align-content: start;
+    }
+
+    section[data-slide="cb-programs"] .item {
+      min-width: 0;
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      padding: 0 0 0 var(--space-3);
+      font-size: clamp(1.5rem, 1.9vw, 1.75rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-programs"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.2vw, 2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 4px;
+    }
+
+    section[data-slide="cb-programs"] .item p { margin: 0; }
+  </style>
+</section>

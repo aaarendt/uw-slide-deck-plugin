@@ -1,0 +1,155 @@
+<section data-slide="cb-award-tiers"
+         data-layout="catalog"
+         data-catalog="cb-award-tiers@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>Grant award tiers</h1>
+
+    <table>
+      <thead>
+        <tr><th scope="col">Tier</th><th scope="col">Range</th><th scope="col">Average</th><th scope="col">Typical use</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Explore</th><td>up to $10,000</td><td>$5,000</td><td>Grad students, first-time users; 1-page proposal</td></tr>
+        <tr><th scope="row">Discover</th><td>$10,001–$37,500</td><td>$18,750</td><td>Multi-user app or scaling up; 3-page proposal</td></tr>
+        <tr><th scope="row">Accelerate</th><td>$37,501–$75,000</td><td>$56,250</td><td>Established gateway, many users, multiple years</td></tr>
+      </tbody>
+    </table>
+
+    <ul class="facts">
+      <li>Hundreds of Explore awards a year</li>
+      <li>Discover and Accelerate are competitive</li>
+      <li>Two installments; renewable after 1 year</li>
+    </ul>
+  </div>
+  <aside class="notes">
+    GRANT AWARD TIERS. Explore: up to $10,000; average award $5000; examples:
+    Grad students, first time cloud user, no PI status on any grants. 1 page
+    proposal. Discover: $10,001-$37,500; average award $18,750; examples: Larger
+    multi-user application or scaling an existing experiment. 3 page proposal.
+    Accelerate: $37,501-$75,000; average award $56,250; examples: Established
+    scientific gateway with many users over multiple years. Hundreds of
+    "Explore" awards available per year. Discover & Accelerate awards are
+    competitive (limited number per year and more justification required).
+    Awards provided in 2 installments, renewable if needed after 1 year.
+  </aside>
+
+  <style>
+    section[data-slide="cb-award-tiers"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-award-tiers"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-award-tiers"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-award-tiers"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-award-tiers"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-award-tiers"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+
+    section[data-slide="cb-award-tiers"] table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin: 0 0 var(--space-3);
+      font-size: clamp(1.5rem, 1.9vw, 1.75rem);
+      line-height: 1.25;
+    }
+
+    section[data-slide="cb-award-tiers"] th,
+    section[data-slide="cb-award-tiers"] td {
+      text-align: left;
+      vertical-align: top;
+      padding: 12px var(--space-2);
+      border-bottom: 2px solid var(--cb-gray-10);
+    }
+
+    section[data-slide="cb-award-tiers"] thead th {
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: var(--head);
+      background: var(--slide-bg-subtle);
+      border-bottom: var(--slide-accent-size) solid var(--slide-accent);
+    }
+
+    section[data-slide="cb-award-tiers"] tbody th {
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-award-tiers"] th:nth-child(1) { width: 17%; }
+    section[data-slide="cb-award-tiers"] th:nth-child(2) { width: 24%; }
+    section[data-slide="cb-award-tiers"] th:nth-child(3) { width: 15%; }
+
+    section[data-slide="cb-award-tiers"] .facts {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: clamp(1.5rem, 1.9vw, 1.75rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-award-tiers"] li {
+      position: relative;
+      padding-left: 1.4em;
+      margin: 0 0 var(--space-1);
+    }
+
+    section[data-slide="cb-award-tiers"] li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.45em;
+      width: 0.55em;
+      height: 0.55em;
+      border-radius: 50%;
+      background: var(--slide-accent);
+    }
+  </style>
+</section>
