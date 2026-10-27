@@ -10,7 +10,7 @@ owner: aaarendt
 
 # Description
 
-A numbered five-step flow from estimating costs to using commercial cloud accounts. The last step condenses three actions: manage users in ACCESS, assign them to cloud accounts in the CloudBank Portal, and use the clouds.
+A left-to-right flow of five numbered steps from estimating costs to using commercial cloud accounts, drawn in HTML and CSS with arrows between steps. A text tag under each step (ACCESS, CloudBank, Providers) shows which system it happens in, replacing the logos used in the program's own diagram. The last step condenses three actions: manage users in ACCESS, assign them to cloud accounts in the CloudBank Portal, and use the clouds at the providers' portals. Step detail is in the speaker notes.
 
 The on-slide text is condensed to fit the 1.5rem minimum font size. The
 original wording is in the speaker notes (presenter view), so the presenter

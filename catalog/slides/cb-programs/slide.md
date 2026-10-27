@@ -10,7 +10,7 @@ owner: aaarendt
 
 # Description
 
-Six services CloudBank provides, in a two-column grid of short headed items. No icons or logos.
+Six services CloudBank provides, in a two-column grid of short headed items. Each has an original line icon (inline SVG, decorative, `aria-hidden`) in a tinted circle. No logos and no copied artwork.
 
 The on-slide text is condensed to fit the 1.5rem minimum font size. The
 original wording is in the speaker notes (presenter view), so the presenter
