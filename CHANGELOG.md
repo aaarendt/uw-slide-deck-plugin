@@ -14,9 +14,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ### Changed
 - `catalog/CURATION.md` now admits program slides (standard slides for a program such as CloudBank) alongside framing slides, with a brand and ID prefix per program, a size guideline per program, and rules for policy wording that changes.
 - `plan-deck` checks a program's catalog slides against planned content slides in decks of that program's brand, not only framing roles.
+- Catalog `agenda` 1.1.0 groups slides into parts: slides that share a `section:` become one item (or, without sections, each `section-divider` and the slides after it), with their minutes summed. New optional `slide.md` field `in_agenda: false` keeps framing catalog slides out of the agenda; the six seeded framing slides set it.
+- Catalog slides without a `title` now take their `aria-label`, and their agenda label, from their own heading instead of the catalog description.
 
 ### Fixed
 - Slide text was centered on every slide in reveal.js decks, because `reveal.css` centers slide text and neither brand header overrode it. Both `header-reveal.html` files now set `text-align: left` on `section.slide`. Layouts meant to be centered (`title`, `closing`, `stat-callout` and the centered catalog slides) set it themselves and are unchanged. Existing decks pick this up with `/uw-slides:update-deck`.
+- The `agenda` catalog slide ran off the bottom of the screen in decks with more than about 9 content slides. It now uses two balanced columns past 7 items and caps the list at 12, which fits at 1280×720 even when labels wrap; past 12 the resolver shows 11 plus "and N more" and warns.
+- The `agenda` listed framing catalog slides by their IDs ("title", "land-ack", "funding", "feedback"), ignored `section: hidden`, and used two color tokens no brand defines, so its heading was plain black. All fixed.
 
 ---
 

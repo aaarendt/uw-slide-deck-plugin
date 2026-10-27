@@ -250,7 +250,7 @@ class TestResolveIntegration(unittest.TestCase):
         self.assertEqual(result, 0)
         out = _read(os.path.join(self.tmpdir, "content", "agenda.html"))
         # Content slide appears; agenda_items must be raw HTML (not escaped)
-        self.assertIn("<li>Introduction", out)
+        self.assertIn('<li><span class="label">Introduction</span>', out)
         self.assertIn("5 min", out)
         self.assertNotIn("&lt;li&gt;", out)
         # Structural slides are excluded: closing should not appear
@@ -714,6 +714,138 @@ class TestBrandMismatchWarning(unittest.TestCase):
         with contextlib.redirect_stderr(buf):
             rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
         self.assertNotIn("may render incorrectly", buf.getvalue())
+
+
+# ---------------------------------------------------------------------------
+# Tests for the derived agenda: exclusions, grouping, labels, fit
+# ---------------------------------------------------------------------------
+
+def _brief(sid, fm="", key_message="x"):
+    """A minimal valid brief; fm is extra front matter lines."""
+    body = f"\n# Key message\n{key_message}\n" if key_message else ""
+    return f"---\nid: {sid}\n{fm}---\n{body}"
+
+
+class TestAgenda(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _agenda(self, order, briefs):
+        """Resolve a deck whose first slide is the agenda.
+
+        Returns (labels, list_class, stderr, html)."""
+        import contextlib
+        import io
+        import re
+        briefs = dict(briefs)
+        briefs["agenda"] = "---\nid: agenda\nuse: catalog/agenda\n---\n"
+        _make_deck(self.tmpdir, ["agenda"] + order, briefs)
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf), contextlib.redirect_stdout(io.StringIO()):
+            rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        out = _read(os.path.join(self.tmpdir, "content", "agenda.html"))
+        labels = re.findall(r'<span class="label">(.*?)</span>', out)
+        list_class = re.search(r'<ol class="([^"]*)"', out).group(1)
+        return labels, list_class, buf.getvalue(), out
+
+    def test_framing_catalog_slides_left_out(self):
+        order = ["title", "land-ack", "intro", "funding", "feedback", "thanks"]
+        labels, _, _, _ = self._agenda(order, {
+            "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
+            "land-ack": "---\nid: land-ack\nuse: catalog/land-ack\n---\n",
+            "intro": _brief("intro", "layout: key-message\ntitle: Introduction\n"),
+            "funding": "---\nid: funding\nuse: catalog/funding\n---\n",
+            "feedback": "---\nid: feedback\nuse: catalog/feedback\n---\n",
+            "thanks": "---\nid: thanks\nuse: catalog/thank-you\n---\n",
+        })
+        self.assertEqual(labels, ["Introduction"])
+
+    def test_program_catalog_slide_uses_its_heading(self):
+        labels, _, _, _ = self._agenda(["eligibility"], {
+            "eligibility": "---\nid: eligibility\nuse: catalog/cb-eligibility\n---\n",
+        })
+        self.assertEqual(labels, ["Eligibility and recommended uses"])
+
+    def test_hidden_section_left_out(self):
+        labels, _, _, _ = self._agenda(["a", "b"], {
+            "a": _brief("a", "layout: bullets\ntitle: Shown\n"),
+            "b": _brief("b", "layout: bullets\ntitle: Backup\nsection: hidden\n"),
+        })
+        self.assertEqual(labels, ["Shown"])
+
+    def test_groups_by_section_and_sums_minutes(self):
+        labels, _, _, out = self._agenda(["a", "b", "c", "d"], {
+            "a": _brief("a", "layout: bullets\nsection: Why cloud\nduration: 2\n"),
+            "b": _brief("b", "layout: bullets\nsection: Why cloud\nduration: 3\n"),
+            "c": _brief("c", "layout: bullets\nsection: Getting access\n"),
+            "d": _brief("d", "layout: bullets\ntitle: Loose slide\nduration: 1\n"),
+        })
+        self.assertEqual(labels, ["Why cloud", "Getting access", "Loose slide"])
+        self.assertIn('<span class="label">Why cloud</span><span class="duration">5 min</span>', out)
+        self.assertIn('<span class="label">Getting access</span></li>', out)
+
+    def test_groups_by_section_divider(self):
+        labels, _, _, out = self._agenda(["opener", "d1", "a", "b", "d2", "c"], {
+            "opener": _brief("opener", "layout: key-message\ntitle: Opening\n"),
+            "d1": _brief("d1", "layout: section-divider\n", "Part one"),
+            "a": _brief("a", "layout: bullets\nduration: 2\n"),
+            "b": _brief("b", "layout: bullets\nduration: 2\n"),
+            "d2": _brief("d2", "layout: section-divider\ntitle: Part two\n"),
+            "c": _brief("c", "layout: bullets\n"),
+        })
+        self.assertEqual(labels, ["Opening", "Part one", "Part two"])
+        self.assertIn('<span class="label">Part one</span><span class="duration">4 min</span>', out)
+
+    def test_sections_win_over_dividers(self):
+        labels, _, _, _ = self._agenda(["d1", "a"], {
+            "d1": _brief("d1", "layout: section-divider\n", "Divider"),
+            "a": _brief("a", "layout: bullets\nsection: Named section\n"),
+        })
+        self.assertEqual(labels, ["Named section"])
+
+    def _flat(self, n):
+        ids = [f"s{i}" for i in range(n)]
+        return ids, {sid: _brief(sid, f"layout: bullets\ntitle: Item {i}\n")
+                     for i, sid in enumerate(ids)}
+
+    def test_seven_items_one_column(self):
+        labels, cls, err, _ = self._agenda(*self._flat(7))
+        self.assertEqual(len(labels), 7)
+        self.assertEqual(cls, "agenda-list")
+        self.assertNotIn("agenda has", err)
+
+    def test_eight_items_two_columns(self):
+        labels, cls, _, _ = self._agenda(*self._flat(8))
+        self.assertEqual(len(labels), 8)
+        self.assertEqual(cls, "agenda-list two-columns")
+
+    def test_twelve_items_fit_without_warning(self):
+        labels, cls, err, _ = self._agenda(*self._flat(12))
+        self.assertEqual(len(labels), 12)
+        self.assertNotIn("agenda has", err)
+
+    def test_over_twelve_items_cut_with_warning(self):
+        labels, cls, err, _ = self._agenda(*self._flat(20))
+        self.assertEqual(len(labels), 12)
+        self.assertEqual(labels[-1], "and 9 more")
+        self.assertEqual(labels[-2], "Item 10")
+        self.assertIn("agenda has 20 items", err)
+        self.assertIn("section:", err)
+
+    def test_aria_label_uses_heading_param(self):
+        _, _, _, out = self._agenda(["a"], {"a": _brief("a", "layout: bullets\n")})
+        self.assertIn('aria-label="Slide 1: Agenda"', out)
+
+    def test_in_agenda_must_be_boolean(self):
+        cat = _make_catalog(self.tmpdir)
+        md = os.path.join(cat, "slides", "agenda", "slide.md")
+        _write(md, _read(md).replace("in_agenda: false", 'in_agenda: "no"'))
+        with self.assertRaises(ValueError):
+            rc._load_catalog_slide_meta(cat, "agenda")
 
 
 # ---------------------------------------------------------------------------
