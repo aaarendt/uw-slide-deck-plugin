@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ## [Unreleased]
 
 ### Added
+- Catalog slides `cb-what-is`, `cb-programs`, `cb-why-choose`, `cb-award-tiers` and `cb-process` (CloudBank brand, verbatim, `status: review`): the standard CloudBank introduction (what it is, services, reasons to choose it, award tiers, application process). On-slide text is condensed; the full wording is in the speaker notes. Each `slide.md` lists its source pages and the facts that still need the owner's check, notably the award-tier figures.
 - Catalog slide `cb-eligibility` (CloudBank brand, verbatim, `status: review`): who can lead a CloudBank project and recommended uses. Full source wording is kept in the speaker notes.
 
 ### Changed

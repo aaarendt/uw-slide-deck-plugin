@@ -1,0 +1,140 @@
+<section data-slide="cb-what-is"
+         data-layout="catalog"
+         data-catalog="cb-what-is@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>What CloudBank is</h1>
+    <p class="lede">NSF's managed gateway to commercial cloud for research</p>
+
+    <div class="cards">
+      <div class="card">
+        <h2>Since 2019</h2>
+        <p>NSF-funded cloud access entity: <strong>UC San Diego (SDSC)</strong>, <strong>UC Berkeley</strong> and <strong>UW eScience</strong></p>
+      </div>
+      <div class="card">
+        <h2>Cloud providers</h2>
+        <p><strong>AWS</strong>, <strong>Google Cloud</strong>, <strong>IBM Cloud</strong> and <strong>Microsoft Azure</strong>, with onboarding, training and billing support</p>
+      </div>
+      <div class="card">
+        <h2>CloudBank 2.0</h2>
+        <p><strong>$20M NSF award in 2025</strong>: five years, ~500 projects a year</p>
+      </div>
+      <div class="card">
+        <h2>NAIRR interface</h2>
+        <p>Interface for private-sector cloud contributions to the <strong>NAIRR Pilot</strong></p>
+      </div>
+    </div>
+
+    <p class="source">Sources:
+      <a href="https://www.sdsc.edu/news/2025/PR20250409-CloudBank.html">SDSC news, April 2025</a> ·
+      <a href="https://www.nsf.gov/news/nsf-expands-access-advanced-cloud-computing-scientific">NSF news</a></p>
+  </div>
+  <aside class="notes">
+    WHAT CLOUDBANK IS. NSF's managed gateway to commercial cloud for research.
+    Since 2019: NSF-funded cloud access entity, co-led by UC San Diego (SDSC),
+    UC Berkeley, and UW eScience. Cloud providers: Managed access to AWS, Google
+    Cloud, IBM Cloud, and Microsoft Azure, plus onboarding, training, billing
+    support, and a shared portal. CloudBank 2.0: $20M NSF award in 2025 —
+    five-year horizon, ~500 projects/year, expanded eligibility to any U.S.
+    researcher or educator at academic, non-profit research, or educational
+    institutions. NAIRR interface: CloudBank is the interface for private-sector
+    cloud contributions to the National AI Research Resource (NAIRR) Pilot.
+  </aside>
+
+  <style>
+    section[data-slide="cb-what-is"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-what-is"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-what-is"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-what-is"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-what-is"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-what-is"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+
+    section[data-slide="cb-what-is"] .lede {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--slide-accent);
+      margin: 0 0 var(--space-5);
+    }
+
+    section[data-slide="cb-what-is"] .cards {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4) clamp(2rem, 4vw, 4rem);
+      align-content: start;
+    }
+
+    section[data-slide="cb-what-is"] .card {
+      min-width: 0;
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      padding: var(--space-1) 0 var(--space-1) var(--space-3);
+      font-size: clamp(1.5rem, 2vw, 1.875rem);
+      line-height: 1.35;
+    }
+
+    section[data-slide="cb-what-is"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.2vw, 2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 var(--space-1);
+    }
+
+    section[data-slide="cb-what-is"] .card p { margin: 0; }
+    section[data-slide="cb-what-is"] strong { color: var(--head); font-weight: 700; }
+  </style>
+</section>

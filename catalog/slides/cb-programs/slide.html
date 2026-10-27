@@ -1,0 +1,179 @@
+<section data-slide="cb-programs"
+         data-layout="catalog"
+         data-catalog="cb-programs@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>CloudBank programs</h1>
+
+    <div class="grid">
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 5.5v2M12 16.5v2M15 9.6c0-1.3-1.3-2-3-2s-3 .8-3 2c0 1.3 1.3 1.8 3 2.2s3 .9 3 2.3c0 1.3-1.3 2-3 2s-3-.7-3-2"/></svg></span>
+        <div class="text">
+          <h2>No cost</h2>
+          <p>NSF sponsors access through ACCESS and the NAIRR Pilot</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.5" r="3"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="18" cy="8" r="3.6"/><path d="M16.9 7.2a1.2 1.2 0 1 1 1.7 1.1c-.4.2-.6.5-.6 1M18 10.8v.1"/></svg></span>
+        <div class="text">
+          <h2>Consulting and helpdesk</h2>
+          <p>Experts help estimate costs, onboard and troubleshoot</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h10M10.5 7.5 15 12l-4.5 4.5M14 4h4.5a1.5 1.5 0 0 1 1.5 1.5v13a1.5 1.5 0 0 1-1.5 1.5H14"/></svg></span>
+        <div class="text">
+          <h2>Account management</h2>
+          <p>Quick provisioning, familiar logins, shared access</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10.5a3.5 3.5 0 0 0 .4-7A5.5 5.5 0 0 0 7.3 9.6 4.2 4.2 0 0 0 7 18z"/></svg></span>
+        <div class="text">
+          <h2>Multiple clouds</h2>
+          <p>Explore several clouds with pay-by-use charges</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5.5 5.5M8 12v-1.5M10 12V8M12 12V9.5"/></svg></span>
+        <div class="text">
+          <h2>Monitoring and optimization</h2>
+          <p>Balance alerts and tips on unused resources</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM5 18a2 2 0 0 1 2-2h11"/></svg></span>
+        <div class="text">
+          <h2>Curated training</h2>
+          <p>Videos and materials for getting started</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="source">Sources:
+      <a href="https://operations.access-ci.org/node/905">ACCESS resource page: CloudBank Research</a> ·
+      <a href="https://support.access-ci.org/node/11714">ACCESS announcement</a></p>
+  </div>
+  <aside class="notes">
+    CLOUDBANK PROGRAMS. No cost: NSF sponsors access to commercial cloud
+    resources through ACCESS and the NAIRR Pilot for researchers and educators.
+    Consulting and helpdesk support: Experts are available to help estimate
+    costs, onboard, and troubleshoot issues. Facilitated cloud access and
+    account management: Cloud accounts are provisioned quickly, allow log in to
+    cloud consoles with familiar credentials, and share access with
+    collaborators. Multiple clouds: Researchers can explore and access multiple
+    clouds to find the right services with CloudBank's pay by use charge model.
+    Monitoring and resource usage optimization: Spending is monitored across
+    multiple clouds and triggers automated email balance alerts. Cost
+    optimization recommendations detect unused or underutilized resources.
+    Curated training materials: CloudBank training videos and curated cloud
+    training materials help researchers get started with cloud services.
+  </aside>
+
+  <style>
+    section[data-slide="cb-programs"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-programs"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-programs"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-programs"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-programs"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-programs"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+
+    section[data-slide="cb-programs"] .grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4) clamp(2rem, 4vw, 4rem);
+      align-content: start;
+    }
+
+    section[data-slide="cb-programs"] .item {
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: clamp(1.5rem, 1.9vw, 1.75rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-programs"] .badge {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      background: var(--slide-bg-subtle);
+      color: var(--slide-accent);
+    }
+
+    section[data-slide="cb-programs"] .icon {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    section[data-slide="cb-programs"] .text { min-width: 0; }
+
+    section[data-slide="cb-programs"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.2vw, 2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 4px;
+    }
+
+    section[data-slide="cb-programs"] .item p { margin: 0; }
+  </style>
+</section>

@@ -197,6 +197,86 @@ use: catalog/cb-eligibility
 
 ---
 
+### `cb-what-is` — CloudBank overview
+**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+
+> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+
+Four cards: origin, cloud providers, the 2025 CloudBank 2.0 award, and the NAIRR interface role. The full original wording is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: what-is
+use: catalog/cb-what-is
+---
+```
+
+---
+
+### `cb-programs` — CloudBank programs
+**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+
+> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+
+Six short headed items with original line icons (inline SVG): no cost, consulting and helpdesk, account management, multiple clouds, monitoring and optimization, training. No logos. The full original wording is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: programs
+use: catalog/cb-programs
+---
+```
+
+---
+
+### `cb-why-choose` — Why choose CloudBank for an account
+**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+
+> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+
+Three reasons (no card or purchase agreement, one bill for several clouds, cost monitoring and spending cap) and a callout that awards are grant dollars, not credits. The full original wording is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: why-choose
+use: catalog/cb-why-choose
+---
+```
+
+---
+
+### `cb-award-tiers` — Grant award tiers
+**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+
+> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+
+A table of Explore, Discover and Accelerate with range, average and typical use, plus three facts. **The figures are unverified**; see the slide's status note. The full original wording is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: award-tiers
+use: catalog/cb-award-tiers
+---
+```
+
+---
+
+### `cb-process` — Application-to-account process
+**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+
+> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+
+A left-to-right flow of four numbered, described steps ending in a "Start working in the cloud" card, with a text tag under each (ACCESS, CloudBank, Cloud provider) showing which system it happens in. The full original wording is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: process
+use: catalog/cb-process
+---
+```
+
+---
+
 ## Adding new catalog slides
 
 See [CURATION.md](CURATION.md) for the full process. In brief:
