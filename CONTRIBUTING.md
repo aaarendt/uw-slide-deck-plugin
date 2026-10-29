@@ -222,15 +222,17 @@ Plugin source lives in this repository. Skills are in `skills/<name>/SKILL.md`; 
    python3 tools/test_deckparse.py
    python3 tools/test_lint.py
    python3 tools/test_resolve_catalog.py
+   python3 tools/test_validate_plugin.py
+   python3 tools/validate_plugin.py          # add --claude to also run `claude plugin validate`
    ```
 5. Open a PR with the change and test results.
 
 ### Adding a skill
 
 1. Create `skills/<name>/SKILL.md` following the format of an existing skill.
-2. Add the skill entry to `.claude-plugin/plugin.json`.
+2. Copy the "Plugin directory" section from an existing skill and write plugin files as `<PLUGIN>/...`. Skills are discovered from `skills/`, so the manifests need no entry. Run `python3 tools/validate_plugin.py`.
 3. Document it in `README.md` (Skills table) and update `CHANGELOG.md`.
 
 ### Versioning
 
-`plugin.json` carries the version. The release process is in `CHANGELOG.md`. Bump to a new minor version for new features; patch for fixes; major for breaking changes.
+`plugin.json` and `.claude-plugin/plugin.json` carry the version; bump both together. The release process is in `CHANGELOG.md`. Bump to a new minor version for new features; patch for fixes; major for breaking changes.

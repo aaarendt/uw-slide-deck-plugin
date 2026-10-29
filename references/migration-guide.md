@@ -11,8 +11,9 @@ tracking and the full layout library, and is ready for `/uw-slides:plan-deck` re
 
 - `python3` available on `PATH` (standard library only, no pip)
 - The deck has a `SLIDES.md` and a matching set of `content/<id>.html` fragments
-- The plugin is at `$UW_SLIDES_HOME` or `~/.claude/plugins/local/uw-slides` (used to
-  locate `tools/deckparse.py` if the deck does not already have a vendored copy)
+- The plugin is installed, or `$UW_SLIDES_HOME` points at a checkout (used to
+  locate `tools/deckparse.py` if the deck does not already have a vendored copy;
+  the skills find the plugin as described in their "Plugin directory" section)
 - The deck directory is a git repository (recommended — the migration removes
   `SLIDES.md` from the working tree; it stays in git history)
 

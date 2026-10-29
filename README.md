@@ -4,7 +4,7 @@ Create branded presentations with any LLM using a fragment-based architecture. S
 
 ## Features
 
-- **LLM-friendly:** Slides, briefs and the design docs are plain files any LLM can read and write. The skills and install steps below target Claude Code; with other tools, point the LLM at `AGENTS.md` and the design docs instead
+- **LLM-friendly:** Slides, briefs and the design docs are plain files any LLM can read and write. The skills install as an [Agent Plugin](https://agent-plugins.org/) in Claude Code, Codex and GitHub Copilot CLI, and as plain skills in OpenCode and other tools that read a skills directory
 - **Fragment-based:** Each slide is self-contained HTML with inline scoped styles
 - **Two-pass workflow:** Pass 1 builds content and layout; pass 2 adds visuals
 - **Brief-driven:** `deck.yml` holds the slide order; one brief per slide (`slides/<id>.md`) holds the message, layout, notes, owner and status. The HTML is generated from the briefs and can be regenerated safely (locked slides are never overwritten)
@@ -18,11 +18,61 @@ Create branded presentations with any LLM using a fragment-based architecture. S
 
 ## Installation
 
+The repository is a single [Agent Plugins v1.0.0](https://agent-plugins.org/specification) plugin named `uw-slides`. Its root holds the portable `plugin.json` and a `.claude-plugin/plugin.json` with the same metadata, because Claude Code doesn't read the portable manifest. It also holds a marketplace called `uw-slide-deck` for each client that supports one. There are no other dependencies.
+
+### Claude Code
+
 ```bash
-ln -s /path/to/uw-slides-plugin ~/.claude/plugins/local/uw-slides
+claude plugin marketplace add aaarendt/uw-slide-deck-plugin
+claude plugin install uw-slides@uw-slide-deck
 ```
 
-No other dependencies. The plugin is now available in any Claude Code session.
+Inside Claude Code the same commands are `/plugin marketplace add aaarendt/uw-slide-deck-plugin` and `/plugin install uw-slides@uw-slide-deck`. Skills are namespaced by plugin, for example `/uw-slides:new-deck`.
+
+### Codex
+
+```bash
+codex plugin marketplace add aaarendt/uw-slide-deck-plugin
+codex plugin add uw-slides@uw-slide-deck
+```
+
+Codex reads the portable `plugin.json` and the marketplace in `.agents/plugins/marketplace.json`. Ask for a skill by name, for example "use the uw-slides new-deck skill to scaffold my-talk".
+
+### GitHub Copilot CLI
+
+```bash
+copilot plugin marketplace add aaarendt/uw-slide-deck-plugin
+copilot plugin install uw-slides@uw-slide-deck
+```
+
+Copilot reads the portable `plugin.json` and the marketplace in `.claude-plugin/marketplace.json`. This follows GitHub's [plugin reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-plugin-reference) but hasn't been tested yet.
+
+### OpenCode and other skills directories
+
+OpenCode discovers skills, not plugins. Clone the repository, link each skill into a skills directory, and point `UW_SLIDES_HOME` at the checkout:
+
+```bash
+git clone https://github.com/aaarendt/uw-slide-deck-plugin ~/src/uw-slide-deck-plugin
+mkdir -p ~/.config/opencode/skills
+for s in ~/src/uw-slide-deck-plugin/skills/*/; do ln -s "${s%/}" ~/.config/opencode/skills/; done
+export UW_SLIDES_HOME=~/src/uw-slide-deck-plugin   # add to your shell profile
+```
+
+The same loop works for `~/.agents/skills` or any other skills directory. Skills keep their plain names there (`new-deck`, not `uw-slides:new-deck`).
+
+### Local checkout (development)
+
+The older symlink install still works: `ln -s /path/to/uw-slide-deck-plugin ~/.claude/plugins/local/uw-slides`. To work on the plugin itself, set `UW_SLIDES_HOME` to your checkout. It takes precedence over an installed copy.
+
+### How skills find the plugin
+
+An installed plugin lives in a cache that differs by client, for example `~/.claude/plugins/cache/...` or `~/.codex/plugins/cache/...`. Each skill finds the plugin's templates, design systems and tools by checking, in order:
+
+1. `$UW_SLIDES_HOME`
+2. the plugin the skill was loaded from (two directories above its `SKILL.md`)
+3. `~/.claude/plugins/local/uw-slides`
+
+New decks vendor `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py`, so building a deck never needs the plugin.
 
 ---
 

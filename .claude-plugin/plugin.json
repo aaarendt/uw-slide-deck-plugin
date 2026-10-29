@@ -6,8 +6,8 @@
         "name": "Anthony Arendt",
         "url": "https://github.com/aaarendt"
     },
-    "homepage": "https://github.com/aaarendt/uw-slides-plugin",
-    "repository": "https://github.com/aaarendt/uw-slides-plugin",
+    "homepage": "https://github.com/aaarendt/uw-slide-deck-plugin",
+    "repository": "https://github.com/aaarendt/uw-slide-deck-plugin",
     "license": "MIT",
     "keywords": [
         "uw",

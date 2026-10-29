@@ -9,10 +9,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ## [Unreleased]
 
 ### Added
+- The plugin is now an [Agent Plugins v1.0.0](https://agent-plugins.org/specification) package, installable in Claude Code, Codex and GitHub Copilot CLI, with linked-skill instructions for OpenCode (README, Installation). New root `plugin.json` (portable manifest) next to `.claude-plugin/plugin.json`, and a Codex marketplace in `.agents/plugins/marketplace.json`.
+- `tools/validate_plugin.py` checks the manifest rules, that both manifests match, skill front matter, that every skill using `<PLUGIN>/` paths says how to find the plugin, and both marketplaces. `--claude` also runs `claude plugin validate`. Tests: `tools/test_validate_plugin.py`.
 - Catalog slides `cb-what-is`, `cb-programs`, `cb-why-choose`, `cb-award-tiers` and `cb-process` (CloudBank brand, verbatim, `status: review`): the standard CloudBank introduction (what it is, services, reasons to choose it, award tiers, application process). On-slide text is condensed; the full wording is in the speaker notes. Each `slide.md` lists its source pages and the facts that still need the owner's check, notably the award-tier figures.
 - Catalog slide `cb-eligibility` (CloudBank brand, verbatim, `status: review`): who can lead a CloudBank project and recommended uses. Full source wording is kept in the speaker notes.
 
 ### Changed
+- Skills find the plugin through `$UW_SLIDES_HOME`, then the plugin they were loaded from (two directories above their `SKILL.md`), then `~/.claude/plugins/local/uw-slides`. Before, an install anywhere but that path needed `UW_SLIDES_HOME`. Every skill now names plugin files as `<PLUGIN>/...`, so they're not confused with files in the deck. The deck `AGENTS.md` template gives other agents the same order.
+- Skills pass `--catalog=<PLUGIN>/catalog` to the deck's vendored `resolve-catalog.py`. The resolver also looks for a `catalog/` next to its own `tools/` directory.
+- Skills read the plugin version from `plugin.json` instead of `.claude-plugin/plugin.json`.
+- The Claude Code marketplace is renamed from `uw-slides-local` to `uw-slide-deck`, and the homepage and repository URLs now point at `aaarendt/uw-slide-deck-plugin` (the old `uw-slides-plugin` URL returns 404).
 - `catalog/CURATION.md` now admits program slides (standard slides for a program such as CloudBank) alongside framing slides, with a brand and ID prefix per program, a size guideline per program, and rules for policy wording that changes.
 - `plan-deck` checks a program's catalog slides against planned content slides in decks of that program's brand, not only framing roles.
 - Catalog `agenda` 1.1.0 groups slides into parts: slides that share a `section:` become one item (or, without sections, each `section-divider` and the slides after it), with their minutes summed. New optional `slide.md` field `in_agenda: false` keeps framing catalog slides out of the agenda; the six seeded framing slides set it.

@@ -8,6 +8,16 @@ description: Validate UW brand compliance. Checks color tokens, fonts, layout pa
 ## Purpose
 Ensure slide deck follows UW brand guidelines.
 
+## Plugin directory
+
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/<skill>/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
+
 ## What Gets Checked
 
 **Deterministic checks (run `./lint.sh` first — these are already covered):**
@@ -55,4 +65,4 @@ The optional `--brand=<uw|cloudbank>` parameter overrides auto-detection. If omi
   - Slide 11 [cloudbank]: Signal Blue on Deep Navy fails WCAG AA (2.25:1). Use --cb-mist for subtitles on dark, or --cb-white for titles.
 ```
 
-See `design-systems/<brand>-brand/DESIGN.md` for complete brand requirements.
+See `<PLUGIN>/design-systems/<brand>-brand/DESIGN.md` for complete brand requirements.
