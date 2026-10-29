@@ -26,6 +26,12 @@ def _copy_packaging(dest):
     shutil.copytree(os.path.join(PLUGIN_DIR, "skills"), os.path.join(dest, "skills"))
 
 
+def _restore_manifests(dest):
+    """Restore both plugin manifests in `dest` from the repository."""
+    for rel in ("plugin.json", os.path.join(".claude-plugin", "plugin.json")):
+        shutil.copy(os.path.join(PLUGIN_DIR, rel), os.path.join(dest, rel))
+
+
 def _edit_json(path, fn):
     with open(path, encoding="utf-8") as fh:
         data = json.load(fh)
@@ -77,6 +83,17 @@ class TestBreakage(unittest.TestCase):
     def test_keywords_must_be_strings(self):
         _edit_json(self._path("plugin.json"), lambda d: d.update({"keywords": [1]}))
         self._assert_error("keywords must be")
+
+    def test_null_fields_are_rejected(self):
+        for key, fragment in (
+            ("author", "author must be"),
+            ("keywords", "keywords must be"),
+            ("version", "version must be a string"),
+        ):
+            for rel in (("plugin.json",), (".claude-plugin", "plugin.json")):
+                _edit_json(self._path(*rel), lambda d: d.update({key: None}))
+            self._assert_error(fragment)
+            _restore_manifests(self.tmpdir)
 
     def test_manifests_must_agree(self):
         _edit_json(

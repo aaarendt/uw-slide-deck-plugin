@@ -70,14 +70,14 @@ def check_manifest(manifest, errors):
     for key in STRING_FIELDS:
         if key in manifest and not isinstance(manifest[key], str):
             errors.append(f"plugin.json: {key} must be a string")
-    author = manifest.get("author")
-    if author is not None:
+    if "author" in manifest:
+        author = manifest["author"]
         if not isinstance(author, dict) or not all(
             isinstance(author.get(k), str) for k in author
         ) or set(author) - {"name", "email", "url"}:
             errors.append("plugin.json: author must be an object of name/email/url strings")
     keywords = manifest.get("keywords")
-    if keywords is not None and not (
+    if "keywords" in manifest and not (
         isinstance(keywords, list) and all(isinstance(k, str) for k in keywords)
     ):
         errors.append("plugin.json: keywords must be an array of strings")
