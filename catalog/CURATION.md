@@ -82,8 +82,10 @@ An empty string default means the element is typically empty or omitted.
 To stop tracking a catalog slide and treat it as a hand-edited local slide:
 
 ```bash
-python3 tools/resolve-catalog.py eject . <slide-id>
+python3 tools/resolve-catalog.py eject . <slide-id> --catalog=<plugin>/catalog
 ```
+
+(`<plugin>` is where the uw-slides plugin is installed; see [README.md](README.md#how-to-use-a-catalog-slide).)
 
 This sets `locked: true` in the brief and removes `use:`. The existing
 `content/<id>.html` is kept unchanged; future builds use it as a locked slide.

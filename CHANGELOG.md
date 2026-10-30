@@ -16,7 +16,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ### Changed
 - Skills find the plugin through `$UW_SLIDES_HOME`, then the plugin they were loaded from (two directories above their `SKILL.md`), then `~/.claude/plugins/local/uw-slides`. Before, an install anywhere but that path needed `UW_SLIDES_HOME`. Every skill now names plugin files as `<PLUGIN>/...`, so they're not confused with files in the deck. The deck `AGENTS.md` template gives other agents the same order.
-- Skills pass `--catalog=<PLUGIN>/catalog` to the deck's vendored `resolve-catalog.py`. The resolver also looks for a `catalog/` next to its own `tools/` directory.
+- Skills pass `--catalog=<PLUGIN>/catalog` to the deck's vendored `resolve-catalog.py`. The resolver also looks for a `catalog/` next to its own `tools/` directory. The `resolve` and `eject` commands in `catalog/README.md`, `catalog/CURATION.md` and the catalog slides' `slide.md` files pass the flag too, because a deck's copy of the resolver can't find the catalog of a marketplace install on its own.
 - Skills read the plugin version from `plugin.json` instead of `.claude-plugin/plugin.json`.
 - The Claude Code marketplace is renamed from `uw-slides-local` to `uw-slide-deck`, and the homepage and repository URLs now point at `aaarendt/uw-slide-deck-plugin` (the old `uw-slides-plugin` URL returns 404).
 - `catalog/CURATION.md` now admits program slides (standard slides for a program such as CloudBank) alongside framing slides, with a brand and ID prefix per program, a size guideline per program, and rules for policy wording that changes.

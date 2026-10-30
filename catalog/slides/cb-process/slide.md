@@ -56,5 +56,5 @@ No parameters. This slide is verbatim: to customise the wording for one deck,
 eject it and edit the HTML directly.
 
 ```bash
-python3 tools/resolve-catalog.py eject . process
+python3 tools/resolve-catalog.py eject . process --catalog=<plugin>/catalog
 ```
