@@ -19,7 +19,17 @@ deck.yml + slides/*.md            (validated with deckparse.py)
 content/*.html
 ```
 
-Catalog slides (`use: catalog/<id>`) are supported. Read `catalog/catalog.yml` before planning and choose catalog slides first when they fit (see step 3). Slides that already have `use:` in a re-plan are left as-is (see Re-plan).
+Catalog slides (`use: catalog/<id>`) are supported. Read `<PLUGIN>/catalog/catalog.yml` before planning and choose catalog slides first when they fit (see step 3). Slides that already have `use:` in a re-plan are left as-is (see Re-plan).
+
+## Plugin directory
+
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/<skill>/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
 
 ## Usage
 
@@ -45,7 +55,7 @@ Run from inside a presentation directory created by `/uw-slides:new-deck` (it mu
 
 Do this once per invocation, before anything else.
 
-1. Confirm `tools/deckparse.py` exists in the deck directory (put there by `/uw-slides:new-deck`). If it is missing, ask the user to run `/uw-slides:new-deck` first, or copy it from `$UW_SLIDES_HOME/tools/deckparse.py` (default: `~/.claude/plugins/local/uw-slides/tools/deckparse.py`).
+1. Confirm `tools/deckparse.py` exists in the deck directory (put there by `/uw-slides:new-deck`). If it is missing, ask the user to run `/uw-slides:new-deck` first, or copy it from `<PLUGIN>/tools/deckparse.py`.
 2. Every `deckparse.py` command below is a single, literal command of this exact form — no leading `VAR=...` assignment, no `cd`, no `&&` chain, no loop, no `${...}` expansion. Run from the deck directory; the recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
 3. Read and write files with the file tools, not shell redirection.
 
@@ -53,9 +63,9 @@ Do this once per invocation, before anything else.
 
 Read these from disk on every invocation (never rely on an earlier read in the conversation):
 
-- `references/slide-schema.md`: deck and brief fields, YAML subset, body sections, generation rules
-- `references/layouts.md`: catalogue (section 1), per-layout limits and example briefs (section 4), choosing a layout and variety rules (section 5), `custom` rules (section 6)
-- `catalog/catalog.yml`: catalog index (if present at `$UW_SLIDES_HOME/catalog/catalog.yml` or the plugin default); read each `catalog/slides/<id>/slide.md` for the slides you are considering to see its params. **Brand filter:** skip any slide whose `brand:` field is neither `any` nor the deck's brand (from the `.brand` file in the deck root; default `uw`).
+- `<PLUGIN>/references/slide-schema.md`: deck and brief fields, YAML subset, body sections, generation rules
+- `<PLUGIN>/references/layouts.md`: catalogue (section 1), per-layout limits and example briefs (section 4), choosing a layout and variety rules (section 5), `custom` rules (section 6)
+- `<PLUGIN>/catalog/catalog.yml`: catalog index (if present); read each `<PLUGIN>/catalog/slides/<id>/slide.md` for the slides you are considering to see its params. **Brand filter:** skip any slide whose `brand:` field is neither `any` nor the deck's brand (from the `.brand` file in the deck root; default `uw`).
 - the source material the user named, if any
 - for a re-plan: `deck.yml`, every `slides/*.md`, and the `status` output (below)
 
@@ -84,12 +94,12 @@ Decide, for each slide, its ID, the message, the objective it serves, its layout
 
 **Structure.** First slide `title`, last slide `closing`. Open the content with why the topic matters to this audience, end with the recap. Every objective is covered by at least one slide, and every content slide serves an objective (`objective:`; the title, dividers and closing may have none).
 
-**Catalog slides.** Before choosing layouts, check `catalog/catalog.yml` for slides that match a structural role in the deck (title, land acknowledgement, funding, agenda, feedback, closing). For a deck in a program's brand, also check that brand's program slides (for example the `cb-` slides in a CloudBank deck) against each planned content slide: use one in place of writing that slide when its description covers the slide's message. Use a catalog slide when:
+**Catalog slides.** Before choosing layouts, check `<PLUGIN>/catalog/catalog.yml` for slides that match a structural role in the deck (title, land acknowledgement, funding, agenda, feedback, closing). For a deck in a program's brand, also check that brand's program slides (for example the `cb-` slides in a CloudBank deck) against each planned content slide: use one in place of writing that slide when its description covers the slide's message. Use a catalog slide when:
 - the slide's purpose matches the catalog description exactly, AND
 - the catalog slide's `status` is `ready`.
 Write `use: catalog/<id>` in the brief front matter (no `layout:` — catalog slides bring their own), and fill `params:` from the catalog slide's `slide.md` (omit params you want to use their defaults). `status: draft` catalog slides may be used but flag them in the VERIFY list. Catalog slides that are verbatim (kind: verbatim) need no params; parameterized ones need the params the deck author should supply.
 
-**Layouts.** For non-catalog slides, choose with `references/layouts.md`, section 5, and apply all its variety rules across the whole deck (no more than two identical layouts in a row, `bullets` at most a third of the slides, a number becomes `stat-callout`, audience action becomes `exercise`, dividers only in decks of 8+ slides, at most two `quote`s, `custom` at most one slide in six). Never write `layout: auto`: the planner resolves it. Use `layout: custom` last, only when section 6 allows it, with a one-sentence `layout_intent`. Fill `layout_rationale` for every slide in one short sentence (why this layout fits this message).
+**Layouts.** For non-catalog slides, choose with `<PLUGIN>/references/layouts.md`, section 5, and apply all its variety rules across the whole deck (no more than two identical layouts in a row, `bullets` at most a third of the slides, a number becomes `stat-callout`, audience action becomes `exercise`, dividers only in decks of 8+ slides, at most two `quote`s, `custom` at most one slide in six). Never write `layout: auto`: the planner resolves it. Use `layout: custom` last, only when section 6 allows it, with a one-sentence `layout_intent`. Fill `layout_rationale` for every slide in one short sentence (why this layout fits this message).
 
 **IDs.** Lowercase kebab-case, descriptive, no number prefixes (the order lives in `deck.yml`): `title`, `why-cloud`, `launch-vm`, `closing`. Unique, and equal to the file name.
 
@@ -115,7 +125,7 @@ For each slide write the real content, not placeholders:
 
 Use the file tools.
 
-- **`deck.yml`**: `title`, `audience`, `duration`, `presenter` (when known), `objectives` (`obj-n: "text"`) and `slides:` in order. Quote strings that contain `: `, ` #` or look like numbers or dates. Stay inside the YAML subset (`references/slide-schema.md`, section 1): no trailing comments, no multi-line values. Keep the header comments of the existing file. Do not set `catalog`.
+- **`deck.yml`**: `title`, `audience`, `duration`, `presenter` (when known), `objectives` (`obj-n: "text"`) and `slides:` in order. Quote strings that contain `: `, ` #` or look like numbers or dates. Stay inside the YAML subset (`<PLUGIN>/references/slide-schema.md`, section 1): no trailing comments, no multi-line values. Keep the header comments of the existing file. Do not set `catalog`.
 - **`slides/<id>.md`**: one per slide, in the shape of the examples in `layouts.md`, section 4. Fresh plan: replace the scaffold's starter slides (`title`, `example-slide`); delete `slides/example-slide.md` if it is not in the new plan.
 - Never write `content/`.
 
@@ -133,7 +143,7 @@ Run `brief` once for each brief you wrote or changed. `status` must list every s
 
 Then check what the parser does not (cross-file rules belong to the lint, which does not exist yet, so the planner does them):
 
-1. Every `layout:` is a file in `<plugin>/templates/layouts/`, or `custom` with a `layout_intent`.
+1. Every `layout:` is a file in `<PLUGIN>/templates/layouts/`, or `custom` with a `layout_intent`.
 2. Every `objective:` is a key of `objectives:` in `deck.yml`, and every objective is used by at least one slide.
 3. Minutes add up to the deck duration (`deckparse.py outline .` states planned minutes against the target).
 4. The variety rules of `layouts.md`, section 5, hold.
@@ -156,7 +166,7 @@ Then ask the user (with the ask-user tool when available) to **approve**, **requ
 - Run `./outline.sh` to refresh the generated `OUTLINE.md` (read-only; never edit it).
 - Leave `status: draft` on every brief (`review` and `done` are for the people working on the slides).
 - Tell the user the next steps:
-  1. If the deck has catalog slides: `python3 tools/resolve-catalog.py resolve .` (copies catalog fragments to `content/`)
+  1. If the deck has catalog slides: `python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog` (copies catalog fragments to `content/`; write `<PLUGIN>` as the resolved absolute path)
   2. `/uw-slides:generate-slides` (generates layout slides; skips catalog ones)
   3. `./build.sh`
   Do not run them.
@@ -173,7 +183,7 @@ Used when `deck.yml` already holds a plan the user wants to change: `replan "<ch
    | `locked: true` | Its HTML is hand-edited. Never change its brief content, layout or ID; never remove, merge or split it. It may be moved. |
    | `status: done` | Finished. Content, layout and ID are fixed; removing, merging or splitting it needs the user's explicit confirmation naming the slide. |
    | `owner:` set | Someone else's slide unless the user says they are that person. Changing or removing it needs explicit confirmation naming the slide and its owner. |
-   | `use:` set | A catalog slide. Leave its `use:`, `params:` and `id` as-is; it may be moved. To replace it with a different catalog slide or a layout slide, first eject it (`python3 tools/resolve-catalog.py eject . <id>`) and then edit it. |
+   | `use:` set | A catalog slide. Leave its `use:`, `params:` and `id` as-is; it may be moved. To replace it with a different catalog slide or a layout slide, first eject it (`python3 tools/resolve-catalog.py eject . <id> --catalog=<PLUGIN>/catalog`) and then edit it. |
    | otherwise | Free to change. |
 
    `status: review` slides are free, but list them in the summary because someone is reviewing them.

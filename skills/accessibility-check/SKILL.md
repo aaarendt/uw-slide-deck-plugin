@@ -8,6 +8,16 @@ description: Validate WCAG 2.1 Level AA compliance. Checks contrast ratios, font
 ## Purpose
 Validate WCAG 2.1 Level AA compliance for slide decks.
 
+## Plugin directory
+
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/<skill>/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
+
 ## What Gets Checked
 
 **Deterministic checks (run `./lint.sh` first — these are already covered):**
@@ -39,7 +49,7 @@ Resolve the brand in this order:
 /uw-slides:accessibility-check --brand=cloudbank
 ```
 
-The optional `--brand=<uw|cloudbank>` parameter overrides auto-detection and selects which brand's approved contrast pairings to reference when reporting results. If omitted, the brand is read from `.brand` in the deck directory (written by `new-deck` at scaffold time). The WCAG 2.1 AA thresholds (4.5:1 text, 3:1 large text) apply to both brands. For approved CloudBank contrast combinations, see `design-systems/cloudbank-brand/DESIGN.md`.
+The optional `--brand=<uw|cloudbank>` parameter overrides auto-detection and selects which brand's approved contrast pairings to reference when reporting results. If omitted, the brand is read from `.brand` in the deck directory (written by `new-deck` at scaffold time). The WCAG 2.1 AA thresholds (4.5:1 text, 3:1 large text) apply to both brands. For approved CloudBank contrast combinations, see `<PLUGIN>/design-systems/cloudbank-brand/DESIGN.md`.
 
 ## Output
 ```
@@ -49,4 +59,4 @@ The optional `--brand=<uw|cloudbank>` parameter overrides auto-detection and sel
   - Slide 12: Contrast 3.2:1 (needs 4.5:1)
 ```
 
-See `references/accessibility-requirements.md` for complete guidelines.
+See `<PLUGIN>/references/accessibility-requirements.md` for complete guidelines.

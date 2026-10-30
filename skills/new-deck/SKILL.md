@@ -159,7 +159,13 @@ When this skill is invoked, create the following files:
 
 Do this once before copying any files.
 
-Check `printenv UW_SLIDES_HOME`. If set and the directory exists, use it. Otherwise use `~/.claude/plugins/local/uw-slides` (the documented default). Confirm by reading `<plugin>/tools/deckparse.py` with the file-read tool. Store this path as `PLUGIN` for the steps below.
+The first match wins. Confirm it by reading `<candidate>/tools/deckparse.py` with the file-read tool, and store the path as `PLUGIN` for the steps below.
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/new-deck/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is. Every file copied below comes from `PLUGIN`; never look for templates relative to the current directory.
 
 ### 1. Copy shared templates
 Brand-agnostic files come from the root templates directory; only `header.html` is brand-specific.
@@ -262,7 +268,7 @@ Write this file to the deck root:
 
 ```json
 {
-  "plugin_version": "<version from <PLUGIN>/.claude-plugin/plugin.json>",
+  "plugin_version": "<version from <PLUGIN>/plugin.json>",
   "brand": "<brand>",
   "scaffolded_at": "<ISO 8601 date, e.g. 2026-10-15>",
   "catalog": null

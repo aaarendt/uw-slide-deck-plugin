@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Plugin Does
 
-This is a Claude Code plugin (`uw-slides`) for creating University of Washington branded HTML presentations. The plugin is typically installed by symlinking the repo to `~/.claude/plugins/local/uw-slides/` and exposes skills to Claude Code sessions in any project directory. Set `UW_SLIDES_HOME` to point to the plugin if it lives elsewhere.
+This is an Agent Plugin (`uw-slides`) for creating University of Washington branded HTML presentations. It installs from this repository's marketplaces into Claude Code, Codex and GitHub Copilot CLI, or as linked skills in OpenCode (see README, Installation). The older symlink install at `~/.claude/plugins/local/uw-slides/` still works. Skills find the plugin through `$UW_SLIDES_HOME`, then the plugin they were loaded from (two directories above their `SKILL.md`), then that legacy path.
 
 No build system, no dependencies — just bash scripts and HTML fragments. (`publish.sh` and `tools/deckparse.py` additionally need `python3`, standard library only.)
 
@@ -12,7 +12,9 @@ No build system, no dependencies — just bash scripts and HTML fragments. (`pub
 
 ```
 uw-slides-plugin/
-├── .claude-plugin/          # Plugin metadata (plugin.json, marketplace.json)
+├── plugin.json              # Portable Agent Plugins manifest (Codex, Copilot, ...)
+├── .claude-plugin/          # Claude Code manifest (same metadata) + marketplace for Claude Code and Copilot
+├── .agents/plugins/         # marketplace.json for Codex
 ├── skills/                  # Claude Code skill definitions
 │   ├── new-deck/SKILL.md
 │   ├── plan-deck/SKILL.md
@@ -176,7 +178,10 @@ Font paths in the UW brand `shared/header.html` (generated presentations) are re
 
 Each skill is defined by a `SKILL.md` in `skills/<skill-name>/`. To add or modify a skill:
 1. Edit or create `skills/<skill-name>/SKILL.md`
-2. Update `.claude-plugin/plugin.json` if adding a new skill entry
-3. Test by running the skill from a presentation directory
+2. Name plugin files as `<PLUGIN>/...` and keep the skill's "Plugin directory" section, so the skill works from any client's install cache. Never hard-code `~/.claude/plugins/local/uw-slides` as the only location
+3. Run `python3 tools/validate_plugin.py` (manifests, skills, marketplaces) and `python3 tools/test_validate_plugin.py`
+4. Test by running the skill from a presentation directory
+
+When you change metadata or the version, edit `plugin.json` and `.claude-plugin/plugin.json` together; the validator checks that they match.
 
 Skills run in the context of the **presentation directory** (wherever the user is), not the plugin directory.

@@ -21,20 +21,22 @@ params:
 ---
 ```
 
-The catalog resolver copies the slide's HTML into `content/<deck-id>.html`, rewrites its ID and CSS selectors to match your deck, and substitutes your params. Run it from inside the deck directory:
+The catalog resolver copies the slide's HTML into `content/<deck-id>.html`, rewrites its ID and CSS selectors to match your deck, and substitutes your params. Run it from inside the deck directory, pointing it at the plugin's catalog:
 
 ```bash
-python3 tools/resolve-catalog.py resolve .
+python3 tools/resolve-catalog.py resolve . --catalog=<plugin>/catalog
 ```
 
 `/uw-slides:generate-slides` calls this automatically for any slide with `use: catalog/...`.
+
+`<plugin>` is the directory where the uw-slides plugin is installed. The skills find it for you. When you run the resolver by hand, pass the path (your agent can tell you where the plugin is installed), or clone this repository and set `UW_SLIDES_HOME` to the clone, in which case you can leave out `--catalog`. Don't save a path from a client's plugin cache in scripts or notes: it can change when the plugin is updated.
 
 ### Ejecting a catalog slide
 
 To customise a catalog slide beyond its params, eject it — this copies the resolved HTML into the deck as a locked slide and removes the `use:` reference:
 
 ```bash
-python3 tools/resolve-catalog.py eject . <slide-id>
+python3 tools/resolve-catalog.py eject . <slide-id> --catalog=<plugin>/catalog
 ```
 
 After ejecting, edit `content/<id>.html` directly and set `locked: true` in the brief.

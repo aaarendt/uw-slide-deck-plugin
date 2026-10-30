@@ -9,6 +9,16 @@ description: Apply pass-2 visual additions from VISUALS.md to existing slide HTM
 
 Read `VISUALS.md` and add the specified visual elements — photographs, diagrammatic accents, icons — to the already-rendered HTML slide fragments from pass 1. Write modified fragments to `content-with-visuals/`. Do not touch `content/`.
 
+## Plugin directory
+
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/<skill>/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
+
 ## Brand Resolution
 
 Resolve the brand in this order:
@@ -39,7 +49,7 @@ Run from inside the presentation directory, or with the presentation directory a
 6. **Reconcile before reporting.** Every entry ID from step 1 must appear in your report with a disposition: applied, skipped (no additions), skipped (already applied), out of date, conflict, or skipped with a reason (for example an ID that is not in `deck.yml`). If any entry has no disposition, you skipped it by mistake: go back and handle it.
 7. Run `./build-visuals.sh` to produce `build/index-with-visuals.html`.
 
-To place a visual in free space, read the slide's brief (`slides/<id>.md`) and its `data-layout`: `references/layouts.md` describes each layout's regions (for example `bullets` leaves the right side open). The brief's talking points and notes are never rendered, so a visual must not restate them.
+To place a visual in free space, read the slide's brief (`slides/<id>.md`) and its `data-layout`: `<PLUGIN>/references/layouts.md` describes each layout's regions (for example `bullets` leaves the right side open). The brief's talking points and notes are never rendered, so a visual must not restate them.
 
 ## Idempotency
 

@@ -39,5 +39,5 @@ No parameters. This slide is verbatim: to customise the wording, eject it and
 edit the HTML directly.
 
 ```bash
-python3 tools/resolve-catalog.py eject . land-ack
+python3 tools/resolve-catalog.py eject . land-ack --catalog=<plugin>/catalog
 ```

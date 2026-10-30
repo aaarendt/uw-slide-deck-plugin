@@ -19,7 +19,11 @@ eject
 Catalog location (first match wins):
   --catalog=<path>                     explicit path to a catalog/ directory
   $UW_SLIDES_HOME/catalog/             if UW_SLIDES_HOME is set
-  ~/.claude/plugins/local/uw-slides/catalog/  default fallback
+  <this script>/../catalog/            when run from the plugin's own tools/
+  ~/.claude/plugins/local/uw-slides/catalog/  legacy symlink install
+
+Skills run the deck's vendored copy and pass --catalog=<plugin>/catalog, because
+an installed plugin lives in a client-specific cache.
 
 Each catalog slide lives in <catalog>/slides/<id>/:
   slide.html   HTML fragment with {{param}} placeholders
@@ -60,6 +64,9 @@ import deckparse
 # Catalog discovery
 # ---------------------------------------------------------------------------
 
+BUNDLED_CATALOG_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "catalog"
+)
 DEFAULT_CATALOG_PATH = os.path.expanduser(
     "~/.claude/plugins/local/uw-slides/catalog"
 )
@@ -75,6 +82,7 @@ def _find_catalog(override=None):
     env = os.environ.get("UW_SLIDES_HOME")
     if env:
         candidates.append(os.path.join(env, "catalog"))
+    candidates.append(BUNDLED_CATALOG_PATH)
     candidates.append(DEFAULT_CATALOG_PATH)
     for c in candidates:
         if os.path.isdir(c) and os.path.isfile(os.path.join(c, "catalog.yml")):
@@ -568,7 +576,7 @@ def cmd_resolve(deck_dir, catalog_override=None):
     catalog_path = _find_catalog(catalog_override)
     if not catalog_path:
         print(
-            "Catalog not found. Set $UW_SLIDES_HOME or pass --catalog=<path>.",
+            "Catalog not found. Pass --catalog=<plugin>/catalog or set $UW_SLIDES_HOME.",
             file=sys.stderr,
         )
         return 1

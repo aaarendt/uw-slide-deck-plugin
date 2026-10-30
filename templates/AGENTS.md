@@ -2,7 +2,7 @@
 
 Built with the `uw-slides` plugin (version in `.uw-slides.json`).
 
-**Plugin location.** The plugin is at `$UW_SLIDES_HOME` if that variable is set; otherwise at `~/.claude/plugins/local/uw-slides`. Before writing any slide HTML, read from the plugin:
+**Plugin location.** Use the first of these that contains `tools/deckparse.py`: `$UW_SLIDES_HOME` if that variable is set; the directory where your client installed the `uw-slides` plugin (two levels above any of its `skills/<skill>/SKILL.md` files); or `~/.claude/plugins/local/uw-slides`. If none does, ask the user where the plugin is. Before writing any slide HTML, read from the plugin:
 - `<plugin>/CLAUDE.md` — architecture, build workflow, skill list
 - `<plugin>/design-systems/[BRAND]-brand/DESIGN.md` — colors, type, spacing, patterns
 - `<plugin>/references/accessibility-requirements.md`

@@ -1,0 +1,28 @@
+{
+    "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+    "name": "uw-slides",
+    "version": "0.2.0",
+    "description": "University of Washington slide deck builder with brand compliance and WCAG 2.1 AA accessibility. Create presentation slides using markdown-per-slide workflow with UW design system, accessibility validation, and reusable layout templates.",
+    "author": {
+        "name": "Anthony Arendt",
+        "url": "https://github.com/aaarendt"
+    },
+    "homepage": "https://github.com/aaarendt/uw-slide-deck-plugin",
+    "repository": "https://github.com/aaarendt/uw-slide-deck-plugin",
+    "license": "MIT",
+    "keywords": [
+        "uw",
+        "university-of-washington",
+        "slides",
+        "presentation",
+        "accessibility",
+        "wcag",
+        "brand-compliance",
+        "deck-stage",
+        "markdown",
+        "cloudbank",
+        "reveal-js",
+        "catalog",
+        "migration"
+    ]
+}

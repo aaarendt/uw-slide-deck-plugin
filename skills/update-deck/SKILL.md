@@ -23,6 +23,16 @@ Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-dec
 
 **Never touched:** `content/`, `content-with-visuals/`, `slides/`, `assets/`, `deck.yml`, `VISUALS.md`, `OUTLINE.md`, `.brand`, `*.md` files.
 
+## Plugin directory
+
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/<skill>/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
+
 ## Usage
 
 ```
@@ -38,7 +48,7 @@ Run from inside the presentation directory.
 
 Read `.uw-slides.json`. Take `plugin_version` as the version the deck was scaffolded with.
 
-Find the current plugin directory: check `$UW_SLIDES_HOME` (run `printenv UW_SLIDES_HOME`), otherwise use `~/.claude/plugins/local/uw-slides`. Read `<plugin>/.claude-plugin/plugin.json` to get the current version.
+Find the current plugin directory as described in Plugin directory above. Read `<PLUGIN>/plugin.json` to get the current version.
 
 Resolve the brand:
 1. `--brand=` flag if provided
@@ -51,16 +61,16 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 
 | Deck file | Plugin source |
 |-----------|--------------|
-| `build.sh` | `<plugin>/templates/build.sh` |
-| `build-visuals.sh` | `<plugin>/templates/build-visuals.sh` |
-| `lint.sh` | `<plugin>/templates/lint.sh` |
-| `status.sh` | `<plugin>/templates/status.sh` |
-| `outline.sh` | `<plugin>/templates/outline.sh` |
-| `publish.sh` | `<plugin>/templates/publish.sh` |
-| `shared/footer.html` | `<plugin>/templates/shared/footer.html` |
-| `shared/header.html` | `<plugin>/design-systems/<brand>-brand/shared/header.html` |
-| `tools/deckparse.py` | `<plugin>/tools/deckparse.py` |
-| `tools/lint.py` | `<plugin>/tools/lint.py` |
+| `build.sh` | `<PLUGIN>/templates/build.sh` |
+| `build-visuals.sh` | `<PLUGIN>/templates/build-visuals.sh` |
+| `lint.sh` | `<PLUGIN>/templates/lint.sh` |
+| `status.sh` | `<PLUGIN>/templates/status.sh` |
+| `outline.sh` | `<PLUGIN>/templates/outline.sh` |
+| `publish.sh` | `<PLUGIN>/templates/publish.sh` |
+| `shared/footer.html` | `<PLUGIN>/templates/shared/footer.html` |
+| `shared/header.html` | `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
+| `tools/deckparse.py` | `<PLUGIN>/tools/deckparse.py` |
+| `tools/lint.py` | `<PLUGIN>/tools/lint.py` |
 
 Read both versions and note whether they differ. A file the deck is missing counts as a diff.
 

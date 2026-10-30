@@ -12,10 +12,22 @@ Turn the briefs in `slides/<id>.md` (ordered by `deck.yml`) into HTML fragments 
 This skill handles **layout slides** only. Catalog slides (`use: catalog/<id>`) are resolved by the catalog resolver and must be run first:
 
 ```bash
-python3 tools/resolve-catalog.py resolve .
+python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog
 ```
 
-This skill replaces the old "read SLIDES.md and write slides by conversation" step. Legacy decks that only have `SLIDES.md` are not handled here: migrate them first (mapping in `references/slide-schema.md`, section 6), or keep writing fragments by hand.
+Write `<PLUGIN>` as the resolved absolute path (see Plugin directory), so the command stays literal.
+
+This skill replaces the old "read SLIDES.md and write slides by conversation" step. Legacy decks that only have `SLIDES.md` are not handled here: migrate them first (mapping in `<PLUGIN>/references/slide-schema.md`, section 6), or keep writing fragments by hand.
+
+## Plugin directory
+
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/<skill>/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
 
 ## Brand Resolution
 
@@ -35,11 +47,11 @@ Run from inside the presentation directory. All `deckparse.py` commands use the 
 
 ## Read first
 
-- `design-systems/<brand>-brand/DESIGN.md`: the brand rules
-- `references/layouts.md`: the layout library, slot limits, fill procedure (section 2) and `custom` rules (section 6)
-- `references/slide-schema.md`: brief fields, staleness hash, generation rules (section 5)
-- `references/accessibility-requirements.md`
-- the font-size rules in the plugin `CLAUDE.md` (minimum `1.5rem`; `1rem` only for source lines and uppercase labels)
+- `<PLUGIN>/design-systems/<brand>-brand/DESIGN.md`: the brand rules
+- `<PLUGIN>/references/layouts.md`: the layout library, slot limits, fill procedure (section 2) and `custom` rules (section 6)
+- `<PLUGIN>/references/slide-schema.md`: brief fields, staleness hash, generation rules (section 5)
+- `<PLUGIN>/references/accessibility-requirements.md`
+- the font-size rules in `<PLUGIN>/CLAUDE.md` (minimum `1.5rem`; `1rem` only for source lines and uppercase labels)
 
 ## Procedure
 
@@ -71,11 +83,11 @@ For every slide you are going to write:
 
 1. **Read the brief**: `python3 tools/deckparse.py brief slides/<id>.md` (JSON: front matter and body).
 2. **Resolve the layout.**
-   - A layout ID: it must be a file in `templates/layouts/` (`layouts.md`, section 1). Unknown ID: stop and report.
+   - A layout ID: it must be a file in `<PLUGIN>/templates/layouts/` (`layouts.md`, section 1). Unknown ID: stop and report.
    - `auto`: choose with `layouts.md`, section 5, **write the chosen ID and a `layout_rationale` back into the brief's front matter**, and only then continue (the hash covers `layout`).
    - `custom`: follow `layout_intent` and the rules in `layouts.md`, section 6.
 3. **Check the content fits** the layout's limits (`layouts.md`, section 4). If it does not, report it and propose either shorter text (for the user to approve in the brief) or a different layout. Never shrink fonts or silently cut the brief's text.
-4. **Fill the layout** exactly as in `layouts.md`, section 2: copy `templates/layouts/<layout>.html`, rename `layout-<layout>` to the slide ID in `data-slide` and every CSS selector, fill each `data-slot` / `data-param`, remove optional elements the brief leaves empty. Replace every sample list item (never append to the template's `<li>`s) and render Markdown to HTML. Before writing, check the output: the number of list items equals the brief's, none of the template's sample text remains, and no literal `-`, `**` or `1.` is left in a text node. `custom` slides are written from scratch to the same standard (scoped `section[data-slide="<id>"]` styles, brand tokens, one `<h1>`, accent bar).
+4. **Fill the layout** exactly as in `layouts.md`, section 2: copy `<PLUGIN>/templates/layouts/<layout>.html`, rename `layout-<layout>` to the slide ID in `data-slide` and every CSS selector, fill each `data-slot` / `data-param`, remove optional elements the brief leaves empty. Replace every sample list item (never append to the template's `<li>`s) and render Markdown to HTML. Before writing, check the output: the number of list items equals the brief's, none of the template's sample text remains, and no literal `-`, `**` or `1.` is left in a text node. `custom` slides are written from scratch to the same standard (scoped `section[data-slide="<id>"]` styles, brand tokens, one `<h1>`, accent bar).
 5. **Apply the generation rules** (`slide-schema.md`, section 5):
    - the key message is the headline and usually the main text shown;
    - talking points are **never** rendered verbatim;
@@ -86,7 +98,7 @@ For every slide you are going to write:
 6. **Stamp provenance** on the root `<section>`, after any write-back to the brief:
    - `data-layout="<layout id or custom>"`
    - `data-brief-hash="<output of python3 tools/deckparse.py hash slides/<id>.md>"`
-   - `data-generated-by="uw-slides@<plugin version>"` (version from `$PLUGIN/.claude-plugin/plugin.json`)
+   - `data-generated-by="uw-slides@<plugin version>"` (version from `<PLUGIN>/plugin.json`)
 7. **Write** `content/<id>.html` (create `content/` if needed).
 
 ### 3. Build and report
@@ -103,7 +115,7 @@ Then run `/uw-slides:design-review` and `/uw-slides:accessibility-check`, and re
 ↻ Regenerated: 03-costs (stale, confirmed)
 ⏭ Fresh:       01-title
 🔒 Locked:      04-diagram (hand-edited; not touched)
-📦 Catalog:     06-intro (use: catalog/uw-title — run `python3 tools/resolve-catalog.py resolve .`)
+📦 Catalog:     06-intro (use: catalog/uw-title — run `python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog`)
 ⚠ Skipped:     07-recap (slides/07-recap.md:12: unknown field 'colour')
 Layout choices written back to briefs: 02-why-cloud (auto -> bullets)
 ```

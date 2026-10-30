@@ -6,9 +6,19 @@ description: Extract slide content from an existing HTML presentation into deck.
 # Extract to Markdown Skill
 
 ## Purpose
-Turn an existing HTML slide deck into the planning files of a fragment-based deck: `deck.yml` (order and metadata) and one brief per slide in `slides/<id>.md` (format: `references/slide-schema.md`). Use it to import a deck made elsewhere, or to rebuild briefs for a deck that only has HTML.
+Turn an existing HTML slide deck into the planning files of a fragment-based deck: `deck.yml` (order and metadata) and one brief per slide in `slides/<id>.md` (format: `<PLUGIN>/references/slide-schema.md`). Use it to import a deck made elsewhere, or to rebuild briefs for a deck that only has HTML.
 
 Also provides a **one-shot migration** (`--migrate`) for legacy decks that use `SLIDES.md` as their slide source, converting them to `deck.yml` + briefs without touching `content/`.
+
+## Plugin directory
+
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
+
+1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
+2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/<skill>/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
+3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
+
+If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
 
 ## Usage
 ```bash
@@ -23,7 +33,7 @@ All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put t
 2. For each slide, writes a brief:
    - `id`: the `data-slide` value if it is a valid ID (lowercase letters, digits, single hyphens), otherwise `NN-<slug of the heading>`; IDs are unique
    - `# Key message`: the slide's main heading or headline
-   - `layout`: the slide's `data-layout` when it is a layout-library ID (`references/layouts.md`), otherwise `auto`
+   - `layout`: the slide's `data-layout` when it is a layout-library ID (`<PLUGIN>/references/layouts.md`), otherwise `auto`
    - `## Talking points`: other visible text and bullets, as a starting point (the user decides what is spoken and what is shown)
    - `## Source`: citation or source lines
    - `## Notes`: speaker notes or "note to self" text, if present
@@ -35,7 +45,7 @@ All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put t
 ## Rules (HTML → briefs)
 - **Never overwrite existing files.** If `deck.yml` or any `slides/<id>.md` already exists, stop and ask whether to skip, rename or replace.
 - Do not touch `content/`. Existing HTML stays as it is (`untracked` in `deckparse.py status`) until `/uw-slides:generate-slides` regenerates it. To keep an imported slide exactly as it is, set `locked: true` in its brief.
-- Only the fields in `references/slide-schema.md` are valid. No `## Visual notes` or `## Speaker notes` headings: use `## Notes`.
+- Only the fields in `<PLUGIN>/references/slide-schema.md` are valid. No `## Visual notes` or `## Speaker notes` headings: use `## Notes`.
 
 ---
 
@@ -45,7 +55,7 @@ Converts a legacy deck in place: reads `SLIDES.md`, writes `deck.yml` + `slides/
 
 **Full procedure:**
 
-See `references/migration-guide.md` for a step-by-step guide with verification steps.
+See `<PLUGIN>/references/migration-guide.md` for a step-by-step guide with verification steps.
 
 ### Inputs
 
@@ -72,7 +82,7 @@ See `references/migration-guide.md` for a step-by-step guide with verification s
      ...
    ```
 
-3. Write `slides/<id>.md` for each slide (front matter + body per `references/slide-schema.md`):
+3. Write `slides/<id>.md` for each slide (front matter + body per `<PLUGIN>/references/slide-schema.md`):
    ```markdown
    ---
    id: <id>
@@ -132,7 +142,7 @@ See `references/migration-guide.md` for a step-by-step guide with verification s
 ---
 
 ## Legacy output (`--format=slides-md`)
-Writes `SLIDES.md` in the current directory, as before (deprecated, see `references/slide-schema.md` section 6 for migration):
+Writes `SLIDES.md` in the current directory, as before (deprecated, see `<PLUGIN>/references/slide-schema.md` section 6 for migration):
 
 ```markdown
 # Extracted Presentation
