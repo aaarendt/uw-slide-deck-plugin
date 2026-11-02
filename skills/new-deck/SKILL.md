@@ -33,6 +33,9 @@ This skill creates a **fragment-based** presentation:
 │   ├── header.html              # Design tokens, base styles
 │   └── footer.html              # Navigation, closing tags
 ├── deck.yml                     # Deck metadata, objectives and slide order (source of truth for order)
+├── .brand, .uw-slides.json      # Brand name and the plugin-version stamp (read by the other skills)
+├── tools/                       # Vendored deckparse.py, lint.py and resolve-catalog.py
+├── .github/                     # CODEOWNERS, pull request template, CI workflow
 ├── slides/                      # One brief per slide: slides/<id>.md (source of truth for content)
 ├── content/                     # Pass-1 slide fragments (generate-slides writes here)
 ├── content-with-visuals/        # Pass-2 slide fragments (apply-visuals writes here)
@@ -153,171 +156,65 @@ Every slide must meet WCAG 2.1 Level AA:
 
 ## Implementation
 
-When this skill is invoked, create the following files:
+Scaffolding is done by one script, `<PLUGIN>/tools/new-deck.py`, not by copying files one at a time. Do **not** scaffold by hand: the script gives the same result every run and needs one permission instead of about twenty. It needs `python3` (standard library only), which the plugin's other tools already need.
 
-### 0. Find the plugin directory
+### 1. Find the plugin directory
 
-Do this once before copying any files.
-
-The first match wins. Confirm it by reading `<candidate>/tools/deckparse.py` with the file-read tool, and store the path as `PLUGIN` for the steps below.
+Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Find `PLUGIN` once. The first candidate whose `tools/new-deck.py` runs wins:
 
 1. `$UW_SLIDES_HOME`, if set (`printenv UW_SLIDES_HOME`). Use this to point at a development checkout.
 2. The plugin this skill was loaded from, two directories above this `SKILL.md` (`<PLUGIN>/skills/new-deck/SKILL.md`). Take the skill's path from your client, for example Claude Code's "Base directory for this skill", and resolve symlinks. This is where Claude Code, Codex, Copilot and other Agent Plugins clients install the plugin.
 3. `~/.claude/plugins/local/uw-slides`, the legacy symlink install.
 
-If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is. Every file copied below comes from `PLUGIN`; never look for templates relative to the current directory.
+Do not read a file to confirm a candidate: step 2 fails with "can't open file" if the path is wrong, and then you try the next candidate. If none works, stop and ask the user where the plugin is.
 
-### 1. Copy shared templates
-Brand-agnostic files come from the root templates directory; only `header.html` is brand-specific.
+### 2. Run the script
 
-Brand-agnostic (same for all brands):
-- `shared/footer.html` from `<PLUGIN>/templates/shared/footer-reveal.html`
-- `setup-reveal.sh` from `<PLUGIN>/templates/setup-reveal.sh`
-- `export.sh` from `<PLUGIN>/templates/export.sh`
-- `build.sh` from `<PLUGIN>/templates/build.sh`
-- `build-visuals.sh` from `<PLUGIN>/templates/build-visuals.sh`
-- `lint.sh` from `<PLUGIN>/templates/lint.sh`
-- `status.sh` from `<PLUGIN>/templates/status.sh`
-- `outline.sh` from `<PLUGIN>/templates/outline.sh`
-- `publish.sh` from `<PLUGIN>/templates/publish.sh`
-- `VISUALS.md` from `<PLUGIN>/templates/VISUALS.md`
-
-Do **not** create a `SLIDES.md`: `deck.yml` and `slides/` replace it. Keep the scripts executable.
-
-Brand-specific (use the `--brand` value, default: `uw`):
-- `shared/header.html` from `<PLUGIN>/design-systems/${brand}-brand/shared/header-reveal.html`
-
-Write a `.brand` file to the presentation root containing just the brand name and a trailing newline (e.g. `uw\n` or `cloudbank\n`). This file is read by all other skills to auto-detect the brand without requiring a `--brand=` flag on every invocation. It should be git-tracked.
-
-### 2. Copy brand fonts (UW only)
-For `--brand=uw`: copy all Encode Sans fonts from plugin to presentation:
-- Copy `<PLUGIN>/design-systems/uw-brand/fonts/*` to `assets/fonts/`
-- This includes 45 .ttf files (~9MB total) for all Encode Sans variants
-- Ensures presentations are self-contained and portable
-
-For `--brand=cloudbank`: **skip font copy.** CloudBank uses Nunito and Open Sans loaded via Google Fonts CDN — no local font files needed.
-
-### 3. Create empty directories
-- `content/` (empty — pass-1 slides are written here by generate-slides)
-- `content-with-visuals/` (empty — pass-2 output written here by apply-visuals)
-- `assets/images/`
-- `assets/diagrams/`
-
-### 4. Vendor tools/deckparse.py, tools/lint.py and tools/resolve-catalog.py
-
-Copy from the plugin into the deck's `tools/` directory:
-- `<PLUGIN>/tools/deckparse.py` → `tools/deckparse.py`
-- `<PLUGIN>/tools/lint.py` → `tools/lint.py`
-- `<PLUGIN>/tools/resolve-catalog.py` → `tools/resolve-catalog.py`
-
-This gives the deck self-contained copies of the parser, linter and catalog resolver. Skills run these as simple, permission-friendly commands (no variable expansion, no path lookup at runtime).
-
-Recommended allow rules (add to the deck's `.claude/settings.json` or the project settings):
-```
-Bash(python3 tools/deckparse.py *)
-Bash(python3 tools/lint.py *)
-Bash(python3 tools/resolve-catalog.py *)
-```
-
-These files should be git-tracked so the deck is fully self-contained.
-
-### 5. Download reveal.js
-
-Run `setup-reveal.sh` (which was copied in step 1) to download the vendored reveal.js assets into `assets/reveal/`:
-
-```bash
-bash setup-reveal.sh <presentation-name>
-```
-
-This requires internet access. If the download fails (offline), tell the user:
-> reveal.js assets could not be downloaded. Run `./setup-reveal.sh` when you have internet access. Until then the legacy footer will not load reveal.js and you can use a manually installed copy at `assets/reveal/`.
-
-The assets (`reveal.min.js`, `reveal.min.css`) should be git-tracked so the deck works offline after the first download.
-
-### 6. Create deck.yml and the starter briefs
-Copy `<PLUGIN>/templates/deck.yml` to `deck.yml` and set `title:` to the presentation name. Keep its `slides:` list as `title` then `example-slide`, and create the matching briefs in `slides/`:
-
-- `slides/example-slide.md`: copy `<PLUGIN>/templates/slides/_example.md` (its `id` is already `example-slide`).
-- `slides/title.md`:
-
-```markdown
----
-id: title
-layout: title
-status: draft
----
-
-# Key message
-[Presentation Name]
-
-## Slot: subtitle
-Subtitle
-```
-
-Validate — run from the deck directory, one call per command:
+Run this one command from the directory where the deck folder should be created (the user's current directory), with `PLUGIN` written out as the literal absolute path:
 
 ```
-python3 tools/deckparse.py deck deck.yml
+python3 <PLUGIN>/tools/new-deck.py <presentation-name> --brand=<brand>
 ```
 
-This is the recommended allow rule: `Bash(python3 tools/deckparse.py *)`. Do not create `content/` fragments here: `/uw-slides:generate-slides` writes them.
+`--brand` defaults to `uw`; leave it out unless the user asked for another brand. Rules for the command, because Claude Code can only match an allow rule against literal text:
 
-### 7. Write .uw-slides.json
+- **Never use shell variables** (`PLUGIN=... python3 $PLUGIN/...`), `cd`, `&&` or pipes. Write each path literally and run one command per call.
+- Quote the presentation name if it contains spaces.
 
-Write this file to the deck root:
-
-```json
-{
-  "plugin_version": "<version from <PLUGIN>/plugin.json>",
-  "brand": "<brand>",
-  "scaffolded_at": "<ISO 8601 date, e.g. 2026-10-15>",
-  "catalog": null,
-  "plugin_dir": "<PLUGIN as the resolved absolute path>"
-}
-```
-
-This stamps the deck with the plugin version it was built with. `/uw-slides:update-deck` uses it to detect drift. `plugin_dir` lets the deck's `tools/resolve-catalog.py` find the catalog without `--catalog` when someone runs it by hand. It is a convenience: it goes stale when the plugin updates (the cache folder is version-numbered) until `/uw-slides:update-deck` rewrites it, and it is machine-specific, so don't commit it to a shared repository if the deck is shared between machines (the resolver ignores a path that doesn't exist).
-
-### 8. Create README.md
-Copy `<PLUGIN>/templates/README.md`, then replace:
-- `[Presentation Name]` with the actual presentation name
-- `[BRAND_NAME]` with the brand's display name (`UW-branded` or `CloudBank-branded`)
-
-### 9. Create .gitignore
-```
-build/
-.DS_Store
-*.swp
-*~
-```
-
-### 10. Create AGENTS.md
-Copy `<PLUGIN>/templates/AGENTS.md`, then replace:
-- `[Presentation Name]` with the actual presentation name
-- `[BRAND]` with the brand value (`uw` or `cloudbank`)
-
-### 11. Create CLAUDE.md
-Copy `<PLUGIN>/templates/CLAUDE.md` verbatim (no substitutions needed).
-
-### 12. Scaffold .github/ collaboration files
-
-Copy these two files from the plugin templates to the deck:
-
-- `<PLUGIN>/templates/.github/CODEOWNERS` → `.github/CODEOWNERS`
-- `<PLUGIN>/templates/.github/pull_request_template.md` → `.github/pull_request_template.md`
-
-Also copy the CI workflow if not already present:
-
-- `<PLUGIN>/templates/.github/workflows/deck.yml` → `.github/workflows/deck.yml`
-
-Tell the user to update `.github/CODEOWNERS` with real GitHub usernames once the slide plan is agreed (the `owner:` field in each brief is the reference). These files should be git-tracked.
-
-## Success Message
-
-After scaffolding, tell the user:
+Recommended allow rules, for the project's or the user's `.claude/settings.json`. The plugin folder is version-numbered, so the rule uses a `*` for the path instead of a literal version:
 
 ```
-✓ Created UW presentation: <presentation-name>/
+Bash(python3 */tools/new-deck.py *)
+Bash(printenv UW_SLIDES_HOME)
+```
+
+### 3. Report the result
+
+The script prints a short summary and exits 0 on success. Relay it, including any `⚠` line, then show the next steps below.
+
+- **Exit 1 with "already exists":** the script never touches an existing folder. Ask the user for a different name; do not delete or reuse the folder yourself.
+- **Exit 1, any other message:** the script removed the folder it started. Relay the message; do not retry by hand.
+- **Exit 2:** a usage error (bad `--brand`, missing name). Fix the command.
+- **reveal.js warning:** the deck is complete. The download needs internet access; tell the user to run `./setup-reveal.sh` when they are online. Until then a manually installed copy at `assets/reveal/` also works.
+
+### What the script does
+
+For reference; do not repeat these steps by hand:
+
+- Copies the build scripts (`build.sh`, `build-visuals.sh`, `lint.sh`, `status.sh`, `outline.sh`, `publish.sh`, `export.sh`, `setup-reveal.sh`), `VISUALS.md`, `shared/footer.html` and the brand's `shared/header.html`, the `.github/` collaboration and CI files, and the vendored `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py`. All `*.sh` files are made executable.
+- For `--brand=uw`, copies the Encode Sans fonts to `assets/fonts/` (about 9 MB, so decks are self-contained). CloudBank decks load their fonts from the Google Fonts CDN.
+- Writes `README.md` and `AGENTS.md` with the presentation name and brand filled in, `CLAUDE.md`, `.gitignore`, and `.brand` (the brand name, which other skills read; keep it git-tracked).
+- Writes `deck.yml` (title set to the presentation name; slides `title` then `example-slide`) and the starter briefs `slides/title.md` and `slides/example-slide.md`, then validates them. There is no `SLIDES.md`, and no `content/` fragments: `/uw-slides:generate-slides` writes those.
+- Writes `.uw-slides.json` with `plugin_version`, `brand`, `scaffolded_at`, `catalog` (null) and `plugin_dir`. `/uw-slides:update-deck` uses it to detect drift. `plugin_dir` lets the deck's `tools/resolve-catalog.py` find the catalog; it goes stale when the plugin updates (the cache folder is version-numbered) until `/uw-slides:update-deck` rewrites it, and it is machine-specific, so don't commit it to a repository shared between machines (the resolver ignores a path that doesn't exist).
+- Creates the empty `content/`, `content-with-visuals/`, `assets/images/` and `assets/diagrams/` folders.
+- Runs `setup-reveal.sh` to download reveal.js into `assets/reveal/`. These files should be git-tracked so the deck works offline afterwards. A failed download is reported as a warning and does not fail the scaffold.
+
+## Next steps to show the user
+
+After a successful run, tell the user:
+
+```
+✓ Created <brand> presentation: <presentation-name>/
 
 Pass 1 — content and structure:
 1. cd <presentation-name>
@@ -351,3 +248,5 @@ Keyboard shortcuts in the browser (reveal.js):
 Each slide is a self-contained HTML fragment with inline scoped styles,
 generated from its brief using the layout library.
 ```
+
+Also tell the user to update `.github/CODEOWNERS` with real GitHub usernames once the slide plan is agreed (the `owner:` field in each brief is the reference).

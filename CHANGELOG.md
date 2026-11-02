@@ -8,6 +8,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Added
+- `tools/new-deck.py` scaffolds a deck in one command: `python3 <PLUGIN>/tools/new-deck.py <name> [--brand=uw|cloudbank]`. It does everything `/uw-slides:new-deck` used to do with about twenty separate commands (templates, brand header and footer, fonts for `uw`, the vendored tools, `.github/` files, `.brand`, `.uw-slides.json`, `deck.yml` and the starter briefs), validates the result and runs `setup-reveal.sh`. A failed reveal.js download is a warning, not a failure. It refuses to touch an existing folder, rejects names that are not safe as a folder name, removes the folder it created if a step fails, and makes every `*.sh` executable (`setup-reveal.sh` and `export.sh` were not executable in the plugin). Tests: `tools/test_new_deck.py`, including a check that its managed-files list matches `/uw-slides:update-deck`.
+
+### Changed
+- `/uw-slides:new-deck` runs that script instead of copying files one by one, so Claude Code asks for permission once instead of about twenty times, and the result is the same every run, in seconds and with few tokens. The README documents the allow rule `Bash(python3 */tools/new-deck.py *)`; the `*` stands in for the version-numbered plugin folder (#50).
+- Every skill's "Plugin directory" section now says to write paths literally and never use shell variables (`PLUGIN=... $PLUGIN/...`), which Claude Code cannot match against an allow rule (#50).
+
 ## [0.3.1] — 2026-11-02
 
 Catalog slides no longer need a separate step: `/uw-slides:generate-slides` resolves them, and the deck's resolver finds the catalog of a marketplace install on its own. In existing decks, run `/uw-slides:update-deck` once to get the updated resolver and record where the plugin is installed.

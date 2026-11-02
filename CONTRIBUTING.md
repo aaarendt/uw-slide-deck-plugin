@@ -223,6 +223,7 @@ Plugin source lives in this repository. Skills are in `skills/<name>/SKILL.md`; 
    python3 tools/test_deckparse.py
    python3 tools/test_lint.py
    python3 tools/test_resolve_catalog.py
+   python3 tools/test_new_deck.py
    python3 tools/test_validate_plugin.py
    python3 tools/validate_plugin.py          # add --claude to also run `claude plugin validate`
    ```

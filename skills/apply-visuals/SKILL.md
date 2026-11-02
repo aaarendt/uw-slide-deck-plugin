@@ -19,6 +19,8 @@ Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the de
 
 If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
 
+Write every path literally when you run a command. Never use shell variables (`PLUGIN=... python3 $PLUGIN/...`): Claude Code cannot match an allow rule against them, so each run asks for permission.
+
 ## Brand Resolution
 
 Resolve the brand in this order:

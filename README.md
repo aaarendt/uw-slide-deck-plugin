@@ -76,7 +76,13 @@ Then in **Claude Code**:
 /uw-slides:new-deck my-talk
 ```
 
-For a CloudBank deck, add `--brand=cloudbank`. This creates a `my-talk/` folder with the build scripts, the brand's styles and fonts, and the presentation runtime ([reveal.js](https://revealjs.com/), downloaded once, so this step needs internet access).
+For a CloudBank deck, add `--brand=cloudbank`. This creates a `my-talk/` folder with the build scripts, the brand's styles and fonts, and the presentation runtime ([reveal.js](https://revealjs.com/), downloaded once, so this step needs internet access; offline, the deck is still created and you run `./setup-reveal.sh` later).
+
+Creating the deck is a single command (`tools/new-deck.py` in the plugin), so Claude Code asks for permission once. The plugin's folder is named after its version, so a "don't ask again" answer stops matching after a plugin update. To allow it for good, add this rule to `permissions.allow` in `~/.claude/settings.json`:
+
+```json
+"Bash(python3 */tools/new-deck.py *)"
+```
 
 ### 2. Reopen Claude Code inside the deck
 
