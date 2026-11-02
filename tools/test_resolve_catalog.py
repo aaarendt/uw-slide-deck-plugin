@@ -411,6 +411,9 @@ class TestCatalogSlideHtml(unittest.TestCase):
     def test_thank_you_html(self):
         self._check_slide("thank-you")
 
+    def test_cb_title_html(self):
+        self._check_slide("cb-title")
+
 
 # ---------------------------------------------------------------------------
 # Tests for _strip_empty_para_elements
@@ -708,6 +711,58 @@ class TestBrandMismatchWarning(unittest.TestCase):
         with contextlib.redirect_stderr(buf):
             rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
         self.assertIn("may render incorrectly", buf.getvalue())
+
+    def test_cb_title_in_cloudbank_deck_no_warning(self):
+        _make_deck(self.tmpdir, ["title"], {
+            "title": "---\nid: title\nuse: catalog/cb-title\n---\n",
+        })
+        _write(os.path.join(self.tmpdir, ".uw-slides.json"),
+               '{"plugin_version": "0.2.0", "brand": "cloudbank", '
+               '"scaffolded_at": "2026-01-01", "catalog": null}')
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            result = rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        self.assertEqual(result, 0)
+        self.assertNotIn("may render incorrectly", buf.getvalue())
+        out = _read(os.path.join(self.tmpdir, "content", "title.html"))
+        self.assertIn('data-catalog="cb-title@1.0.0"', out)
+        self.assertIn('data-slide="title"', out)
+        self.assertNotIn("cb-title\"]", out)
+        self.assertNotIn("{{", out)
+        # affiliation defaults to plain "CloudBank"
+        self.assertIn('<p class="affiliation">CloudBank</p>', out)
+
+    def test_cb_title_in_uw_deck_warns(self):
+        _make_deck(self.tmpdir, ["title"], {
+            "title": "---\nid: title\nuse: catalog/cb-title\n---\n",
+        })
+        _write(os.path.join(self.tmpdir, ".uw-slides.json"),
+               '{"plugin_version": "0.2.0", "brand": "uw", '
+               '"scaffolded_at": "2026-01-01", "catalog": null}')
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        self.assertIn("may render incorrectly", buf.getvalue())
+
+    def test_cb_title_params_substituted(self):
+        _make_deck(self.tmpdir, ["title"], {
+            "title": ("---\nid: title\nuse: catalog/cb-title\nparams:\n"
+                      "  title: \"CloudBank for Researchers\"\n"
+                      "  subtitle: \"Cloud access\"\n"
+                      "  presenter: \"Jane Doe\"\n"
+                      "  affiliation: \"UW eScience\"\n"
+                      "  date: \"November 3, 2026\"\n---\n"),
+        })
+        _write(os.path.join(self.tmpdir, ".brand"), "cloudbank\n")
+        self.assertEqual(rc.cmd_resolve(self.tmpdir, CATALOG_DIR), 0)
+        out = _read(os.path.join(self.tmpdir, "content", "title.html"))
+        for text in ("CloudBank for Researchers", "Cloud access", "Jane Doe",
+                     "UW eScience", "November 3, 2026"):
+            self.assertIn(text, out)
 
     def test_uw_slide_in_uw_deck_no_brand_warning(self):
         _make_deck(self.tmpdir, ["title"], {

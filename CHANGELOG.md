@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ## [Unreleased]
 
 ### Added
+- Catalog slide `cb-title` (CloudBank brand, parameterized): the CloudBank title slide, with the same params as `uw-title` (`title`, `subtitle`, `presenter`, `affiliation` defaulting to "CloudBank", `date`). A CloudBank deck can now be assembled entirely from catalog slides, starting with a title (#42).
 - `tools/new-deck.py` scaffolds a deck in one command: `python3 <PLUGIN>/tools/new-deck.py <name> [--brand=uw|cloudbank]`. It does everything `/uw-slides:new-deck` used to do with about twenty separate commands (templates, brand header and footer, fonts for `uw`, the vendored tools, `.github/` files, `.brand`, `.uw-slides.json`, `deck.yml` and the starter briefs), validates the result and runs `setup-reveal.sh`. A failed reveal.js download is a warning, not a failure. It refuses to touch an existing folder, rejects names that are not safe as a folder name, removes the folder it created if a step fails, and makes every `*.sh` executable (`setup-reveal.sh` and `export.sh` were not executable in the plugin). Tests: `tools/test_new_deck.py`, including a check that its managed-files list matches `/uw-slides:update-deck`.
 
 ### Changed

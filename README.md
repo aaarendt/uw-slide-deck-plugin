@@ -111,10 +111,22 @@ Without a topic, it asks you for the essentials first. It drafts learning object
 # deck.yml
 title: "CloudBank for Researchers"
 slides:
+  - title
   - what-is
   - programs
   - process
   - thank-you
+```
+
+```markdown
+<!-- slides/title.md -->
+---
+id: title
+use: catalog/cb-title
+params:
+  title: "CloudBank for Researchers"
+  presenter: "Jane Doe"
+---
 ```
 
 ```markdown
@@ -136,7 +148,7 @@ params:
 ---
 ```
 
-A brief needs only `id` and `use:`, plus `params:` for slides that take them (each slide's params are in [`catalog/README.md`](catalog/README.md)). new-deck starts every deck with two placeholder slides, `title` and `example-slide`: replace them in `deck.yml` and delete `slides/example-slide.md`. You can write these files yourself or ask Claude Code to ("make this deck the cb-what-is, cb-programs, cb-process and thank-you catalog slides"); either way it costs few or no tokens.
+A brief needs only `id` and `use:`, plus `params:` for slides that take them (each slide's params are in [`catalog/README.md`](catalog/README.md)). new-deck starts every deck with two placeholder slides, `title` and `example-slide`: replace them in `deck.yml` and delete `slides/example-slide.md`. You can write these files yourself or ask Claude Code to ("make this deck the cb-title, cb-what-is, cb-programs, cb-process and thank-you catalog slides"); either way it costs few or no tokens.
 
 If you include the `funding` slide, set its params: its defaults are placeholders, and the resolver warns while one still shows. For a few slides of your own among the catalog ones, write their briefs with a `layout:` instead of `use:` (see [`references/slide-schema.md`](references/slide-schema.md)); step 4 then writes only those.
 
@@ -254,6 +266,7 @@ The catalog is a set of pre-made, vetted slides that any deck can include by ID 
 | `agenda` | Agenda built from the deck's own slides, sections and durations | any |
 | `feedback` | Session feedback prompt with an optional survey link | any |
 | `thank-you` | Closing slide with presenter and contact details | any |
+| `cb-title` | Title slide: title, subtitle, presenter, affiliation, date | cloudbank |
 | `cb-what-is` | What CloudBank is and who runs it | cloudbank |
 | `cb-programs` | CloudBank's six standard services | cloudbank |
 | `cb-why-choose` | Why researchers choose a CloudBank account | cloudbank |
