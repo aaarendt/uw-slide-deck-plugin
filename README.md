@@ -136,15 +136,11 @@ If you include the `funding` slide, set its params: its defaults are placeholder
 
 ### 4. Write the slides
 
-If the deck has catalog slides, ask Claude Code to **"resolve the catalog slides"**. This copies them into the deck and fills in their params. If every slide is a catalog slide, ask it to resolve and build, and skip to step 5.
-
-For the other slides:
-
 ```
 /uw-slides:generate-slides
 ```
 
-It writes each slide from its brief, builds the presentation (`build/index.html`), and then runs the brand review and the accessibility check and reports what they found.
+If the deck has catalog slides, this first copies them into the deck and fills in their params, and passes on any warnings (a placeholder you still need to set, for example). It then writes each slide that uses a layout from its brief. If every slide is a catalog slide, it only copies them. Finally it builds the presentation (`build/index.html`), and then runs the brand review and the accessibility check and reports what they found.
 
 ### 5. Look at it
 
@@ -276,13 +272,15 @@ params:
 ---
 ```
 
-Catalog slides are copied, not generated: `/uw-slides:generate-slides` skips them. To copy them into the deck, ask Claude Code to **"resolve the catalog slides"**, or run the command plan-deck prints:
+Catalog slides are copied, not generated. `/uw-slides:generate-slides` copies them into the deck for you and reports any warnings. Run it again after changing a catalog slide's params, or, for `agenda`, after changing slide titles, sections or durations.
+
+Without an agent, run the resolver yourself:
 
 ```bash
 python3 tools/resolve-catalog.py resolve . --catalog=<plugin>/catalog
 ```
 
-`<plugin>` is where the plugin is installed. It differs by agent and changes with each version, so don't save the path in scripts; with `UW_SLIDES_HOME` set you can leave out `--catalog`. Resolve again after changing a catalog slide's params, or, for `agenda`, after changing slide titles, sections or durations.
+`<plugin>` is where the plugin is installed. It differs by agent and changes with each version, so don't save the path in scripts; with `UW_SLIDES_HOME` set you can leave out `--catalog`.
 
 To change a catalog slide beyond its params, eject it. This keeps the slide in your deck as a locked, hand-edited slide and removes the link to the catalog:
 
@@ -313,10 +311,10 @@ To change colors, spacing or type for one deck only, edit that deck's `shared/he
 - An earlier install may still be in the way. Follow [Upgrading from the symlink install](#upgrading-from-the-symlink-install), and check that `UW_SLIDES_HOME` isn't set (`echo $UW_SLIDES_HOME`).
 
 **"Catalog not found" when resolving catalog slides**
-- The resolver needs to know where the plugin is. Ask Claude Code to resolve the catalog slides, or pass `--catalog=<plugin>/catalog` as shown in [Using a catalog slide](#using-a-catalog-slide).
+- You ran the resolver by hand and it doesn't know where the plugin is. Run `/uw-slides:generate-slides`, which finds the plugin itself, or pass `--catalog=<plugin>/catalog` as shown in [Using a catalog slide](#using-a-catalog-slide).
 
 **A slide is missing from the built deck**
-- `./status.sh` shows which slides have no HTML yet. Catalog slides need resolving; other slides need `/uw-slides:generate-slides`.
+- `./status.sh` shows which slides have no HTML yet. Run `/uw-slides:generate-slides` to copy catalog slides and generate the others.
 - The build skips missing slides with a warning, so a half-finished deck still builds. `./build.sh --strict` fails instead.
 
 **Slides are in the wrong order**

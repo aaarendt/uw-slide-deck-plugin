@@ -21,13 +21,13 @@ params:
 ---
 ```
 
-The catalog resolver copies the slide's HTML into `content/<deck-id>.html`, rewrites its ID and CSS selectors to match your deck, and substitutes your params. Run it from inside the deck directory, pointing it at the plugin's catalog:
+The catalog resolver copies the slide's HTML into `content/<deck-id>.html`, rewrites its ID and CSS selectors to match your deck, and substitutes your params. `/uw-slides:generate-slides` runs it for you. To run it by hand, from inside the deck directory, point it at the plugin's catalog:
 
 ```bash
 python3 tools/resolve-catalog.py resolve . --catalog=<plugin>/catalog
 ```
 
-`/uw-slides:generate-slides` skips slides with `use: catalog/...`, so run the resolver before or after it. `/uw-slides:plan-deck` prints this command with the real plugin path when the plan uses catalog slides.
+`/uw-slides:generate-slides` never generates slides with `use: catalog/...`; it resolves them with this command and reports the resolver's warnings.
 
 `<plugin>` is the directory where the uw-slides plugin is installed. The skills find it for you. When you run the resolver by hand, pass the path (your agent can tell you where the plugin is installed), or clone this repository and set `UW_SLIDES_HOME` to the clone, in which case you can leave out `--catalog`. Don't save a path from a client's plugin cache in scripts or notes: it can change when the plugin is updated.
 

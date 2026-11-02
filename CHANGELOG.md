@@ -8,6 +8,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Changed
+- `/uw-slides:generate-slides` now resolves catalog slides itself: before generating layout slides it runs `tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog` and reports the resolver's output, including placeholder and brand warnings, with its own. Users no longer need the `--catalog` path (#39, most of #34). `/uw-slides:plan-deck`'s next steps, the README walkthrough (step 4, "Using a catalog slide", troubleshooting) and `catalog/README.md` shrink to a single `/uw-slides:generate-slides`.
+
 ## [0.3.0] — 2026-11-02
 
 This release makes the plugin installable from a marketplace in Claude Code, Codex and GitHub Copilot CLI, simplifies the slide catalog and fixes `/uw-slides:update-deck`. Breaking changes: the Claude Code marketplace is renamed from `uw-slides-local` to `uw-slide-deck` (README, "Upgrading from the symlink install"), and the catalog's `land-ack` slide is removed (catalog 2.0.0). Run `/uw-slides:update-deck` in existing decks to pick up the new scripts and tools. The `SLIDES.md` fallback, planned for removal in this release, stays deprecated; its removal moves to a later release (#22).

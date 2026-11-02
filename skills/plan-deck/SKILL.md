@@ -164,9 +164,8 @@ Then ask the user (with the ask-user tool when available) to **approve**, **requ
 - Run `./outline.sh` to refresh the generated `OUTLINE.md` (read-only; never edit it).
 - Leave `status: draft` on every brief (`review` and `done` are for the people working on the slides).
 - Tell the user the next steps:
-  1. If the deck has catalog slides: `python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog` (copies catalog fragments to `content/`; write `<PLUGIN>` as the resolved absolute path)
-  2. `/uw-slides:generate-slides` (generates layout slides; skips catalog ones)
-  3. `./build.sh`
+  1. `/uw-slides:generate-slides` (copies any catalog slides into `content/`, generates the layout slides, builds the deck and runs both checks)
+  2. `./build.sh` only if they want to rebuild without regenerating
   Do not run them.
 
 ## Re-plan

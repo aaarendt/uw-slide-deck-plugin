@@ -1,6 +1,6 @@
 ---
 name: generate-slides
-description: Generate content/<id>.html slide fragments from slides/<id>.md briefs using the layout library. Skips locked and catalog slides, reports stale slides and asks before overwriting.
+description: Resolve catalog slides and generate content/<id>.html slide fragments from slides/<id>.md briefs using the layout library. Skips locked slides, reports stale slides and asks before overwriting.
 ---
 
 # Generate Slides (Pass 1)
@@ -9,13 +9,7 @@ description: Generate content/<id>.html slide fragments from slides/<id>.md brie
 
 Turn the briefs in `slides/<id>.md` (ordered by `deck.yml`) into HTML fragments in `content/<id>.html`. The brief is the source of truth; the HTML is a regenerable artifact that records which version of the brief it came from.
 
-This skill handles **layout slides** only. Catalog slides (`use: catalog/<id>`) are resolved by the catalog resolver and must be run first:
-
-```bash
-python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog
-```
-
-Write `<PLUGIN>` as the resolved absolute path (see Plugin directory), so the command stays literal.
+This skill **generates** layout slides and **resolves** catalog slides (`use: catalog/<id>`). Catalog slides are copied from the plugin's catalog by `tools/resolve-catalog.py`, never generated; this skill runs the resolver for you (step 2), so the user never needs to know the catalog path.
 
 This skill replaces the old "read SLIDES.md and write slides by conversation" step. Legacy decks that only have `SLIDES.md` are not handled here: migrate them first (mapping in `<PLUGIN>/references/slide-schema.md`, section 6), or keep writing fragments by hand.
 
@@ -72,14 +66,26 @@ It prints one line per slide in `deck.yml` order. Act on the state, never on gue
 | `untracked` | HTML exists without `data-brief-hash` (hand-written or older) | **ask**: overwrite, or keep it by setting `locked: true` in the brief |
 | `fresh` | HTML matches the brief | skip |
 | `locked` | brief has `locked: true` (hand-edited HTML) | **never write**; report it. To regenerate, the user sets `locked: false` |
-| `catalog` | brief has `use: catalog/<id>` | skip; catalog slides are copied by the catalog resolver, never generated |
+| `catalog` | brief has `use: catalog/<id>` | resolve with the catalog resolver (step 2); never generate |
 | `no-brief`, `invalid` | `slides/<id>.md` missing or does not parse | skip and report the file and line; the user fixes it |
 
 If the user named slide IDs, restrict to those. If `deck.yml` itself does not parse, stop and show the error. `orphan-brief` and `orphan-fragment` lines are reported, not acted on.
 
-### 2. Generate each slide
+### 2. Resolve catalog slides
 
-For every slide you are going to write:
+Skip this step if no slide is in state `catalog`, or if the user named slide IDs and none is a catalog slide. Otherwise run, from the deck directory:
+
+```bash
+python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog 2>&1
+```
+
+Write `<PLUGIN>` as the resolved absolute path (see Plugin directory), so the command stays literal; never save it in a file in the deck. The resolver rewrites `content/<id>.html` for every catalog slide in the deck (it cannot be limited to one), so a catalog slide's HTML is never hand-edited: to customise one, eject it (`python3 tools/resolve-catalog.py eject . <id> --catalog=<PLUGIN>/catalog`), which turns it into a locked layout slide.
+
+Keep the resolver's output for the report. Pass its warnings on exactly as printed, including placeholder warnings (such as the `funding` slide's default agency and grant ID) and brand-mismatch warnings, and name the params the user still has to set. If it exits non-zero (catalog not found, a slide that did not resolve), show the output, list the slides that failed, and carry on with the layout slides; do not stop the run.
+
+### 3. Generate each slide
+
+For every layout slide you are going to write (not the catalog slides):
 
 1. **Read the brief**: `python3 tools/deckparse.py brief slides/<id>.md` (JSON: front matter and body).
 2. **Resolve the layout.**
@@ -101,7 +107,7 @@ For every slide you are going to write:
    - `data-generated-by="uw-slides@<plugin version>"` (version from `<PLUGIN>/plugin.json`)
 7. **Write** `content/<id>.html` (create `content/` if needed).
 
-### 3. Build and report
+### 4. Build and report
 
 ```bash
 ./build.sh
@@ -115,7 +121,8 @@ Then run `/uw-slides:design-review` and `/uw-slides:accessibility-check`, and re
 ↻ Regenerated: 03-costs (stale, confirmed)
 ⏭ Fresh:       01-title
 🔒 Locked:      04-diagram (hand-edited; not touched)
-📦 Catalog:     06-intro (use: catalog/uw-title — run `python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog`)
+📦 Catalog:     06-intro (catalog/uw-title, resolved)
+⚠ Catalog:     08-funding: placeholder agency, grant ID and title still shown (set params in slides/08-funding.md)
 ⚠ Skipped:     07-recap (slides/07-recap.md:12: unknown field 'colour')
 Layout choices written back to briefs: 02-why-cloud (auto -> bullets)
 ```
@@ -125,4 +132,5 @@ Layout choices written back to briefs: 02-why-cloud (auto -> bullets)
 - **Never overwrite a locked slide, and never overwrite a stale or untracked one without asking.** If the user wants to hand-edit generated HTML, tell them to set `locked: true` in the brief first, or the next run will replace the edit.
 - Changing `layout_rationale`, `objective`, `owner`, `status`, `duration`, `locked`, `section` or `## Notes` does not make a slide stale; changing the key message, talking points, source, slots, `title`, `layout`, `layout_intent`, `use` or `params` does.
 - Fix problems in the brief or the layout choice, not by hand-tuning one slide's CSS away from the library.
+- Never generate a catalog slide or edit its resolved HTML by hand; run the resolver (step 2) or eject the slide.
 - Slide fragments only ever touch `content/`. Pass 2 (`apply-visuals`) writes `content-with-visuals/`.
