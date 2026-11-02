@@ -56,6 +56,8 @@ uw-slides-plugin/
 
 `tools/deckparse.py` (Python 3 stdlib only; tests: `python3 tools/test_deckparse.py`) parses and validates `deck.yml` and briefs, reports per-slide generation state (`status`) and writes the generated `OUTLINE.md` (`outline`). New decks receive a vendored copy at `<deck>/tools/deckparse.py` (written by `/uw-slides:new-deck`); skills run `python3 tools/deckparse.py ...` from the deck directory. The build scripts also search `$UW_SLIDES_HOME/tools/` and `~/.claude/plugins/local/uw-slides/tools/` as fallbacks; without a parser they read the plain `slides:` list unvalidated.
 
+`tools/new-deck.py` (Python 3 stdlib only; tests: `python3 tools/test_new_deck.py`) is the one command `/uw-slides:new-deck` runs: `python3 <PLUGIN>/tools/new-deck.py <name> [--brand=uw|cloudbank]`. It copies the templates, brand header, fonts and vendored tools, writes `.brand`, `.uw-slides.json` and `deck.yml` with the starter briefs, validates them and runs `setup-reveal.sh` (a failed download is a warning). It refuses to touch an existing folder. Its `FILES` table is the list of files a new deck gets; the files marked managed there must match the "Managed files" list in `skills/update-deck/SKILL.md` (a test checks this). Skills run it with literal paths, never shell variables, so one allow rule covers it.
+
 ## Slide Fragment Architecture
 
 Each slide is a self-contained `<section>` saved as `content/<slide-id>.html`. Styles are **inline and scoped** using the attribute selector pattern:
