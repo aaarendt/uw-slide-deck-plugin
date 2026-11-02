@@ -194,6 +194,26 @@ params:
 
 ---
 
+### `cb-why-cloud` — Why cloud?
+**Kind:** parameterized · **Brand:** cloudbank
+
+General motivation for cloud computing in research, to place before the CloudBank program slides. Six headed items with original line icons (inline SVG): bring compute to the data, scale up on demand, run in parallel, use and deploy LLMs, share reproducible environments, host research services. Example services are named in the speaker notes only.
+
+| Param | Required | Default |
+|-------|----------|---------|
+| `lead` | no | hidden when empty |
+
+```markdown
+---
+id: why-cloud
+use: catalog/cb-why-cloud
+params:
+  lead: "The work you're doing this week may benefit from cloud computing. With cloud you can:"
+---
+```
+
+---
+
 ### `cb-eligibility` — CloudBank eligibility and recommended uses
 **Kind:** verbatim · **Brand:** cloudbank
 

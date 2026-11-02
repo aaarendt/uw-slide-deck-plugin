@@ -1,0 +1,177 @@
+<section data-slide="cb-why-cloud"
+         data-layout="catalog"
+         data-catalog="cb-why-cloud@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>Why cloud?</h1>
+    <p class="lead">{{lead}}</p>
+
+    <div class="grid">
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="15" cy="6" rx="6" ry="2.5"/><path d="M9 6v12c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V6M9 12c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5M2 12h5.5M5 9.5 7.5 12 5 14.5"/></svg></span>
+        <div class="text">
+          <h2>Bring compute to the data</h2>
+          <p>Analyze large datasets where they live, without downloading them</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1.5"/><rect x="10" y="10" width="4" height="4"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></svg></span>
+        <div class="text">
+          <h2>Scale up on demand</h2>
+          <p>Rent GPUs or large-memory machines, and pay only while they run</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="12" r="2"/><circle cx="18.5" cy="5.5" r="2"/><circle cx="18.5" cy="12" r="2"/><circle cx="18.5" cy="18.5" r="2"/><path d="M6 12h10.5M9.5 12c3 0 3-6.5 7-6.5M9.5 12c3 0 3 6.5 7 6.5"/></svg></span>
+        <div class="text">
+          <h2>Run in parallel</h2>
+          <p>Many simulations, parameter sweeps or fine&#8209;tuning runs at once</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4A2.5 2.5 0 0 1 4 13.5v-7A2.5 2.5 0 0 1 6.5 4z"/><path d="M12 6.5c.4 2.2 1.3 3.1 3.5 3.5-2.2.4-3.1 1.3-3.5 3.5-.4-2.2-1.3-3.1-3.5-3.5 2.2-.4 3.1-1.3 3.5-3.5z"/></svg></span>
+        <div class="text">
+          <h2>Use and deploy LLMs</h2>
+          <p>Call hosted models through an API, or serve your own on GPUs</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 7.5l9 4.5 9-4.5z"/><path d="m3 12 9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></svg></span>
+        <div class="text">
+          <h2>Share reproducible environments</h2>
+          <p>Collaborators and students work in the same setup</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="badge"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.5"/><circle cx="12" cy="4" r="2"/><circle cx="5" cy="18.5" r="2"/><circle cx="19" cy="18.5" r="2"/><path d="M12 6v3.5M10.2 13.7 6.5 17.1M13.8 13.7l3.7 3.4"/></svg></span>
+        <div class="text">
+          <h2>Host research services</h2>
+          <p>Web apps, APIs and live model endpoints that others can reach</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    WHY CLOUD? Six things the cloud makes possible that are hard on a laptop or
+    a fixed campus cluster.
+    Bring compute to the data: many large research datasets are already hosted
+    in the cloud (for example the AWS Open Data registry, Google Cloud public
+    datasets and Microsoft Planetary Computer). Running the analysis next to
+    the data avoids downloading terabytes to a laptop.
+    Scale up on demand: start a GPU or large-memory machine for an intensive
+    job, then shut it down. You pay for the hours it runs, not for hardware
+    that sits idle.
+    Run in parallel: launch many copies of the same job at once, such as
+    simulations, parameter sweeps, fine-tuning runs or reinforcement learning
+    experiments, and finish in hours instead of weeks.
+    Use and deploy LLMs: call hosted foundation models through an API (for
+    example Amazon Bedrock, Google Vertex AI or Azure AI Foundry), or deploy an
+    open-weight model on your own GPU instance or managed endpoint with a
+    serving tool such as vLLM.
+    Share reproducible environments: package code, libraries and data access in
+    containers, machine images or shared notebook servers, so collaborators and
+    students all work in the same setup.
+    Host research services: run web apps, API gateways, data portals and live
+    model endpoints that collaborators or the public can reach.
+  </aside>
+
+  <style>
+    section[data-slide="cb-why-cloud"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-why-cloud"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-why-cloud"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-why-cloud"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-why-cloud"] .lead {
+      font-size: clamp(1.5rem, 2.2vw, 2rem);
+      line-height: 1.3;
+      color: var(--fg);
+      margin: calc(-1 * var(--space-2)) 0 var(--space-4);
+    }
+
+    section[data-slide="cb-why-cloud"] .lead:empty { display: none; }
+
+    section[data-slide="cb-why-cloud"] .grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 4.5vw, 4.5rem) clamp(2rem, 4vw, 4rem);
+      align-content: center;
+    }
+
+    section[data-slide="cb-why-cloud"] .item {
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      font-size: clamp(1.5rem, 2.2vw, 2.125rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-why-cloud"] .badge {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 5.5rem;
+      height: 5.5rem;
+      border-radius: 50%;
+      background: var(--slide-bg-subtle);
+      color: var(--slide-accent);
+    }
+
+    section[data-slide="cb-why-cloud"] .icon {
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+
+    section[data-slide="cb-why-cloud"] .text { min-width: 0; }
+
+    section[data-slide="cb-why-cloud"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 4px;
+    }
+
+    section[data-slide="cb-why-cloud"] .item p { margin: 0; }
+  </style>
+</section>

@@ -13,6 +13,7 @@ agenda: "Auto-generated agenda built from the deck.yml slide titles"
 feedback: "Session feedback slide — configurable URL for survey or QR code"
 thank-you: "Closing thank-you slide with presenter name and contact info"
 cb-title: "Standard CloudBank branded title slide — presenter, title, subtitle, date, affiliation"
+cb-why-cloud: "Why use the cloud for research: data access, on-demand scale, parallel runs, LLMs, shared environments, hosted services"
 cb-eligibility: "CloudBank eligibility (who can lead a project) and recommended uses (good fit vs. better elsewhere)"
 cb-what-is: "What CloudBank is: who runs it, which clouds, the 2025 NSF award and the NAIRR link"
 cb-programs: "CloudBank's six standard services: no cost, helpdesk, accounts, multiple clouds, monitoring, training"
@@ -28,6 +29,7 @@ slides:
   - feedback
   - thank-you
   - cb-title
+  - cb-why-cloud
   - cb-eligibility
   - cb-what-is
   - cb-programs
