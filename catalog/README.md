@@ -167,6 +167,33 @@ params:
 
 ---
 
+### `cb-title` — CloudBank title slide
+**Kind:** parameterized · **Brand:** cloudbank
+
+The CloudBank counterpart of `uw-title`: dark navy background, blue accent bar, title and subtitle centre, presenter details below.
+
+| Param | Required | Default |
+|-------|----------|---------|
+| `title` | yes | `"Presentation Title"` |
+| `subtitle` | no | hidden when empty |
+| `presenter` | no | `""` |
+| `affiliation` | no | `"CloudBank"` |
+| `date` | no | hidden when empty |
+
+```markdown
+---
+id: title
+use: catalog/cb-title
+params:
+  title: "CloudBank for Researchers"
+  subtitle: "Cloud access for NSF-funded research"
+  presenter: "Jane Doe"
+  date: "November 3, 2026"
+---
+```
+
+---
+
 ### `cb-eligibility` — CloudBank eligibility and recommended uses
 **Kind:** verbatim · **Brand:** cloudbank
 
