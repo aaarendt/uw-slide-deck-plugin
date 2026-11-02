@@ -58,6 +58,11 @@ Resolve the brand:
 
 ### 2. Diff the managed files
 
+First decide which runtime the deck uses, because the shared header and footer come in two versions:
+
+- **reveal.js deck** (every deck scaffolded by the current `/uw-slides:new-deck`): the deck's `shared/footer.html` contains `Reveal.initialize`. Compare against the `-reveal` templates.
+- **legacy deck** (scaffolded before reveal.js): it doesn't. Compare against the legacy templates, and never replace a legacy header or footer with a reveal one, or a reveal one with a legacy one: the two need different markup and assets, so swapping one alone breaks the deck.
+
 For each managed file, compare the deck's copy with the plugin's canonical copy:
 
 | Deck file | Plugin source |
@@ -68,8 +73,8 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 | `status.sh` | `<PLUGIN>/templates/status.sh` |
 | `outline.sh` | `<PLUGIN>/templates/outline.sh` |
 | `publish.sh` | `<PLUGIN>/templates/publish.sh` |
-| `shared/footer.html` | `<PLUGIN>/templates/shared/footer.html` |
-| `shared/header.html` | `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
+| `shared/footer.html` | reveal.js deck: `<PLUGIN>/templates/shared/footer-reveal.html`; legacy deck: `<PLUGIN>/templates/shared/footer.html` |
+| `shared/header.html` | reveal.js deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header-reveal.html`; legacy deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
 | `tools/deckparse.py` | `<PLUGIN>/tools/deckparse.py` |
 | `tools/lint.py` | `<PLUGIN>/tools/lint.py` |
 | `tools/resolve-catalog.py` | `<PLUGIN>/tools/resolve-catalog.py` |
@@ -83,6 +88,7 @@ Show the user:
 ```
 Deck:   <name>  (scaffolded with uw-slides v<deck-version>)
 Plugin: <plugin-path>  (current version: v<current-version>)
+Runtime: reveal.js   (or: legacy)
 
 Changes found:
   build.sh            — updated
