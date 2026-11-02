@@ -1,13 +1,13 @@
 ---
 name: update-deck
-description: Update a deck's managed files (build scripts, shared templates, tools/deckparse.py) to match the current plugin version, without touching slides, content, or assets.
+description: Update a deck's managed files (build scripts, shared templates, vendored tools in tools/) to match the current plugin version, without touching slides, content, or assets.
 ---
 
 # Update Deck
 
 ## Purpose
 
-Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-deck` copies build scripts, `shared/header.html`, `shared/footer.html`, and `tools/deckparse.py` into the deck at scaffold time and stamps `.uw-slides.json` with the plugin version. When the plugin is updated, those files drift. This skill shows what has changed and updates them on confirmation.
+Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-deck` copies build scripts, `shared/header.html`, `shared/footer.html`, and the tools `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py` into the deck at scaffold time and stamps `.uw-slides.json` with the plugin version. When the plugin is updated, those files drift. This skill shows what has changed and updates them on confirmation.
 
 **Managed files** (the only files this skill may touch):
 - `build.sh`
@@ -20,6 +20,7 @@ Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-dec
 - `shared/header.html` (brand-specific)
 - `tools/deckparse.py`
 - `tools/lint.py`
+- `tools/resolve-catalog.py`
 
 **Never touched:** `content/`, `content-with-visuals/`, `slides/`, `assets/`, `deck.yml`, `VISUALS.md`, `OUTLINE.md`, `.brand`, `*.md` files.
 
@@ -57,6 +58,11 @@ Resolve the brand:
 
 ### 2. Diff the managed files
 
+First decide which runtime the deck uses, because the shared header and footer come in two versions:
+
+- **reveal.js deck** (every deck scaffolded by the current `/uw-slides:new-deck`): the deck's `shared/footer.html` contains `Reveal.initialize`. Compare against the `-reveal` templates.
+- **legacy deck** (scaffolded before reveal.js): it doesn't. Compare against the legacy templates, and never replace a legacy header or footer with a reveal one, or a reveal one with a legacy one: the two need different markup and assets, so swapping one alone breaks the deck.
+
 For each managed file, compare the deck's copy with the plugin's canonical copy:
 
 | Deck file | Plugin source |
@@ -67,12 +73,13 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 | `status.sh` | `<PLUGIN>/templates/status.sh` |
 | `outline.sh` | `<PLUGIN>/templates/outline.sh` |
 | `publish.sh` | `<PLUGIN>/templates/publish.sh` |
-| `shared/footer.html` | `<PLUGIN>/templates/shared/footer.html` |
-| `shared/header.html` | `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
+| `shared/footer.html` | reveal.js deck: `<PLUGIN>/templates/shared/footer-reveal.html`; legacy deck: `<PLUGIN>/templates/shared/footer.html` |
+| `shared/header.html` | reveal.js deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header-reveal.html`; legacy deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
 | `tools/deckparse.py` | `<PLUGIN>/tools/deckparse.py` |
 | `tools/lint.py` | `<PLUGIN>/tools/lint.py` |
+| `tools/resolve-catalog.py` | `<PLUGIN>/tools/resolve-catalog.py` |
 
-Read both versions and note whether they differ. A file the deck is missing counts as a diff.
+Read both versions and note whether they differ. A file the deck is missing counts as a diff: decks scaffolded by older plugin versions may have no `tools/lint.py` or `tools/resolve-catalog.py`, and this adds them.
 
 ### 3. Report and ask for confirmation
 
@@ -81,6 +88,7 @@ Show the user:
 ```
 Deck:   <name>  (scaffolded with uw-slides v<deck-version>)
 Plugin: <plugin-path>  (current version: v<current-version>)
+Runtime: reveal.js   (or: legacy)
 
 Changes found:
   build.sh            — updated

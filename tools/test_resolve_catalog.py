@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Tests for tools/resolve-catalog.py (stdlib only)."""
 
+import contextlib
 import importlib.util
+import io
 import os
 import shutil
 import sys
@@ -149,9 +151,17 @@ class TestLoadCatalogSlideMeta(unittest.TestCase):
         self.assertEqual(meta["kind"], "parameterized")
         self.assertIn("title", meta["params"])
 
-    def test_loads_land_ack(self):
-        meta = rc._load_catalog_slide_meta(CATALOG_DIR, "land-ack")
+    def test_loads_verbatim(self):
+        meta = rc._load_catalog_slide_meta(CATALOG_DIR, "cb-what-is")
         self.assertEqual(meta["kind"], "verbatim")
+
+    def test_no_slide_has_a_status_field(self):
+        # Catalog slides have no status: a slide in the catalog is ready to use.
+        for cid in os.listdir(os.path.join(CATALOG_DIR, "slides")):
+            meta = rc._load_catalog_slide_meta(CATALOG_DIR, cid)
+            self.assertNotIn("status", meta)
+            with open(os.path.join(CATALOG_DIR, "slides", cid, "slide.md"), encoding="utf-8") as fh:
+                self.assertNotRegex(fh.read(), r"(?m)^status:", f"{cid}/slide.md still has status:")
 
     def test_loads_agenda(self):
         meta = rc._load_catalog_slide_meta(CATALOG_DIR, "agenda")
@@ -208,15 +218,16 @@ class TestResolveIntegration(unittest.TestCase):
         # aria-label should include slide number
         self.assertIn("Slide 1:", out)
 
-    def test_resolves_verbatim_land_ack(self):
-        _make_deck(self.tmpdir, ["land-ack"], {
-            "land-ack": "---\nid: land-ack\nuse: catalog/land-ack\n---\n",
+    def test_resolves_verbatim_slide(self):
+        _make_deck(self.tmpdir, ["what-is"], {
+            "what-is": "---\nid: what-is\nuse: catalog/cb-what-is\n---\n",
         })
-        result = self._resolve()
+        with contextlib.redirect_stderr(io.StringIO()):
+            result = self._resolve()
         self.assertEqual(result, 0)
-        out = _read(os.path.join(self.tmpdir, "content", "land-ack.html"))
-        self.assertIn('data-slide="land-ack"', out)
-        self.assertIn('data-catalog="land-ack@1.0.0"', out)
+        out = _read(os.path.join(self.tmpdir, "content", "what-is.html"))
+        self.assertIn('data-slide="what-is"', out)
+        self.assertIn('data-catalog="cb-what-is@', out)
 
     def test_param_html_escaping(self):
         _make_deck(self.tmpdir, ["title"], {
@@ -266,14 +277,15 @@ class TestResolveIntegration(unittest.TestCase):
         self.assertIn("PLACEHOLDER AGENCY", out)
 
     def test_resolves_multiple_catalog_slides(self):
-        _make_deck(self.tmpdir, ["title", "land-ack", "thank-you"], {
+        _make_deck(self.tmpdir, ["title", "feedback", "thank-you"], {
             "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
-            "land-ack": "---\nid: land-ack\nuse: catalog/land-ack\n---\n",
+            "feedback": "---\nid: feedback\nuse: catalog/feedback\n---\n",
             "thank-you": "---\nid: thank-you\nuse: catalog/thank-you\n---\n",
         })
-        result = self._resolve()
+        with contextlib.redirect_stderr(io.StringIO()):
+            result = self._resolve()
         self.assertEqual(result, 0)
-        for sid in ("title", "land-ack", "thank-you"):
+        for sid in ("title", "feedback", "thank-you"):
             out_path = os.path.join(self.tmpdir, "content", sid + ".html")
             self.assertTrue(os.path.isfile(out_path), f"content/{sid}.html not created")
             out = _read(out_path)
@@ -386,9 +398,6 @@ class TestCatalogSlideHtml(unittest.TestCase):
 
     def test_uw_title_html(self):
         self._check_slide("uw-title")
-
-    def test_land_ack_html(self):
-        self._check_slide("land-ack")
 
     def test_funding_html(self):
         self._check_slide("funding")
@@ -538,6 +547,47 @@ class TestFeedbackEmptyUrl(unittest.TestCase):
 # Tests for asset path rewrite (fix 3)
 # ---------------------------------------------------------------------------
 
+class TestPlaceholderWarning(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp(prefix="uw-test-placeholder-")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _resolve_funding(self, brief):
+        _make_deck(self.tmpdir, ["funding"], {"funding": brief})
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err), contextlib.redirect_stdout(io.StringIO()):
+            result = rc.cmd_resolve(self.tmpdir, CATALOG_DIR)
+        return result, err.getvalue()
+
+    def test_default_funding_params_warn(self):
+        result, err = self._resolve_funding("---\nid: funding\nuse: catalog/funding\n---\n")
+        self.assertEqual(result, 0)  # a warning, not a failure
+        self.assertIn("funding: still shows placeholder text", err)
+        self.assertIn("PLACEHOLDER AGENCY", err)
+        self.assertIn("PLACEHOLDER GRANT ID", err)
+
+    def test_filled_funding_params_do_not_warn(self):
+        result, err = self._resolve_funding(
+            "---\nid: funding\nuse: catalog/funding\nparams:\n"
+            "  agency: \"National Science Foundation\"\n"
+            "  grant-id: \"OAC-1234567\"\n"
+            "  grant-title: \"CloudBank\"\n---\n"
+        )
+        self.assertEqual(result, 0)
+        self.assertNotIn("placeholder", err)
+
+    def test_only_unfilled_params_are_listed(self):
+        _, err = self._resolve_funding(
+            "---\nid: funding\nuse: catalog/funding\nparams:\n"
+            "  agency: \"National Science Foundation\"\n---\n"
+        )
+        self.assertNotIn("PLACEHOLDER AGENCY", err)
+        self.assertIn("PLACEHOLDER GRANT ID", err)
+
+
 class TestAssetPathRewrite(unittest.TestCase):
 
     def setUp(self):
@@ -557,7 +607,6 @@ class TestAssetPathRewrite(unittest.TestCase):
                "kind: parameterized\n"
                "brand: any\n"
                "version: 1.0.0\n"
-               "status: stable\n"
                "owner: test\n"
                "params:\n"
                "  logo_url: https://example.com/assets/logo.png\n"
@@ -753,10 +802,9 @@ class TestAgenda(unittest.TestCase):
         return labels, list_class, buf.getvalue(), out
 
     def test_framing_catalog_slides_left_out(self):
-        order = ["title", "land-ack", "intro", "funding", "feedback", "thanks"]
+        order = ["title", "intro", "funding", "feedback", "thanks"]
         labels, _, _, _ = self._agenda(order, {
             "title": "---\nid: title\nuse: catalog/uw-title\n---\n",
-            "land-ack": "---\nid: land-ack\nuse: catalog/land-ack\n---\n",
             "intro": _brief("intro", "layout: key-message\ntitle: Introduction\n"),
             "funding": "---\nid: funding\nuse: catalog/funding\n---\n",
             "feedback": "---\nid: feedback\nuse: catalog/feedback\n---\n",

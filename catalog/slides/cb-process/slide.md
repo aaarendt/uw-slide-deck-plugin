@@ -4,7 +4,6 @@ description: "CloudBank onboarding process: four steps from cost estimate to onb
 kind: verbatim
 brand: cloudbank
 version: "1.0.0"
-status: review
 owner: aaarendt
 ---
 
@@ -20,28 +19,15 @@ can quote it exactly.
 
 cloudbank, process, onboarding, access, allocation, steps, program
 
-## Status note
+## Sources
 
-`status: review`. Program process wording; the owner checks it against the current pages before
-setting `status: ready`.
-
-Source pages consulted:
+Accepted by the slide owner on 2026-11-02. The wording was condensed from the
+pages below. CloudBank's program details change: re-check the slide when they
+do, and bump `version` if the wording changes.
 
 - ACCESS resource page, "CloudBank Research": https://operations.access-ci.org/node/905
 - ACCESS announcement: https://support.access-ci.org/node/11714
-
-Confirmed: accounts are created for the platforms in the request, more can be
-added later, and users are managed through the portal with ACCESS credentials;
-CloudBank is allocated through ACCESS and the NAIRR Pilot.
-
-Flagged, not confirmed (cloudbank.org pages could not be reached from this
-environment): the **"under a week" turnaround** in the title, the calculator
-and ACCESS-credit-to-CloudBank-dollar exchange steps, and the onboarding email.
-The ACCESS resource page points to the CloudBank user guide
-(https://www.cloudbank.org/training/access-cloudbank-research) for process
-details; the owner should check the slide against it.
-
-No ACCESS or CloudBank logos appear on the slide, per the catalog's no-logos rule for individual slides.
+- CloudBank user guide, "Access CloudBank Research": https://www.cloudbank.org/training/access-cloudbank-research
 
 ## Usage
 

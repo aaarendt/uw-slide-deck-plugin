@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Tests for tools/validate_plugin.py (stdlib only)."""
 
+import contextlib
+import io
 import json
 import os
 import shutil
@@ -140,6 +142,83 @@ class TestBreakage(unittest.TestCase):
             lambda d: d.update({"plugins": []}),
         )
         self._assert_error("no entry for plugin 'uw-slides'")
+
+    def test_marketplace_plugins_must_be_array(self):
+        rel = (".agents", "plugins", "marketplace.json")
+        for bad in (None, {}, "uw-slides"):
+            _edit_json(self._path(*rel), lambda d: d.update({"plugins": bad}))
+            self._assert_error("plugins must be an array")
+
+    def _edit_codex_entry(self, fn):
+        _edit_json(
+            self._path(".agents", "plugins", "marketplace.json"),
+            lambda d: fn(d["plugins"][0]),
+        )
+
+    def test_codex_entry_needs_policy(self):
+        self._edit_codex_entry(lambda e: e.pop("policy"))
+        self._assert_error("needs a policy object")
+
+    def test_codex_policy_installation_value(self):
+        self._edit_codex_entry(lambda e: e["policy"].update({"installation": "available"}))
+        self._assert_error("policy.installation must be one of")
+
+    def test_codex_policy_needs_authentication(self):
+        self._edit_codex_entry(lambda e: e["policy"].pop("authentication"))
+        self._assert_error("policy.authentication must be a string")
+
+    def test_codex_entry_needs_category(self):
+        self._edit_codex_entry(lambda e: e.pop("category"))
+        self._assert_error("category must be a non-empty string")
+
+    def test_categories_must_agree(self):
+        self._edit_codex_entry(lambda e: e.update({"category": "Education"}))
+        self._assert_error("category differs between marketplaces")
+
+    def test_category_case_is_ignored(self):
+        self._edit_codex_entry(lambda e: e.update({"category": "PRODUCTIVITY"}))
+        self.assertEqual(vp.validate(self.tmpdir), [])
+
+    def _set_description(self, skill, lines):
+        """Replace the `description:` line of a skill's front matter."""
+        path = self._path("skills", skill, "SKILL.md")
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+        out = []
+        for line in text.splitlines():
+            if line.startswith("description:"):
+                out.extend(lines)
+            else:
+                out.append(line)
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write("\n".join(out) + "\n")
+
+    def test_folded_description_is_read(self):
+        self._set_description(
+            "design-review",
+            ["description: >", "  Validate UW brand compliance", "  for a slide deck."],
+        )
+        self.assertEqual(vp.validate(self.tmpdir), [])
+
+    def test_empty_block_description_is_rejected(self):
+        self._set_description("design-review", ["description: >"])
+        self._assert_error("description is empty")
+
+    def test_long_literal_description_is_rejected(self):
+        self._set_description(
+            "design-review", ["description: |"] + ["  " + "x" * 100] * 11
+        )
+        self._assert_error("longer than 1024 characters")
+
+
+class TestMain(unittest.TestCase):
+    def test_usage_error_prints_both_usage_lines(self):
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            self.assertEqual(vp.main(["--bogus"]), 2)
+        self.assertIn("Usage:", err.getvalue())
+        self.assertIn("--claude", err.getvalue())
+        self.assertIn("default: the directory above tools/", err.getvalue())
 
 
 if __name__ == "__main__":

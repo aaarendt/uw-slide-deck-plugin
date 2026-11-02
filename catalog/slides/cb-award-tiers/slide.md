@@ -4,7 +4,6 @@ description: "CloudBank grant award tiers (Explore, Discover, Accelerate): dolla
 kind: verbatim
 brand: cloudbank
 version: "1.0.0"
-status: review
 owner: aaarendt
 ---
 
@@ -20,24 +19,20 @@ can quote it exactly.
 
 cloudbank, awards, tiers, explore, discover, accelerate, allocations, program
 
-## Status note
+## Sources
 
-`status: review`. Program policy wording: **award sizes and tiers are never to be taken from
-this slide alone.** The dollar ranges, averages, proposal lengths and award
-counts come only from the earlier presenter wording. None of the pages that
-could be reached from this environment state them (the cloudbank.org and
-allocations.access-ci.org pages were blocked), so they are **unverified**.
-The owner must check every figure against CloudBank's current request-access
-and ACCESS allocation pages before setting `status: ready`.
+Accepted by the slide owner on 2026-11-02. The wording was condensed from the
+pages below. CloudBank's program details change: re-check the slide when they
+do, and bump `version` if the wording changes.
 
-Pages consulted, none of which state the tiers:
+The tier figures (ranges, averages, proposal lengths) come from CloudBank's
+presenter material; the pages below describe the program but don't list the
+tiers. Check the figures against CloudBank's request-access page when they
+change.
 
 - ACCESS resource page, "CloudBank Research": https://operations.access-ci.org/node/905
 - ACCESS announcement: https://support.access-ci.org/node/11714
 - SDSC news (April 2025): https://www.sdsc.edu/news/2025/PR20250409-CloudBank.html
-
-The slide has no on-slide source line because no reachable page supports the
-figures. Add one after the owner's check. Bump `version` if any figure changes.
 
 ## Usage
 

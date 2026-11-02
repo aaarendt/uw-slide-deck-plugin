@@ -1,6 +1,6 @@
 # Slide Catalog
 
-Vetted, reusable slides that any deck can reference by ID. The catalog keeps framing slides (title, land acknowledgement, agenda, closing) consistent across trainings without copying HTML between decks.
+Vetted, reusable slides that any deck can reference by ID. A slide in the catalog is ready to use. The catalog keeps framing slides (title, agenda, funding, feedback, closing) and program introductions consistent across trainings without copying HTML between decks.
 
 For curation rules — how to add, review and version catalog slides — see [CURATION.md](CURATION.md).
 
@@ -27,7 +27,7 @@ The catalog resolver copies the slide's HTML into `content/<deck-id>.html`, rewr
 python3 tools/resolve-catalog.py resolve . --catalog=<plugin>/catalog
 ```
 
-`/uw-slides:generate-slides` calls this automatically for any slide with `use: catalog/...`.
+`/uw-slides:generate-slides` skips slides with `use: catalog/...`, so run the resolver before or after it. `/uw-slides:plan-deck` prints this command with the real plugin path when the plan uses catalog slides.
 
 `<plugin>` is the directory where the uw-slides plugin is installed. The skills find it for you. When you run the resolver by hand, pass the path (your agent can tell you where the plugin is installed), or clone this repository and set `UW_SLIDES_HOME` to the clone, in which case you can leave out `--catalog`. Don't save a path from a client's plugin cache in scripts or notes: it can change when the plugin is updated.
 
@@ -46,7 +46,7 @@ After ejecting, edit `content/<id>.html` directly and set `locked: true` in the 
 ## Available slides
 
 ### `uw-title` — Title slide
-**Kind:** parameterized · **Brand:** uw · **Status:** ready
+**Kind:** parameterized · **Brand:** uw
 
 Standard opening slide: dark purple background, gold accent bar, title and subtitle centre, presenter details below.
 
@@ -72,26 +72,10 @@ params:
 
 ---
 
-### `land-ack` — Land acknowledgement
-**Kind:** verbatim · **Brand:** uw · **Status:** draft ⚠
-
-> **The text in this slide is a placeholder.** Replace it with the current approved wording from the UW Office of Minority Affairs & Diversity (OMA&D) or the Office of the President before use. Do not present this slide with placeholder text.
-
-No params. To customise the wording, eject the slide and edit the HTML directly.
-
-```markdown
----
-id: land-ack
-use: catalog/land-ack
----
-```
-
----
-
 ### `funding` — Funding credit
-**Kind:** parameterized · **Brand:** uw · **Status:** draft ⚠
+**Kind:** parameterized · **Brand:** uw
 
-> **Default param values are placeholders.** Use the exact language required by the award. Consult the UW Office of Sponsored Programs (OSP) if unsure.
+> **Default param values are placeholders.** Set `agency`, `grant-id` and `grant-title` in the brief; the resolver warns while a `PLACEHOLDER` value still shows. Use the exact language required by the award, including the disclaimer. Consult the UW Office of Sponsored Programs (OSP) if unsure.
 
 | Param | Required | Notes |
 |-------|----------|-------|
@@ -114,7 +98,7 @@ params:
 ---
 
 ### `agenda` — Agenda
-**Kind:** derived · **Brand:** any · **Status:** ready
+**Kind:** derived · **Brand:** any
 
 Auto-generated from `deck.yml`, in deck order, with minutes where briefs set `duration:`. Slides that share a `section:` become one item named after the section (or, without sections, each `section-divider` and the slides after it). Title and closing slides, hidden slides (`section: hidden`) and the framing catalog slides are left out. Up to 7 items fit in one column and 12 in two; past that the resolver warns. Re-run the resolver after changing titles, sections or durations.
 
@@ -132,7 +116,7 @@ use: catalog/agenda
 ---
 
 ### `feedback` — Session feedback
-**Kind:** parameterized · **Brand:** any · **Status:** ready
+**Kind:** parameterized · **Brand:** any
 
 Prompts participants to complete a survey. The link is hidden when `url` is empty.
 
@@ -156,7 +140,7 @@ params:
 ---
 
 ### `thank-you` — Closing / thank you
-**Kind:** parameterized · **Brand:** any · **Status:** ready
+**Kind:** parameterized · **Brand:** any
 
 Closing slide with a large message and optional contact details. All fields except `message` are hidden when empty.
 
@@ -184,9 +168,9 @@ params:
 ---
 
 ### `cb-eligibility` — CloudBank eligibility and recommended uses
-**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+**Kind:** verbatim · **Brand:** cloudbank
 
-> **Program policy wording.** Check the condensed text against the ACCESS allocations policy and CloudBank's request-access page before setting `status: ready`, and again whenever either changes.
+> **Program policy wording.** Re-check against the ACCESS allocations policy and CloudBank's request-access page whenever either changes. The slide's `slide.md` lists its sources.
 
 Who can lead a project and what CloudBank is for: a who/what criteria strip, then "Good fit" and "Better elsewhere" columns. The full original wording of both sources is in the speaker notes. No params; eject to customise.
 
@@ -200,9 +184,9 @@ use: catalog/cb-eligibility
 ---
 
 ### `cb-what-is` — CloudBank overview
-**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+**Kind:** verbatim · **Brand:** cloudbank
 
-> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+> **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
 Four cards: origin, cloud providers, the 2025 CloudBank 2.0 award, and the NAIRR interface role. The full original wording is in the speaker notes. No params; eject to customise.
 
@@ -216,9 +200,9 @@ use: catalog/cb-what-is
 ---
 
 ### `cb-programs` — CloudBank programs
-**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+**Kind:** verbatim · **Brand:** cloudbank
 
-> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+> **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
 Six short headed items with original line icons (inline SVG): no cost, consulting and helpdesk, account management, multiple clouds, monitoring and optimization, training. No logos. The full original wording is in the speaker notes. No params; eject to customise.
 
@@ -232,9 +216,9 @@ use: catalog/cb-programs
 ---
 
 ### `cb-why-choose` — Why choose CloudBank for an account
-**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+**Kind:** verbatim · **Brand:** cloudbank
 
-> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+> **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
 Three reasons (no card or purchase agreement, one bill for several clouds, cost monitoring and spending cap) and a callout that awards are grant dollars, not credits. The full original wording is in the speaker notes. No params; eject to customise.
 
@@ -248,11 +232,11 @@ use: catalog/cb-why-choose
 ---
 
 ### `cb-award-tiers` — Grant award tiers
-**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+**Kind:** verbatim · **Brand:** cloudbank
 
-> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+> **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
-A table of Explore, Discover and Accelerate with range, average and typical use, plus three facts. **The figures are unverified**; see the slide's status note. The full original wording is in the speaker notes. No params; eject to customise.
+A table of Explore, Discover and Accelerate with range, average and typical use, plus three facts. The full original wording is in the speaker notes. No params; eject to customise.
 
 ```markdown
 ---
@@ -264,9 +248,9 @@ use: catalog/cb-award-tiers
 ---
 
 ### `cb-process` — Application-to-account process
-**Kind:** verbatim · **Brand:** cloudbank · **Status:** review ⚠
+**Kind:** verbatim · **Brand:** cloudbank
 
-> **Program policy wording.** Check the condensed text against CloudBank's current pages before setting `status: ready`. The slide's `slide.md` lists the pages checked and the facts still unverified.
+> **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
 A left-to-right flow of four numbered, described steps ending in a "Start working in the cloud" card, with a text tag under each (ACCESS, CloudBank, Cloud provider) showing which system it happens in. The full original wording is in the speaker notes. No params; eject to customise.
 
@@ -285,4 +269,4 @@ See [CURATION.md](CURATION.md) for the full process. In brief:
 
 1. Create `catalog/slides/<id>/` with `slide.html` and `slide.md`.
 2. Add an entry to `catalog/catalog.yml`.
-3. Open a PR; the slide owner reviews it before it is marked `status: ready`.
+3. Open a PR. The slide owner approves the wording before it is merged; a slide in the catalog is ready to use.

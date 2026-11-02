@@ -35,7 +35,7 @@ for candidate in "${UW_SLIDES_HOME:+$UW_SLIDES_HOME/tools/deckparse.py}" \
 done
 
 if [ -z "$PARSER" ]; then
-  echo "Error: tools/deckparse.py not found (set UW_SLIDES_HOME to the plugin directory)"
+  echo "Error: tools/deckparse.py not found (run /uw-slides:update-deck to add it to this deck, or set UW_SLIDES_HOME to the plugin directory)"
   exit 1
 fi
 

@@ -210,11 +210,12 @@ Plugin source lives in this repository. Skills are in `skills/<name>/SKILL.md`; 
 
 1. Fork or branch from `main`.
 2. Edit the relevant `SKILL.md`, template, or tool.
-3. Test with a throwaway deck in `/tmp`:
+3. Test with a throwaway deck in `/tmp`. `UW_SLIDES_HOME` makes the skills read templates, the catalog and tools from your checkout; `--plugin-dir` also loads the skills' `SKILL.md` instructions from it, which you need when you change a skill. If you have the marketplace install, disable it while testing (`/plugin disable uw-slides@uw-slide-deck`).
    ```bash
    # From the plugin repo
    export UW_SLIDES_HOME=$(pwd)
-   # In a Claude Code session pointed at /tmp
+   cd /tmp && claude --plugin-dir "$UW_SLIDES_HOME"
+   # In that Claude Code session
    /uw-slides:new-deck test-deck
    ```
 4. Run the tools tests:

@@ -29,7 +29,7 @@ done
 
 if [ -z "$LINTER" ]; then
   echo "Error: tools/lint.py not found." >&2
-  echo "  Set UW_SLIDES_HOME or run /uw-slides:new-deck to vendor lint.py into this deck." >&2
+  echo "  Run /uw-slides:update-deck to add tools/lint.py to this deck, or set UW_SLIDES_HOME." >&2
   exit 2
 fi
 

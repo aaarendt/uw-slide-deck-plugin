@@ -3,12 +3,11 @@
 # Each slide's param defaults and full metadata live in slides/<id>/slide.md.
 # Curation rules: catalog/CURATION.md
 
-version: "1.0.0"
+version: "2.0.0"
 
 # Brief descriptions used by plan-deck when choosing catalog slides.
 # Full metadata is in slides/<id>/slide.md.
 uw-title: "Standard UW branded title slide — presenter, title, subtitle, date, affiliation"
-land-ack: "Land acknowledgement placeholder — requires approved text from UW"
 funding: "Funding credit slide — agency, grant ID, grant title (placeholder wording)"
 agenda: "Auto-generated agenda built from the deck.yml slide titles"
 feedback: "Session feedback slide — configurable URL for survey or QR code"
@@ -23,7 +22,6 @@ cb-process: "CloudBank onboarding process: four steps from cost estimate to onbo
 # Ordered list of slide IDs included in this catalog.
 slides:
   - uw-title
-  - land-ack
   - funding
   - agenda
   - feedback

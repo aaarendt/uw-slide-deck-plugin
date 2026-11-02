@@ -15,7 +15,7 @@
 #
 #   slides/                       @project-lead        # fallback for unlisted slides
 #   slides/01-title.md            @project-lead
-#   slides/02-land-ack.md         @project-lead
+#   slides/02-why-cloud.md        @project-lead
 #   slides/03-overview.md         @presenter-a
 #   slides/04-methods.md          @presenter-b
 #   slides/05-results.md          @presenter-b

@@ -4,7 +4,6 @@ description: "Auto-generated agenda built from deck.yml slide titles and duratio
 kind: derived
 brand: any
 version: "1.1.0"
-status: ready
 in_agenda: false
 owner: plugin
 params:
@@ -26,7 +25,7 @@ Derived slide that generates an agenda automatically from the deck's
 - the agenda itself, and slides with `layout: title` or `layout: closing`;
 - slides whose brief has `section: hidden`;
 - catalog slides marked `in_agenda: false` in their `slide.md` (the framing
-  slides: title, land acknowledgement, funding, agenda, feedback, thank you).
+  slides: title, funding, agenda, feedback, thank you).
 
 **Grouping.** An agenda reads best as a handful of parts, not every slide:
 1. If any brief sets `section:`, consecutive slides with the same section

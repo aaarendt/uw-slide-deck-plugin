@@ -119,7 +119,7 @@ python3 tools/deckparse.py status <deck-dir>   # missing / stale / untracked / f
 | `/uw-slides:accessibility-check` | WCAG 2.1 AA validation |
 | `/uw-slides:design-review` | UW brand compliance check |
 | `/uw-slides:extract-to-markdown` | Convert an existing HTML deck → `deck.yml` + `slides/*.md` briefs; `--migrate` migrates a legacy SLIDES.md deck in place |
-| `/uw-slides:update-deck` | Diff and update managed files (build scripts, shared templates, `tools/deckparse.py`) against the current plugin; never touches `content/`, `slides/`, or `assets/` |
+| `/uw-slides:update-deck` | Diff and update managed files (build scripts, shared templates, the vendored `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py`) against the current plugin; never touches `content/`, `slides/`, or `assets/` |
 
 ## Design System
 

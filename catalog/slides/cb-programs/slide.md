@@ -4,7 +4,6 @@ description: "CloudBank's six standard services: no cost, helpdesk, accounts, mu
 kind: verbatim
 brand: cloudbank
 version: "1.0.0"
-status: review
 owner: aaarendt
 ---
 
@@ -20,26 +19,14 @@ can quote it exactly.
 
 cloudbank, services, programs, helpdesk, monitoring, training, program
 
-## Status note
+## Sources
 
-`status: review`. Program facts; the owner checks them against the current pages before
-setting `status: ready`.
-
-Source pages consulted:
+Accepted by the slide owner on 2026-11-02. The wording was condensed from the
+pages below. CloudBank's program details change: re-check the slide when they
+do, and bump `version` if the wording changes.
 
 - ACCESS resource page, "CloudBank Research": https://operations.access-ci.org/node/905
 - ACCESS announcement, "CloudBank Expands Commercial Cloud Access for U.S. Researchers and Educators": https://support.access-ci.org/node/11714
-
-Confirmed against those pages: access through ACCESS and the NAIRR Pilot,
-account creation and sign-in with ACCESS credentials, automated spend alerts,
-multi-cloud access, and expert support and training resources.
-
-Not found on the pages above, so carried over unchanged from the earlier
-wording: "no cost" wording, helpdesk cost estimates, "pay by use charge
-model", email balance alerts, cost optimization recommendations for unused or
-underutilized resources, and the curated training videos. The cloudbank.org
-pages could not be reached from this environment, so the owner should check
-these there.
 
 ## Usage
 

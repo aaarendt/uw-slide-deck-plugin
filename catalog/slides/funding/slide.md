@@ -4,7 +4,6 @@ description: "Funding credit slide — agency, grant ID, grant title, disclaimer
 kind: parameterized
 brand: uw
 version: "1.0.0"
-status: draft
 in_agenda: false
 owner: plugin
 params:
@@ -31,11 +30,13 @@ award terms. Consult the UW Office of Sponsored Programs (OSP) for guidance.
 
 funding, acknowledgement, uw, framing
 
-## Status note
+## Placeholder wording
 
-`status: draft` — default parameter values are placeholders. Change to
-`status: ready` only after the wording has been reviewed against the specific
-award's requirements.
+The default `agency`, `grant-id` and `grant-title` read `PLACEHOLDER ...`, and the
+resolver warns while any of them still shows on the slide. Set them in the
+brief's `params:`. The default `disclaimer` is a generic NSF-style sentence:
+replace it with the exact language the award requires. Consult the UW Office of
+Sponsored Programs (OSP) if unsure.
 
 ## Usage
 

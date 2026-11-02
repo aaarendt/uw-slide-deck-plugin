@@ -55,7 +55,7 @@ if [ -f "$DECK_DIR/deck.yml" ]; then
   if [ -n "$PARSER" ] && command -v python3 >/dev/null 2>&1; then
     slide_ids=$(python3 "$PARSER" deck "$DECK_DIR/deck.yml" --format ids) || exit 1
   else
-    echo "Warning: deckparse.py or python3 not found; reading deck.yml without validation (set UW_SLIDES_HOME)"
+    echo "Warning: deckparse.py or python3 not found; reading deck.yml without validation (run /uw-slides:update-deck to add tools/deckparse.py to this deck, or set UW_SLIDES_HOME)"
     # Fallback reader: the plain list under a top-level "slides:" key
     slide_ids=$(tr -d '\r' < "$DECK_DIR/deck.yml" | awk -v q="'" '
       BEGIN {
