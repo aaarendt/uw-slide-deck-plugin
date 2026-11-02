@@ -60,9 +60,28 @@ export UW_SLIDES_HOME=~/src/uw-slide-deck-plugin   # add to your shell profile
 
 The same loop works for `~/.agents/skills` or any other skills directory. Skills keep their plain names there (`new-deck`, not `uw-slides:new-deck`).
 
-### Local checkout (development)
+### Switching from the symlink install
 
-The older symlink install still works: `ln -s /path/to/uw-slide-deck-plugin ~/.claude/plugins/local/uw-slides`. To work on the plugin itself, set `UW_SLIDES_HOME` to your checkout. It takes precedence over an installed copy.
+Earlier versions were installed by symlinking a checkout to `~/.claude/plugins/local/uw-slides`, usually with a folder marketplace called `uw-slides-local` and sometimes with `UW_SLIDES_HOME` set. Leaving any of these in place next to the marketplace install gives you two copies of the skills, and `UW_SLIDES_HOME` overrides the installed copy, so the skills keep reading your checkout. To switch:
+
+```bash
+claude plugin marketplace remove uw-slides-local     # also uninstalls the plugin it supplied
+mv ~/.claude/plugins/local/uw-slides ~/.claude/plugins/local/uw-slides.off   # or delete it
+unset UW_SLIDES_HOME                                 # and remove it from your shell profile
+claude plugin marketplace add aaarendt/uw-slide-deck-plugin
+claude plugin install uw-slides@uw-slide-deck
+```
+
+`claude plugin marketplace list` should then show `uw-slide-deck` and no `uw-slides-local`. Your checkout and your decks are not touched. Decks you already made keep working; run `/uw-slides:update-deck` in each to pick up the current scripts and tools.
+
+### Working on the plugin
+
+Clone the repository and keep the marketplace install for everyday use. Two settings point Claude Code at your checkout while you test a change:
+
+- `UW_SLIDES_HOME=/path/to/checkout` makes the skills read templates, design systems, the catalog and tools from your checkout. It takes precedence over the installed copy, so set it only in the terminal where you are testing.
+- `claude --plugin-dir /path/to/checkout` also loads the skills' own instructions (`SKILL.md`) from your checkout. You need this when you change a skill. Disable the installed copy while you do (`/plugin disable uw-slides@uw-slide-deck`), so you don't have two sets of the same skills.
+
+The older symlink install still works, but isn't needed for either.
 
 ### How skills find the plugin
 
@@ -86,7 +105,8 @@ New decks vendor `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalo
 cd my-presentation
 /uw-slides:plan-deck "Cloud computing for researchers" --duration=45
 
-# After approving the plan, generate the slides:
+# If the plan uses catalog slides, run the resolve command plan-deck prints
+# (see Catalog Slides below). Then generate the other slides:
 /uw-slides:generate-slides
 
 # Download the reveal.js runtime (once per deck):
@@ -114,8 +134,10 @@ presentation-name/
 │   ├── images/
 │   ├── diagrams/
 │   └── reveal/                # reveal.js runtime (downloaded by setup-reveal.sh)
-├── tools/
-│   └── deckparse.py           # Vendored parser/validator (stdlib only)
+├── tools/                     # Vendored copies (stdlib only); /uw-slides:update-deck refreshes them
+│   ├── deckparse.py           # Parser/validator for deck.yml and the briefs
+│   ├── lint.py                # Deterministic checks behind lint.sh and status.sh
+│   └── resolve-catalog.py     # Copies catalog slides into content/
 ├── .uw-slides.json            # Plugin version stamp and brand
 ├── deck.yml                   # Deck metadata, objectives and slide order
 ├── slides/                    # One brief per slide (slides/<id>.md)
@@ -137,7 +159,7 @@ A slide ID is lowercase letters, digits and single hyphens (`03-approach`). IDs 
 
 `content/*.html` is generated from the briefs and records which version of the brief it came from (`data-brief-hash`). `/uw-slides:generate-slides` skips slides with `locked: true` (hand-edited HTML) and asks before replacing a slide whose brief changed. To check the state of every slide: `python3 tools/deckparse.py status <deck-dir>`. `./outline.sh` writes `OUTLINE.md`, a generated overview that is never edited by hand.
 
-**Legacy decks** with only a `SLIDES.md` still build (headings `## <kebab-case-id>` give the order) and print a deprecation warning; the fallback is planned for removal in v0.3.0. See [Migrating from SLIDES.md](#migrating-from-slidesmd) below.
+**Legacy decks** with only a `SLIDES.md` still build (headings `## <kebab-case-id>` give the order) and print a deprecation warning; the fallback is planned for removal in v0.3.0.
 
 ### Fragment Pattern
 
@@ -179,15 +201,16 @@ Both scripts accept an optional path argument: `./build.sh /path/to/deck`
 
 By default a slide listed in `deck.yml` with no fragment yet is skipped with a warning, so you can build while the deck is in progress. Use `--strict` (`./build.sh --strict`) to fail instead, for example in CI. An invalid `deck.yml` (such as a duplicate ID) always fails the build, and fragments in `content/` that `deck.yml` doesn't list are reported as warnings.
 
-The scripts read `deck.yml` with `tools/deckparse.py` (needs `python3`). New decks ship a vendored copy in `<deck>/tools/deckparse.py` (put there by `/uw-slides:new-deck`); the scripts also check `$UW_SLIDES_HOME/tools/` and `~/.claude/plugins/local/uw-slides/tools/` as fallbacks. If none is found they still read the plain `slides:` list, without validation.
+The scripts read `deck.yml` with `tools/deckparse.py` (needs `python3`). New decks ship a vendored copy in `<deck>/tools/deckparse.py` (put there by `/uw-slides:new-deck`); the scripts also check `$UW_SLIDES_HOME/tools/` and `~/.claude/plugins/local/uw-slides/tools/` as fallbacks. If none is found they still read the plain `slides:` list, without validation; run `/uw-slides:update-deck` to add the missing tools to the deck.
 
 ### Two-Pass Workflow
 
 **Pass 1 — content and structure:**
 1. Run `/uw-slides:plan-deck` (or edit `deck.yml` and the briefs in `slides/` by hand). The planner drafts learning objectives, picks a layout per slide, fills the slots and stops for your approval before any HTML is written. Run it again later to add, remove, merge or split slides or to change the length; it leaves locked, owned and `done` slides alone
-2. Run `/uw-slides:generate-slides` → `content/*.html` fragments
-3. Run `./build.sh` → `build/index.html`
-4. The deck should look complete at this stage — no image placeholders
+2. If the deck uses [catalog slides](#catalog-slides), resolve them → their `content/*.html` fragments
+3. Run `/uw-slides:generate-slides` → `content/*.html` fragments for the other slides
+4. Run `./build.sh` → `build/index.html`
+5. The deck should look complete at this stage — no image placeholders
 
 **Pass 2 — visual additions:**
 1. Specify photographs, diagrams, and icons in `VISUALS.md`
@@ -226,6 +249,60 @@ open build/index.html
 ```bash
 ./export.sh              # writes build/deck.pdf, one page per slide
 ```
+
+---
+
+## Catalog Slides
+
+The catalog is a set of pre-made, vetted slides that any deck can include by ID instead of writing them from scratch: title, land acknowledgement, funding credit, agenda, feedback and closing slides, plus the standard CloudBank introduction. They keep slides that should read the same in every talk consistent across decks.
+
+| ID | What it is | Brand | Status |
+|----|-----------|-------|--------|
+| `uw-title` | Title slide: title, subtitle, presenter, affiliation, date | uw | ready |
+| `land-ack` | Land acknowledgement (placeholder text) | uw | draft |
+| `funding` | Funding credit: agency, grant ID, grant title (placeholder wording) | uw | draft |
+| `agenda` | Agenda built from the deck's own slides, sections and durations | any | ready |
+| `feedback` | Session feedback prompt with an optional survey link | any | ready |
+| `thank-you` | Closing slide with presenter and contact details | any | ready |
+| `cb-what-is` | What CloudBank is and who runs it | cloudbank | review |
+| `cb-programs` | CloudBank's six standard services | cloudbank | review |
+| `cb-why-choose` | Why researchers choose a CloudBank account | cloudbank | review |
+| `cb-eligibility` | Who can lead a project; good and poor fits | cloudbank | review |
+| `cb-award-tiers` | Grant award tiers (Explore, Discover, Accelerate) | cloudbank | review |
+| `cb-process` | Steps from cost estimate to working in the cloud | cloudbank | review |
+
+**Status** says whether a slide is safe to present as-is. `ready` slides are. `draft` slides contain placeholder text that must be replaced with approved wording first (the land acknowledgement and funding language). `review` slides carry program policy wording, such as CloudBank's award figures, that its owner still needs to check. **Brand** limits where a slide is offered: `cb-` slides only in CloudBank decks, `uw` slides only in UW decks, `any` everywhere.
+
+### Using a catalog slide
+
+`/uw-slides:plan-deck` picks catalog slides for you when one fits a planned slide. It uses `ready` slides, and `draft` slides only with a flag in its list of things for you to verify. To add one by hand, write `use: catalog/<id>` in the slide's brief instead of `layout:`, with `params:` for the fields you want to fill:
+
+```markdown
+---
+id: title
+use: catalog/uw-title
+params:
+  title: "Cloud Computing for Researchers"
+  presenter: "Jane Doe"
+  date: "November 3, 2026"
+---
+```
+
+Catalog slides are copied, not generated. `/uw-slides:generate-slides` skips them, so resolve them first. The resolver copies each slide's HTML into `content/<id>.html`, renames its ID and styles to match your deck and fills in the params:
+
+```bash
+python3 tools/resolve-catalog.py resolve . --catalog=<plugin>/catalog
+```
+
+plan-deck prints this command with the real plugin path filled in, or ask your agent to resolve the catalog slides. `<plugin>` is where the plugin is installed, which differs by client and version, so don't save the path in scripts. With `UW_SLIDES_HOME` set you can leave out `--catalog`. Run the resolver again after changing a catalog slide's params, or, for `agenda`, after changing slide titles, sections or durations.
+
+To change a catalog slide beyond its params, eject it. This keeps the resolved HTML in your deck as a locked, hand-edited slide and removes the link to the catalog:
+
+```bash
+python3 tools/resolve-catalog.py eject . <slide-id> --catalog=<plugin>/catalog
+```
+
+Each slide's params, defaults and notes are in [`catalog/README.md`](catalog/README.md). To add or change a catalog slide, see [`catalog/CURATION.md`](catalog/CURATION.md).
 
 ---
 
@@ -290,26 +367,6 @@ Omitting `--brand` defaults to `uw`.
 | `design-review` | Brand compliance review |
 | `extract-to-markdown` | Convert an existing HTML deck to `deck.yml` + `slides/*.md` briefs; `--migrate` migrates a legacy SLIDES.md deck in place |
 | `update-deck` | Diff and update managed files (build scripts, shared templates, the vendored `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py`) against the current plugin; never touches slides, content, or assets |
-
----
-
-## Migrating from SLIDES.md
-
-Decks built before v0.2.0 use `SLIDES.md` as the slide-ordering source. The build scripts still accept `SLIDES.md` (with a deprecation warning) but support is scheduled for removal in v0.3.0.
-
-**One-shot migration** (from inside the deck directory):
-
-```
-/uw-slides:extract-to-markdown --migrate
-```
-
-This reads `SLIDES.md`, writes `deck.yml` + one `slides/<id>.md` brief per slide,
-stamps `.uw-slides.json`, validates the output with `deckparse.py`, and removes
-`SLIDES.md` (it stays in git history). Existing HTML fragments in `content/` are not
-touched.
-
-For step-by-step instructions, verification, and the manual path: see
-`references/migration-guide.md` in the plugin directory.
 
 ---
 
