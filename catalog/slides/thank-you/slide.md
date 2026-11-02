@@ -4,7 +4,6 @@ description: "Closing thank-you slide with presenter name and contact info"
 kind: parameterized
 brand: any
 version: "1.0.0"
-status: ready
 in_agenda: false
 owner: plugin
 params:

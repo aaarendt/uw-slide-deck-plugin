@@ -4,7 +4,6 @@ description: "CloudBank eligibility (who can lead a project) and recommended use
 kind: verbatim
 brand: cloudbank
 version: "1.0.0"
-status: review
 owner: aaarendt
 ---
 
@@ -23,18 +22,14 @@ the presenter can quote it exactly.
 
 cloudbank, eligibility, access, allocations, recommended-uses, program
 
-## Status note
+## Sources
 
-`status: review`. Eligibility and recommended uses are program policy and can
-change. Before setting `status: ready`, the owner checks both source pages
-and confirms the condensed wording still matches:
+Accepted by the slide owner on 2026-11-02. The wording was condensed from the
+pages below. CloudBank's program details change: re-check the slide when they
+do, and bump `version` if the wording changes.
 
-- ACCESS allocations policy (eligibility):
-  https://allocations.access-ci.org/allocations-policy#eligibility
-- CloudBank, "Request access to commercial cloud resources" (recommended uses):
-  https://www.cloudbank.org/request-access-commercial-cloud-resources
-
-Re-check whenever either page changes, and bump `version`.
+- ACCESS allocations policy (eligibility): https://allocations.access-ci.org/allocations-policy#eligibility
+- CloudBank, "Request access to commercial cloud resources" (recommended uses): https://www.cloudbank.org/request-access-commercial-cloud-resources
 
 ## Usage
 

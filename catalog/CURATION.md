@@ -1,7 +1,9 @@
 # Catalog Curation Rules
 
 The slide catalog (`catalog/`) holds finished, vetted, optionally parameterized
-slides that are used across many decks. Two kinds belong here: framing slides
+slides that are used across many decks. A slide in the catalog is ready to use:
+a slide whose wording hasn't been approved stays out of the catalog (in a
+branch or pull request) until it has. Two kinds belong here: framing slides
 (opening, closing, legal/administrative and structural slides that are the
 same regardless of topic) and program slides (standard slides for a program
 such as CloudBank, reused across that program's talks).
@@ -9,14 +11,14 @@ such as CloudBank, reused across that program's talks).
 ## What belongs in the catalog
 
 - **Framing slides** that appear in virtually every UW training deck: title,
-  land acknowledgement, funding credit, agenda, feedback, closing.
+  funding credit, agenda, feedback, closing.
 - **Program slides** that a program presents the same way in most of its
   talks, such as CloudBank's eligibility and recommended uses. They carry the
   program's brand (`brand: cloudbank`, never `any`) and an ID prefix for that
   program (`cb-`), so they sort together and the planner only offers them to
   that program's decks.
-- Slides where the wording has been reviewed and approved (land acknowledgement,
-  funding, disclaimer language, program policy).
+- Slides where the wording has been reviewed and approved (funding and
+  disclaimer language, program policy).
 - Slides that would otherwise be rebuilt from scratch for every deck.
 
 ## What does not belong
@@ -47,7 +49,6 @@ catalog/slides/<id>/
 | `kind` | yes | `verbatim`, `parameterized`, or `derived` |
 | `brand` | yes | `uw`, `cloudbank`, or `any` |
 | `version` | yes | Semantic version (`"1.0.0"`) |
-| `status` | yes | `draft`, `review`, or `ready` |
 | `owner` | yes | Team or handle responsible for the slide |
 | `in_agenda` | no | `false` keeps the slide out of the generated agenda (framing slides); default `true` |
 | `params` | no | Map of param names to default values |
@@ -101,8 +102,11 @@ After ejecting, edit the brief and regenerate normally.
    description in the top-level key `<id>:`.
 4. Review against `references/accessibility-requirements.md` and
    `design-systems/uw-brand/DESIGN.md`.
-5. Set `status: ready` only after the content (especially any institutional
-   wording) has been reviewed and approved.
+5. Merge it only once its content, especially any institutional or program
+   wording, has been reviewed and approved.
+6. Mark any wording that each deck must replace with the word `PLACEHOLDER`,
+   as the funding slide's default params do. The resolver warns while a
+   resolved slide still shows it.
 
 ## Size guideline
 
@@ -113,17 +117,20 @@ unchanged, not a library of every possible layout.
 ## Program policy wording
 
 Program slides often state policy that changes: eligibility, allocation sizes,
-award numbers. Keep a program slide at `status: review` until its owner has
-checked it against the program's current pages, list those pages in the
+award numbers. Add a program slide only after its owner has checked it against
+the program's current pages, list those pages in a `## Sources` section of the
 slide's `slide.md`, and bump the slide's `version` whenever the wording changes.
 
 ## Institutional wording
 
-**Land acknowledgement and funding wording must never be invented.**
-The placeholder text in the seeded slides is intentional. Replace it only with
-text that has been reviewed and approved by the appropriate UW office.
+**Institutional wording, such as funding credits and land acknowledgements,
+must never be invented.** Use only text that has been reviewed and approved by
+the appropriate UW office.
 
-- Land acknowledgement: contact the UW Office of Minority Affairs & Diversity
-  (OMA&D) or the Office of the President for approved language.
-- Funding credits: use the exact language required by the funding agency's
-  award terms. Consult the UW Office of Sponsored Programs for guidance.
+- Land acknowledgement: the catalog has none. Add one only with wording
+  approved by the UW Office of Minority Affairs & Diversity (OMA&D) or the
+  Office of the President.
+- Funding credits: the `funding` slide's default params are `PLACEHOLDER`
+  values that each deck replaces. Use the exact language required by the
+  funding agency's award terms. Consult the UW Office of Sponsored Programs for
+  guidance.

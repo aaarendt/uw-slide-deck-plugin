@@ -95,7 +95,7 @@ def _find_catalog(override=None):
 # ---------------------------------------------------------------------------
 
 SLIDE_MD_FIELDS = {
-    "id", "description", "kind", "brand", "version", "status", "owner", "params",
+    "id", "description", "kind", "brand", "version", "owner", "params",
     "in_agenda",
 }
 SLIDE_MD_KINDS = ("verbatim", "parameterized", "derived")
@@ -124,7 +124,7 @@ def _load_catalog_slide_meta(catalog_path, catalog_id):
     fm_text = "\n".join(rows[1:end])
     data, _ = deckparse.parse_subset(fm_text, meta_path, 2)
     # Validate required fields
-    for req in ("id", "kind", "version", "status", "owner"):
+    for req in ("id", "kind", "version", "owner"):
         if req not in data:
             raise ValueError(f"{meta_path}: missing required field {req!r}")
     if data["kind"] not in SLIDE_MD_KINDS:
@@ -141,7 +141,6 @@ def _load_catalog_slide_meta(catalog_path, catalog_id):
         "kind": data["kind"],
         "brand": data.get("brand", "any"),
         "version": data["version"],
-        "status": data.get("status", "draft"),
         "owner": data.get("owner", ""),
         "params": data.get("params") or {},
     }
@@ -165,6 +164,9 @@ DATA_CATALOG_ATTR_RE = re.compile(
 )
 SECTION_TAG_RE = re.compile(r"(<section\b[^>]*>)", re.S)
 PARAM_RE = re.compile(r"\{\{([^}]+)\}\}")
+# Catalog slides mark wording that must be replaced before use (e.g. the
+# funding slide's default params) with the word PLACEHOLDER.
+PLACEHOLDER_RE = re.compile(r"\bPLACEHOLDER\b[A-Z0-9 \-]*")
 
 
 def _substitute_params(template, params, raw_keys=()):
@@ -196,6 +198,21 @@ def _warn_empty_params(template, catalog_defaults, merged_params, slide_id):
         print(
             f"  ⚠ {slide_id}: param(s) {keys} are empty — "
             "add them to the brief's params: map if needed",
+            file=sys.stderr,
+        )
+
+
+def _warn_placeholders(fragment, slide_id):
+    """Warn when the resolved slide still shows placeholder wording."""
+    found = []
+    for m in PLACEHOLDER_RE.finditer(fragment):
+        text = m.group(0).strip()
+        if text not in found:
+            found.append(text)
+    if found:
+        print(
+            f"  ⚠ {slide_id}: still shows placeholder text ({', '.join(found)}) — "
+            "set the params in the brief before presenting",
             file=sys.stderr,
         )
 
@@ -531,6 +548,9 @@ def _resolve_one(deck_dir, deck, briefs, sid, slide_pos, catalog_path):
 
     # Remove <p> elements that became empty or contain broken links after substitution
     fragment = _strip_empty_para_elements(fragment)
+
+    # Warn if placeholder wording survived substitution
+    _warn_placeholders(fragment, sid)
 
     # Rewrite data-slide and CSS selectors
     fragment = _rewrite_data_slide(fragment, catalog_id, sid)

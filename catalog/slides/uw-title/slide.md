@@ -4,7 +4,6 @@ description: "Standard UW branded title slide with presenter info"
 kind: parameterized
 brand: uw
 version: "1.0.0"
-status: ready
 in_agenda: false
 owner: plugin
 params:

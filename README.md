@@ -7,7 +7,7 @@ A plugin for Claude Code (and other coding agents) that turns a topic into a Uni
 - **Plans before it writes.** You describe the talk; the plugin drafts objectives and a slide-by-slide plan, and stops for your approval before writing any slides.
 - **On brand and accessible.** Slides follow the UW or CloudBank design system and WCAG 2.1 AA, and two checks review a finished deck against both.
 - **Easy to revise.** Each slide comes from a short text brief. Change a brief and regenerate that slide; slides you have edited by hand are never overwritten.
-- **Ready-made slides.** Title, land acknowledgement, agenda, funding, feedback and closing slides, and the standard CloudBank introduction, come from a shared [catalog](#catalog-slides).
+- **Ready-made slides.** Title, agenda, funding, feedback and closing slides, and the standard CloudBank introduction, come from a shared [catalog](#catalog-slides).
 
 You need Claude Code (or [another supported agent](#other-agents)), `python3` (standard library only, nothing to install) and a web browser.
 
@@ -132,7 +132,7 @@ params:
 
 A brief needs only `id` and `use:`, plus `params:` for slides that take them (each slide's params are in [`catalog/README.md`](catalog/README.md)). new-deck starts every deck with two placeholder slides, `title` and `example-slide`: replace them in `deck.yml` and delete `slides/example-slide.md`. You can write these files yourself or ask Claude Code to ("make this deck the cb-what-is, cb-programs, cb-process and thank-you catalog slides"); either way it costs few or no tokens.
 
-When you assemble by hand, check each slide's status yourself: plan-deck warns you about `draft` and `review` slides, but nothing else does (see [Catalog Slides](#catalog-slides)). For a few slides of your own among the catalog ones, write their briefs with a `layout:` instead of `use:` (see [`references/slide-schema.md`](references/slide-schema.md)); step 4 then writes only those.
+If you include the `funding` slide, set its params: its defaults are placeholders, and the resolver warns while one still shows. For a few slides of your own among the catalog ones, write their briefs with a `layout:` instead of `use:` (see [`references/slide-schema.md`](references/slide-schema.md)); step 4 then writes only those.
 
 ### 4. Write the slides
 
@@ -245,26 +245,25 @@ When the plugin is updated, run `/uw-slides:update-deck` in each deck to pick up
 
 The catalog is a set of pre-made, vetted slides that any deck can include by ID instead of writing them from scratch. They keep slides that should read the same in every talk consistent across decks.
 
-| ID | What it is | Brand | Status |
-|----|-----------|-------|--------|
-| `uw-title` | Title slide: title, subtitle, presenter, affiliation, date | uw | ready |
-| `land-ack` | Land acknowledgement (placeholder text) | uw | draft |
-| `funding` | Funding credit: agency, grant ID, grant title (placeholder wording) | uw | draft |
-| `agenda` | Agenda built from the deck's own slides, sections and durations | any | ready |
-| `feedback` | Session feedback prompt with an optional survey link | any | ready |
-| `thank-you` | Closing slide with presenter and contact details | any | ready |
-| `cb-what-is` | What CloudBank is and who runs it | cloudbank | review |
-| `cb-programs` | CloudBank's six standard services | cloudbank | review |
-| `cb-why-choose` | Why researchers choose a CloudBank account | cloudbank | review |
-| `cb-eligibility` | Who can lead a project; good and poor fits | cloudbank | review |
-| `cb-award-tiers` | Grant award tiers (Explore, Discover, Accelerate) | cloudbank | review |
-| `cb-process` | Steps from cost estimate to working in the cloud | cloudbank | review |
+| ID | What it is | Brand |
+|----|-----------|-------|
+| `uw-title` | Title slide: title, subtitle, presenter, affiliation, date | uw |
+| `funding` | Funding credit: agency, grant ID, grant title (set them in the brief) | uw |
+| `agenda` | Agenda built from the deck's own slides, sections and durations | any |
+| `feedback` | Session feedback prompt with an optional survey link | any |
+| `thank-you` | Closing slide with presenter and contact details | any |
+| `cb-what-is` | What CloudBank is and who runs it | cloudbank |
+| `cb-programs` | CloudBank's six standard services | cloudbank |
+| `cb-why-choose` | Why researchers choose a CloudBank account | cloudbank |
+| `cb-eligibility` | Who can lead a project; good and poor fits | cloudbank |
+| `cb-award-tiers` | Grant award tiers (Explore, Discover, Accelerate) | cloudbank |
+| `cb-process` | Steps from cost estimate to working in the cloud | cloudbank |
 
-**Status** says whether a slide is safe to present as-is. `ready` slides are. `draft` slides contain placeholder text that must be replaced with approved wording first (the land acknowledgement and funding language). `review` slides carry program policy wording, such as CloudBank's award figures, that its owner still needs to check. **Brand** limits where a slide is offered: `cb-` slides only in CloudBank decks, `uw` slides only in UW decks, `any` everywhere.
+Every slide in the catalog has been checked and is ready to use. The `funding` slide needs your award's details: its agency, grant ID and grant title default to `PLACEHOLDER` values, and the resolver warns until you set them. **Brand** limits where a slide is offered: `cb-` slides only in CloudBank decks, `uw` slides only in UW decks, `any` everywhere.
 
 ### Using a catalog slide
 
-`/uw-slides:plan-deck` picks catalog slides for you when one fits a planned slide. It uses `ready` slides, and `draft` slides only with a flag in its list of things for you to verify. To add one by hand, write `use: catalog/<id>` in the slide's brief instead of `layout:`, with `params:` for the fields you want to fill:
+`/uw-slides:plan-deck` picks catalog slides for you when one fits a planned slide. To add one by hand, write `use: catalog/<id>` in the slide's brief instead of `layout:`, with `params:` for the fields you want to fill:
 
 ```markdown
 ---

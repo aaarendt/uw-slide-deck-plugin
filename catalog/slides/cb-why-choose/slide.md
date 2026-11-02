@@ -4,7 +4,6 @@ description: "Why a researcher would choose a CloudBank account: no card, one bi
 kind: verbatim
 brand: cloudbank
 version: "1.0.0"
-status: review
 owner: aaarendt
 ---
 
@@ -20,30 +19,14 @@ can quote it exactly.
 
 cloudbank, benefits, billing, marketplace, spending-cap, program
 
-## Status note
+## Sources
 
-`status: review`. Program policy wording; the owner checks it against the current pages before
-setting `status: ready`.
-
-Source pages consulted:
+Accepted by the slide owner on 2026-11-02. The wording was condensed from the
+pages below. CloudBank's program details change: re-check the slide when they
+do, and bump `version` if the wording changes.
 
 - ACCESS resource page, "CloudBank Research": https://operations.access-ci.org/node/905
 - ACCESS announcement: https://support.access-ci.org/node/11714
-
-Confirmed: awards are made in dollars and usable on AWS, Google Cloud, IBM
-Cloud and Microsoft Azure; usage is tracked continuously with automated spend
-alerts.
-
-Not confirmed (cloudbank.org pages could not be reached from this
-environment), carried over unchanged from the earlier wording:
-
-- no credit card or university purchase agreement required
-- a spending cap (the pages above mention spend alerts, not a cap)
-- grant dollars can be used for marketplace services, third-party
-  applications and LLM model access
-
-Also check how "grant dollars, not credits" sits next to the process slide,
-where ACCESS credits are exchanged for CloudBank dollars.
 
 ## Usage
 

@@ -4,7 +4,6 @@ description: "Session feedback slide with a configurable survey URL"
 kind: parameterized
 brand: any
 version: "1.0.0"
-status: ready
 in_agenda: false
 owner: plugin
 params:
