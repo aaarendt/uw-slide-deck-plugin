@@ -208,7 +208,7 @@ General motivation for cloud computing in research, to place before the CloudBan
 id: why-cloud
 use: catalog/cb-why-cloud
 params:
-  lead: "The work you're doing this week may benefit from cloud computing. With cloud you can:"
+  lead: "Commercial cloud computing can help with research like yours. With cloud you can:"
 ---
 ```
 

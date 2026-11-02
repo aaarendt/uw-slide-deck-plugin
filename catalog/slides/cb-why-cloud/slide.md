@@ -26,8 +26,8 @@ can name (no provider names appear on the slide itself).
 ## Parameters
 
 - `lead` (optional): One line shown under the heading to tie the slide to the
-  talk, for example `"The work you're doing this week may benefit from cloud
-  computing. With cloud you can:"`. Default: `""` (hidden when empty).
+  talk, for example `"Commercial cloud computing can help with research like
+  yours. With cloud you can:"`. Default: `""` (hidden when empty).
 
 The heading "Why cloud?" is fixed so the generated agenda can use it. To change
 it, set `title:` in the brief (agenda label) or eject the slide.
@@ -50,7 +50,7 @@ speaker notes are examples; re-check them when the slide is revised and bump
 id: why-cloud
 use: catalog/cb-why-cloud
 params:
-  lead: "The work you're doing this week may benefit from cloud computing. With cloud you can:"
+  lead: "Commercial cloud computing can help with research like yours. With cloud you can:"
 ---
 ```
 
