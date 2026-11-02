@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-11-02
+
+This release makes the plugin installable from a marketplace in Claude Code, Codex and GitHub Copilot CLI, simplifies the slide catalog and fixes `/uw-slides:update-deck`. Breaking changes: the Claude Code marketplace is renamed from `uw-slides-local` to `uw-slide-deck` (README, "Upgrading from the symlink install"), and the catalog's `land-ack` slide is removed (catalog 2.0.0). Run `/uw-slides:update-deck` in existing decks to pick up the new scripts and tools. The `SLIDES.md` fallback, planned for removal in this release, stays deprecated; its removal moves to a later release (#22).
+
 ### Added
 - The plugin is now an [Agent Plugins v1.0.0](https://agent-plugins.org/specification) package, installable in Claude Code, Codex and GitHub Copilot CLI, with linked-skill instructions for OpenCode (README, Installation). New root `plugin.json` (portable manifest) next to `.claude-plugin/plugin.json`, and a Codex marketplace in `.agents/plugins/marketplace.json`.
 - `tools/validate_plugin.py` checks the manifest rules, that both manifests match, skill front matter, that every skill using `<PLUGIN>/` paths says how to find the plugin, and both marketplaces. `--claude` also runs `claude plugin validate`. Tests: `tools/test_validate_plugin.py`.
@@ -33,6 +37,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 - Catalog slides no longer have a `status` field (`draft` / `review` / `ready`): a slide in the catalog is ready to use, and slides whose wording isn't approved stay out of it. plan-deck now uses any catalog slide whose description fits, so the CloudBank introduction slides (accepted by their owner on 2026-11-02) are picked for CloudBank decks; before, as `review` slides, they never were. Their "Status note" sections became "Sources". A `PLACEHOLDER` value the planner can't fill becomes a `VERIFY:` line. Slide briefs in a deck keep their own `status:` (`draft` / `review` / `done`), which is unrelated.
 - The catalog version is now 2.0.0, because a slide was removed (see Removed).
 
+- The `SLIDES.md` deprecation warning in `build.sh` and `build-visuals.sh` no longer names v0.3.0 as the removal release; removal moves to a later release (#22).
 ### Removed
 - Catalog slide `land-ack`. Its text was a placeholder and there is no approved wording to replace it; `catalog/CURATION.md` says how to add one once there is. A deck that used it fails to resolve that slide ("catalog slide metadata not found"); its existing `content/<id>.html` is kept, so to keep the slide, replace `use: catalog/land-ack` in its brief with `locked: true` and add a `# Key message` line (as eject would have), or remove the slide from `deck.yml`.
 
@@ -110,7 +115,7 @@ Initial release (WS0 baseline fixes).
 
 ## Release and tagging process
 
-1. Update the version in `.claude-plugin/plugin.json`.
+1. Update the version in `plugin.json` and `.claude-plugin/plugin.json` (they must match; `python3 tools/validate_plugin.py` checks).
 2. Move `[Unreleased]` entries under a new `[x.y.z] — YYYY-MM-DD` heading.
 3. Commit: `chore(release): bump to vX.Y.Z`.
 4. Tag: `git tag -a vX.Y.Z -m "Release vX.Y.Z"`.

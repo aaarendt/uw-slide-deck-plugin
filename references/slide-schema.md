@@ -237,8 +237,8 @@ alongside `deck.yml` (two sources of truth drift).
 1. Builds use `deck.yml` when present and fall back to `SLIDES.md` for legacy decks.
 2. New decks scaffold `deck.yml` + `slides/` and no `SLIDES.md`.
 3. Migration converts legacy decks using the table above.
-4. The fallback prints a deprecation warning in v0.2.0 and is removed in a later
-   release (target v0.3.0). A one-page `OUTLINE.md`, if wanted, is generated and
+4. The fallback prints a deprecation warning since v0.2.0 and will be removed in
+   a later release (#22). A one-page `OUTLINE.md`, if wanted, is generated and
    read-only.
 
 ### `markdown-schema.md` front matter

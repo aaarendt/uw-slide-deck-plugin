@@ -147,6 +147,7 @@ briefs using the layout library.
 | Version | Status |
 |---------|--------|
 | v0.2.0 | `SLIDES.md` fallback deprecated; builds warn and point here |
-| v0.3.0 | Fallback removed; `SLIDES.md`-only decks no longer build |
+| v0.3.0 | Still deprecated; builds still warn |
+| later | Fallback removed; `SLIDES.md`-only decks no longer build |
 
-Track removal in the [GitHub issue](https://github.com/aaarendt/uw-slides-plugin/issues) for `SLIDES.md` removal (v0.3.0 milestone).
+Track removal in [issue #22](https://github.com/aaarendt/uw-slide-deck-plugin/issues/22).
