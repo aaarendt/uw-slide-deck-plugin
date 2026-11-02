@@ -214,6 +214,20 @@ params:
 
 ---
 
+### `cb-what-weve-heard` — What we've heard from researchers
+**Kind:** verbatim · **Brand:** cloudbank
+
+A dark "The friction" slide: four paraphrased researcher quotes in cards (no account without a credit card, a 40-hour laptop run, setup different on every platform, a surprise $12K bill), with a source line saying they are paraphrased. Place it between `cb-why-cloud` and `cb-what-is`; each quote is answered by a later CloudBank slide. No params; eject to use your own quotes.
+
+```markdown
+---
+id: what-weve-heard
+use: catalog/cb-what-weve-heard
+---
+```
+
+---
+
 ### `cb-eligibility` — CloudBank eligibility and recommended uses
 **Kind:** verbatim · **Brand:** cloudbank
 

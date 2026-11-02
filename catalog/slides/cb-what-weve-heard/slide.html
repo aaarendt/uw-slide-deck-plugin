@@ -1,0 +1,157 @@
+<section data-slide="cb-what-weve-heard"
+         data-layout="catalog"
+         data-catalog="cb-what-weve-heard@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <p class="eyebrow">The friction</p>
+    <h1>What we've heard from researchers</h1>
+
+    <ul class="quotes">
+      <li>
+        <span class="mark" aria-hidden="true">&ldquo;</span>
+        <blockquote><p>I couldn't get a cloud account on my grant without a university credit card.</p></blockquote>
+      </li>
+      <li>
+        <span class="mark" aria-hidden="true">&ldquo;</span>
+        <blockquote><p>My training run works on my laptop but takes 40&nbsp;hours. How do I move it to something faster without rewriting everything?</p></blockquote>
+      </li>
+      <li>
+        <span class="mark" aria-hidden="true">&ldquo;</span>
+        <blockquote><p>Setting up my first experiment in the cloud took forever, and it was different for every platform I tried.</p></blockquote>
+      </li>
+      <li>
+        <span class="mark" aria-hidden="true">&ldquo;</span>
+        <blockquote><p>I got a $12K bill last month and I still don't understand why.</p></blockquote>
+      </li>
+    </ul>
+
+    <p class="source">Paraphrased from conversations with researchers</p>
+  </div>
+  <aside class="notes">
+    THE FRICTION: WHAT WE'VE HEARD FROM RESEARCHERS. These are paraphrased from
+    conversations with researchers over the years, not verbatim quotes.
+    Let them land before moving on; each one is a problem the following slides
+    answer.
+    Getting an account: grants and university purchasing often don't fit a
+    pay-as-you-go cloud bill, and many researchers stall before they start.
+    CloudBank needs no credit card or purchase agreement.
+    Moving off the laptop: the work runs, just too slowly, and the researcher
+    doesn't know how to move it without starting over. CloudBank's consulting
+    and helpdesk help with exactly this step.
+    Every platform is different: each cloud has its own console, accounts and
+    vocabulary. CloudBank gives one billing account across several clouds.
+    The surprise bill: cloud charges are easy to run up and hard to read.
+    CloudBank monitors spending, sends balance alerts and enforces a spending
+    cap.
+  </aside>
+
+  <style>
+    section[data-slide="cb-what-weve-heard"] {
+      --bg: var(--slide-bg-dark);
+      --fg: var(--slide-text-on-dark);
+      --fg-muted: var(--slide-text-muted-on-dark);
+      --quote-accent: var(--cb-accent-amber);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-what-weve-heard"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-what-weve-heard"] .layout {
+      flex: 1;
+      height: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-what-weve-heard"] .eyebrow {
+      font-family: var(--font-body);
+      font-size: clamp(1.5rem, 1.5vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-what-weve-heard"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--fg);
+      margin: 0;
+    }
+
+    section[data-slide="cb-what-weve-heard"] .quotes {
+      flex: 1;
+      min-height: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(1.25rem, 2.5vw, 3rem);
+      align-content: center;
+      padding-top: var(--space-6);
+    }
+
+    section[data-slide="cb-what-weve-heard"] li {
+      min-width: 0;
+      background: rgba(255, 255, 255, 0.06);
+      border-top: var(--slide-accent-size) solid var(--quote-accent);
+      border-radius: 0 0 8px 8px;
+      padding: var(--space-4) clamp(1.25rem, 2vw, 2.25rem) var(--space-6);
+    }
+
+    section[data-slide="cb-what-weve-heard"] .mark {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 5vw, 5.5rem);
+      font-weight: 800;
+      line-height: 0.8;
+      height: 0.55em;
+      color: var(--quote-accent);
+      margin: 0 0 var(--space-3);
+    }
+
+    section[data-slide="cb-what-weve-heard"] blockquote {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: clamp(1.5rem, 1.9vw, 1.875rem);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--fg);
+    }
+
+    section[data-slide="cb-what-weve-heard"] blockquote p { margin: 0; }
+
+    section[data-slide="cb-what-weve-heard"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+  </style>
+</section>
