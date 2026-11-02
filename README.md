@@ -59,18 +59,18 @@ The same loop works for `~/.agents/skills` or any other skills directory. Skills
 
 ## Make your first deck
 
-Each step says where to run it: in your **terminal**, or in **Claude Code** (the `/uw-slides:` commands).
+You work in Claude Code: type the `/uw-slides:` commands, or just ask in plain words ("rebuild the deck", "publish it"). The skills run the build and check scripts for you. The first time Claude Code wants to run each script it asks for permission; choose the option not to ask again, and from then on it runs them on its own. The only terminal steps are starting Claude Code (steps 1 and 2).
 
 ### 1. Create the deck
 
-**Terminal:** go to the folder where you keep your talks and start Claude Code.
+In your **terminal**, go to the folder where you keep your talks and start Claude Code:
 
 ```bash
 cd ~/talks
 claude
 ```
 
-**Claude Code:**
+Then in **Claude Code**:
 
 ```
 /uw-slides:new-deck my-talk
@@ -80,62 +80,87 @@ For a CloudBank deck, add `--brand=cloudbank`. This creates a `my-talk/` folder 
 
 ### 2. Reopen Claude Code inside the deck
 
-The other commands run from inside the deck folder. Quit Claude Code, then in the **terminal**:
+The other commands run from inside the deck folder, so quit Claude Code and start it there:
 
 ```bash
 cd my-talk
 claude
 ```
 
-### 3. Plan the slides
+### 3. Choose the slides
 
-**Claude Code:**
+There are two ways to fill the deck. Pick by how much new content the talk needs.
+
+**Plan a new talk with Claude.** For a talk with its own content:
 
 ```
 /uw-slides:plan-deck "Cloud computing for researchers" --duration=45
 ```
 
-Without a topic, it asks you for the essentials first. It drafts learning objectives, chooses a layout and writes the content for every slide, then shows you the plan. Ask for changes or approve it. Nothing is written as HTML until you approve.
+Without a topic, it asks you for the essentials first. It drafts learning objectives, chooses a layout and writes the content for every slide, using [catalog slides](#catalog-slides) where they fit, then shows you the plan. Ask for changes or approve it. Nothing is written as HTML until you approve. This is the step that uses the most tokens.
 
-The plan is saved as plain text you can edit: `deck.yml` holds the slide order, and `slides/<id>.md` holds one brief per slide (see [What's in your deck folder](#whats-in-your-deck-folder)).
+**Assemble it from the catalog.** For a talk made mostly of standard slides, such as a CloudBank introduction, skip planning. List the slides in `deck.yml` and give each a short brief that names its catalog slide. For a CloudBank deck:
+
+```yaml
+# deck.yml
+title: "CloudBank for Researchers"
+slides:
+  - what-is
+  - programs
+  - process
+  - thank-you
+```
+
+```markdown
+<!-- slides/what-is.md -->
+---
+id: what-is
+use: catalog/cb-what-is
+---
+```
+
+```markdown
+<!-- slides/thank-you.md -->
+---
+id: thank-you
+use: catalog/thank-you
+params:
+  presenter: "Jane Doe"
+  email: "jdoe@uw.edu"
+---
+```
+
+A brief needs only `id` and `use:`, plus `params:` for slides that take them (each slide's params are in [`catalog/README.md`](catalog/README.md)). new-deck starts every deck with two placeholder slides, `title` and `example-slide`: replace them in `deck.yml` and delete `slides/example-slide.md`. You can write these files yourself or ask Claude Code to ("make this deck the cb-what-is, cb-programs, cb-process and thank-you catalog slides"); either way it costs few or no tokens.
+
+When you assemble by hand, check each slide's status yourself: plan-deck warns you about `draft` and `review` slides, but nothing else does (see [Catalog Slides](#catalog-slides)). For a few slides of your own among the catalog ones, write their briefs with a `layout:` instead of `use:` (see [`references/slide-schema.md`](references/slide-schema.md)); step 4 then writes only those.
 
 ### 4. Write the slides
 
-If the plan includes catalog slides (marked `use: catalog/...`), ask Claude Code to **"resolve the catalog slides"** first. Then:
+If the deck has catalog slides, ask Claude Code to **"resolve the catalog slides"**. This copies them into the deck and fills in their params. If every slide is a catalog slide, ask it to resolve and build, and skip to step 5.
+
+For the other slides:
 
 ```
 /uw-slides:generate-slides
 ```
 
-### 5. Build and look at it
+It writes each slide from its brief, builds the presentation (`build/index.html`), and then runs the brand review and the accessibility check and reports what they found.
 
-**Terminal:**
+### 5. Look at it
 
-```bash
-./build.sh
-```
+Open `build/index.html` in your browser, or ask Claude Code to open it. See [Presenting](#presenting) for the keys.
 
-Open `build/index.html` in your browser (`open build/index.html` on a Mac, `xdg-open build/index.html` on Linux). See [Presenting](#presenting) for the keys.
+### 6. Revise
 
-### 6. Check it
-
-**Terminal:** `./lint.sh` runs quick automatic checks (missing slides, alt text, font sizes). Then in **Claude Code**:
-
-```
-/uw-slides:design-review
-/uw-slides:accessibility-check
-```
-
-### 7. Revise
-
-- **Change a slide:** edit its brief in `slides/`, then run `/uw-slides:generate-slides` again. It writes new slides, leaves unchanged ones alone, and asks before replacing a slide whose brief changed.
-- **Reorder:** move lines in the `slides:` list in `deck.yml`, then `./build.sh`.
+- **Change a slide:** edit its brief in `slides/`, then run `/uw-slides:generate-slides` again. It writes new slides, leaves unchanged ones alone, asks before replacing a slide whose brief changed, and rebuilds.
+- **Reorder:** move lines in the `slides:` list in `deck.yml` and ask Claude Code to rebuild.
 - **Bigger changes** (add, remove, merge or split slides, change the length): `/uw-slides:plan-deck replan "make it 30 minutes"`.
 - **Edit a slide's HTML by hand:** set `locked: true` in its brief so it is never regenerated.
+- **Check the deck again:** `/uw-slides:design-review` and `/uw-slides:accessibility-check`.
 
-`./status.sh` lists every slide and whether it is up to date.
+Ask "which slides are out of date?" at any point for the status of every slide.
 
-### 8. Add visuals (optional)
+### 7. Add visuals (optional)
 
 The first pass uses only layout, type and color. To add photos, diagrams and icons, describe them per slide in `VISUALS.md`, then:
 
@@ -143,18 +168,28 @@ The first pass uses only layout, type and color. To add photos, diagrams and ico
 /uw-slides:apply-visuals
 ```
 
-and in the **terminal**, `./build-visuals.sh`, which writes `build/index-with-visuals.html`. Slides you didn't list are unchanged, and the first-pass slides in `content/` are never modified.
+It edits copies of the slides in `content-with-visuals/` and builds `build/index-with-visuals.html`. Slides you didn't list are unchanged, and the first-pass slides are never modified.
 
-### 9. Share it
+### 8. Share it
 
-**Terminal:**
+Ask Claude Code to **"publish the deck"**. This makes `build/index-published.html`, a single file with every image built in that you can email or upload. Ask for a PDF and it runs the PDF export, which needs [Playwright](https://playwright.dev/) (`npm install -g playwright && npx playwright install chromium`).
 
-```bash
-./build-visuals.sh    # needed even if you added no visuals
-./publish.sh          # → build/index-published.html
-```
+### Running the scripts yourself
 
-`build/index-published.html` is a single file with every image built in, so you can email or upload it. For a PDF, run `./export.sh` (needs [Playwright](https://playwright.dev/): `npm install -g playwright && npx playwright install chromium`).
+Everything the skills build or check is a plain script in the deck folder, so you or a colleague can rebuild a deck without an agent, or in CI:
+
+| Script | What it does |
+|--------|--------------|
+| `./build.sh` | Builds `build/index.html` from `content/` in `deck.yml` order (`--strict` fails on missing slides) |
+| `./build-visuals.sh` | Builds `build/index-with-visuals.html`, using `content-with-visuals/` where a slide has visuals |
+| `./publish.sh` | Makes the single-file `build/index-published.html`; run `./build-visuals.sh` first, even with no visuals |
+| `./export.sh` | Writes `build/deck.pdf` (needs Playwright) |
+| `./lint.sh` | Quick automatic checks: missing slides, alt text, font sizes, stale briefs |
+| `./status.sh` | Lists every slide and whether it is up to date |
+| `./outline.sh` | Refreshes `OUTLINE.md`, a read-only overview of the deck |
+| `./setup-reveal.sh` | Downloads reveal.js again, if the download in step 1 failed |
+
+Resolving catalog slides by hand is described in [Using a catalog slide](#using-a-catalog-slide).
 
 ---
 
