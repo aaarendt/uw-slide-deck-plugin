@@ -1,13 +1,13 @@
 ---
 name: update-deck
-description: Update a deck's managed files (build scripts, shared templates, tools/deckparse.py) to match the current plugin version, without touching slides, content, or assets.
+description: Update a deck's managed files (build scripts, shared templates, vendored tools in tools/) to match the current plugin version, without touching slides, content, or assets.
 ---
 
 # Update Deck
 
 ## Purpose
 
-Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-deck` copies build scripts, `shared/header.html`, `shared/footer.html`, and `tools/deckparse.py` into the deck at scaffold time and stamps `.uw-slides.json` with the plugin version. When the plugin is updated, those files drift. This skill shows what has changed and updates them on confirmation.
+Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-deck` copies build scripts, `shared/header.html`, `shared/footer.html`, and the tools `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py` into the deck at scaffold time and stamps `.uw-slides.json` with the plugin version. When the plugin is updated, those files drift. This skill shows what has changed and updates them on confirmation.
 
 **Managed files** (the only files this skill may touch):
 - `build.sh`
@@ -20,6 +20,7 @@ Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-dec
 - `shared/header.html` (brand-specific)
 - `tools/deckparse.py`
 - `tools/lint.py`
+- `tools/resolve-catalog.py`
 
 **Never touched:** `content/`, `content-with-visuals/`, `slides/`, `assets/`, `deck.yml`, `VISUALS.md`, `OUTLINE.md`, `.brand`, `*.md` files.
 
@@ -71,8 +72,9 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 | `shared/header.html` | `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
 | `tools/deckparse.py` | `<PLUGIN>/tools/deckparse.py` |
 | `tools/lint.py` | `<PLUGIN>/tools/lint.py` |
+| `tools/resolve-catalog.py` | `<PLUGIN>/tools/resolve-catalog.py` |
 
-Read both versions and note whether they differ. A file the deck is missing counts as a diff.
+Read both versions and note whether they differ. A file the deck is missing counts as a diff: decks scaffolded by older plugin versions may have no `tools/lint.py` or `tools/resolve-catalog.py`, and this adds them.
 
 ### 3. Report and ask for confirmation
 

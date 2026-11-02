@@ -289,7 +289,7 @@ Omitting `--brand` defaults to `uw`.
 | `accessibility-check` | WCAG 2.1 AA validation |
 | `design-review` | Brand compliance review |
 | `extract-to-markdown` | Convert an existing HTML deck to `deck.yml` + `slides/*.md` briefs; `--migrate` migrates a legacy SLIDES.md deck in place |
-| `update-deck` | Diff and update managed files (build scripts, shared templates, `tools/deckparse.py`) against the current plugin; never touches slides, content, or assets |
+| `update-deck` | Diff and update managed files (build scripts, shared templates, the vendored `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py`) against the current plugin; never touches slides, content, or assets |
 
 ---
 

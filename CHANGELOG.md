@@ -23,6 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 - `plan-deck` checks a program's catalog slides against planned content slides in decks of that program's brand, not only framing roles.
 - Catalog `agenda` 1.1.0 groups slides into parts: slides that share a `section:` become one item (or, without sections, each `section-divider` and the slides after it), with their minutes summed. New optional `slide.md` field `in_agenda: false` keeps framing catalog slides out of the agenda; the six seeded framing slides set it.
 - Catalog slides without a `title` now take their `aria-label`, and their agenda label, from their own heading instead of the catalog description.
+- `/uw-slides:update-deck` now also keeps `tools/resolve-catalog.py` in sync, and adds it (and `tools/lint.py`) to decks scaffolded before they were vendored (#33). When a deck has no vendored `deckparse.py` or `lint.py`, the deck scripts now suggest running `/uw-slides:update-deck` instead of only setting `UW_SLIDES_HOME`.
 
 ### Fixed
 - Slide text was centered on every slide in reveal.js decks, because `reveal.css` centers slide text and neither brand header overrode it. Both `header-reveal.html` files now set `text-align: left` on `section.slide`. Layouts meant to be centered (`title`, `closing`, `stat-callout` and the centered catalog slides) set it themselves and are unchanged. Existing decks pick this up with `/uw-slides:update-deck`.
