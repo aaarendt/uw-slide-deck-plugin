@@ -280,7 +280,7 @@ Without an agent, run the resolver yourself:
 python3 tools/resolve-catalog.py resolve . --catalog=<plugin>/catalog
 ```
 
-`<plugin>` is where the plugin is installed. It differs by agent and changes with each version, so don't save the path in scripts; with `UW_SLIDES_HOME` set you can leave out `--catalog`.
+You can usually leave out `--catalog`: `/uw-slides:new-deck` and `/uw-slides:update-deck` record where the plugin is installed in the deck's `.uw-slides.json` (`plugin_dir`), and the resolver reads it. After a plugin update that path is stale until you run `/uw-slides:update-deck`; if the resolver says it can't find the catalog, do that, or pass `--catalog=<plugin>/catalog`, where `<plugin>` is where the plugin is installed (it differs by agent and changes with each version, so don't save it in scripts). With `UW_SLIDES_HOME` set you can also leave out `--catalog`.
 
 To change a catalog slide beyond its params, eject it. This keeps the slide in your deck as a locked, hand-edited slide and removes the link to the catalog:
 
@@ -311,7 +311,7 @@ To change colors, spacing or type for one deck only, edit that deck's `shared/he
 - An earlier install may still be in the way. Follow [Upgrading from the symlink install](#upgrading-from-the-symlink-install), and check that `UW_SLIDES_HOME` isn't set (`echo $UW_SLIDES_HOME`).
 
 **"Catalog not found" when resolving catalog slides**
-- You ran the resolver by hand and it doesn't know where the plugin is. Run `/uw-slides:generate-slides`, which finds the plugin itself, or pass `--catalog=<plugin>/catalog` as shown in [Using a catalog slide](#using-a-catalog-slide).
+- You ran the resolver by hand and the plugin has moved or been updated since the deck was created. Run `/uw-slides:update-deck` to refresh the recorded location, run `/uw-slides:generate-slides`, which finds the plugin itself, or pass `--catalog=<plugin>/catalog` as shown in [Using a catalog slide](#using-a-catalog-slide).
 
 **A slide is missing from the built deck**
 - `./status.sh` shows which slides have no HTML yet. Run `/uw-slides:generate-slides` to copy catalog slides and generate the others.

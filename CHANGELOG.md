@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ## [Unreleased]
 
 ### Changed
+- The deck's `tools/resolve-catalog.py` can find the catalog of a marketplace install without `--catalog`: `/uw-slides:new-deck` and `/uw-slides:update-deck` record the plugin location as `plugin_dir` in `.uw-slides.json`, and the resolver reads it after `$UW_SLIDES_HOME`. A missing or stale path is ignored, and the "Catalog not found" message then points to `/uw-slides:update-deck`. The resolver's docstring now documents that a vendored copy also looks in `<deck>/catalog` (#34).
 - `/uw-slides:generate-slides` now resolves catalog slides itself: before generating layout slides it runs `tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog` and reports the resolver's output, including placeholder and brand warnings, with its own. Users no longer need the `--catalog` path (#39, most of #34). `/uw-slides:plan-deck`'s next steps, the README walkthrough (step 4, "Using a catalog slide", troubleshooting) and `catalog/README.md` shrink to a single `/uw-slides:generate-slides`.
 
 ## [0.3.0] — 2026-11-02

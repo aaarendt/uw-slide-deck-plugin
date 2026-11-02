@@ -271,11 +271,12 @@ Write this file to the deck root:
   "plugin_version": "<version from <PLUGIN>/plugin.json>",
   "brand": "<brand>",
   "scaffolded_at": "<ISO 8601 date, e.g. 2026-10-15>",
-  "catalog": null
+  "catalog": null,
+  "plugin_dir": "<PLUGIN as the resolved absolute path>"
 }
 ```
 
-This stamps the deck with the plugin version it was built with. `/uw-slides:update-deck` uses it to detect drift.
+This stamps the deck with the plugin version it was built with. `/uw-slides:update-deck` uses it to detect drift. `plugin_dir` lets the deck's `tools/resolve-catalog.py` find the catalog without `--catalog` when someone runs it by hand. It is a convenience: it goes stale when the plugin updates (the cache folder is version-numbered) until `/uw-slides:update-deck` rewrites it, and it is machine-specific, so don't commit it to a shared repository if the deck is shared between machines (the resolver ignores a path that doesn't exist).
 
 ### 8. Create README.md
 Copy `<PLUGIN>/templates/README.md`, then replace:

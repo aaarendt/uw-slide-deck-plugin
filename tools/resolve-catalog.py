@@ -19,11 +19,16 @@ eject
 Catalog location (first match wins):
   --catalog=<path>                     explicit path to a catalog/ directory
   $UW_SLIDES_HOME/catalog/             if UW_SLIDES_HOME is set
-  <this script>/../catalog/            when run from the plugin's own tools/
+  <deck>/.uw-slides.json "plugin_dir"  plugin location recorded by new-deck and
+                                       update-deck (used if its catalog/ exists)
+  <this script>/../catalog/            the plugin's own tools/, or, in a deck's
+                                       vendored copy, a deck-local <deck>/catalog/
   ~/.claude/plugins/local/uw-slides/catalog/  legacy symlink install
 
-Skills run the deck's vendored copy and pass --catalog=<plugin>/catalog, because
-an installed plugin lives in a client-specific cache.
+An installed plugin lives in a client-specific, version-numbered cache, so a
+deck's vendored copy can't find it on its own. new-deck and update-deck record
+the location as "plugin_dir"; it goes stale when the plugin updates, until
+/uw-slides:update-deck runs again. Skills still pass --catalog explicitly.
 
 Each catalog slide lives in <catalog>/slides/<id>/:
   slide.html   HTML fragment with {{param}} placeholders
@@ -72,7 +77,21 @@ DEFAULT_CATALOG_PATH = os.path.expanduser(
 )
 
 
-def _find_catalog(override=None):
+def _plugin_dir_from_stamp(deck_dir):
+    """Return the "plugin_dir" recorded in <deck>/.uw-slides.json, or None."""
+    if not deck_dir:
+        return None
+    try:
+        with open(os.path.join(deck_dir, ".uw-slides.json"), encoding="utf-8") as fh:
+            value = json.load(fh).get("plugin_dir")
+    except (OSError, ValueError, AttributeError):
+        return None
+    if isinstance(value, str) and value.strip():
+        return os.path.expanduser(value.strip())
+    return None
+
+
+def _find_catalog(override=None, deck_dir=None):
     if override:
         # Explicit --catalog= flag: use it or fail; do not fall through.
         if os.path.isdir(override) and os.path.isfile(os.path.join(override, "catalog.yml")):
@@ -82,6 +101,9 @@ def _find_catalog(override=None):
     env = os.environ.get("UW_SLIDES_HOME")
     if env:
         candidates.append(os.path.join(env, "catalog"))
+    recorded = _plugin_dir_from_stamp(deck_dir)
+    if recorded:
+        candidates.append(os.path.join(recorded, "catalog"))
     candidates.append(BUNDLED_CATALOG_PATH)
     candidates.append(DEFAULT_CATALOG_PATH)
     for c in candidates:
@@ -478,6 +500,19 @@ def _build_agenda_items(deck_dir, deck, briefs, self_id, catalog_path):
 # ---------------------------------------------------------------------------
 
 
+def _catalog_not_found_message(override, deck_dir):
+    if override:
+        return f"Catalog not found at --catalog={override}. Pass the plugin's catalog/ directory."
+    msg = "Catalog not found. Pass --catalog=<plugin>/catalog or set $UW_SLIDES_HOME."
+    recorded = _plugin_dir_from_stamp(deck_dir)
+    if recorded:
+        msg += (
+            f"\n.uw-slides.json records plugin_dir={recorded}, which has no catalog/"
+            " (the plugin was probably updated or moved). Run /uw-slides:update-deck to refresh it."
+        )
+    return msg
+
+
 def _resolve_one(deck_dir, deck, briefs, sid, slide_pos, catalog_path):
     """Resolve a single catalog slide. Returns (ok, message)."""
     b = briefs.get(sid)
@@ -593,12 +628,9 @@ def cmd_resolve(deck_dir, catalog_override=None):
         print(f"{deck_yml}: not found", file=sys.stderr)
         return 1
 
-    catalog_path = _find_catalog(catalog_override)
+    catalog_path = _find_catalog(catalog_override, deck_dir)
     if not catalog_path:
-        print(
-            "Catalog not found. Pass --catalog=<plugin>/catalog or set $UW_SLIDES_HOME.",
-            file=sys.stderr,
-        )
+        print(_catalog_not_found_message(catalog_override, deck_dir), file=sys.stderr)
         return 1
 
     try:
@@ -666,7 +698,7 @@ def cmd_eject(deck_dir, slide_id, catalog_override=None):
     catalog_id = use[len("catalog/"):] if use.startswith("catalog/") else use
 
     # Find catalog to get description for key message
-    catalog_path = _find_catalog(catalog_override)
+    catalog_path = _find_catalog(catalog_override, deck_dir)
     description = f"Ejected from {use}"
     if catalog_path:
         try:
