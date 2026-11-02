@@ -78,7 +78,7 @@ if [ -f "$DECK_DIR/deck.yml" ]; then
   fi
 elif [ -f "$DECK_DIR/SLIDES.md" ]; then
   ORDER_SOURCE="SLIDES.md"
-  echo "Warning: SLIDES.md is deprecated and support will be removed in v0.3.0."
+  echo "Warning: SLIDES.md is deprecated and support will be removed in a future release."
   echo "         Migrate to deck.yml + slides/ (see references/slide-schema.md, section 6)."
   # Slide IDs in SLIDES.md order (CRLF-safe)
   slide_ids=$(tr -d '\r' < "$DECK_DIR/SLIDES.md" \
