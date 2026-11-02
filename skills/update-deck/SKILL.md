@@ -112,7 +112,7 @@ For each changed file the user confirmed:
 
 ### 5. Update the stamp
 
-Rewrite `.uw-slides.json`, updating `plugin_version` to the current version and `scaffolded_at` to today's date. Preserve `brand` and `catalog`.
+Rewrite `.uw-slides.json`, updating `plugin_version` to the current version and `scaffolded_at` to today's date, and setting `plugin_dir` to `<PLUGIN>` as the resolved absolute path (add the field if the deck has none). Preserve `brand` and `catalog`. Decks whose `plugin_dir` is stale after a plugin update are fixed by this step.
 
 ### 6. Validate
 
@@ -136,7 +136,7 @@ If either fails, report the error. The deck's source files (`slides/`, `deck.yml
   Unchanged (4):
     build-visuals.sh, outline.sh, publish.sh, shared/header.html
 
-  .uw-slides.json stamped: v<deck-version> → v<current-version>
+  .uw-slides.json stamped: v<deck-version> → v<current-version> (plugin_dir updated)
 
 Validation passed. Run ./build.sh to rebuild.
 ```

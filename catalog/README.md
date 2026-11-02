@@ -29,7 +29,7 @@ python3 tools/resolve-catalog.py resolve . --catalog=<plugin>/catalog
 
 `/uw-slides:generate-slides` never generates slides with `use: catalog/...`; it resolves them with this command and reports the resolver's warnings.
 
-`<plugin>` is the directory where the uw-slides plugin is installed. The skills find it for you. When you run the resolver by hand, pass the path (your agent can tell you where the plugin is installed), or clone this repository and set `UW_SLIDES_HOME` to the clone, in which case you can leave out `--catalog`. Don't save a path from a client's plugin cache in scripts or notes: it can change when the plugin is updated.
+`<plugin>` is the directory where the uw-slides plugin is installed. The skills find it for you. When you run the resolver by hand, `--catalog` is usually unnecessary: the deck's `.uw-slides.json` records the plugin location (`plugin_dir`, written by new-deck and refreshed by update-deck). If the plugin has been updated since, run `/uw-slides:update-deck`, pass the path (your agent can tell you where the plugin is installed), or clone this repository and set `UW_SLIDES_HOME` to the clone, in which case you can leave out `--catalog`. Don't save a path from a client's plugin cache in scripts or notes: it can change when the plugin is updated.
 
 ### Ejecting a catalog slide
 

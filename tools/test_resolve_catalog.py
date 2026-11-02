@@ -897,6 +897,72 @@ class TestAgenda(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
+# Catalog discovery via .uw-slides.json plugin_dir (#34)
+# ---------------------------------------------------------------------------
+
+class TestPluginDirStamp(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp(prefix="uw-test-")
+        self.deck = os.path.join(self.tmpdir, "deck")
+        os.makedirs(self.deck)
+        self.plugin = os.path.join(self.tmpdir, "cache", "uw-slides", "0.3.0")
+        shutil.copytree(CATALOG_DIR, os.path.join(self.plugin, "catalog"))
+        self._env = os.environ.pop("UW_SLIDES_HOME", None)
+        # Isolate from the repo's own catalog next to tools/ and the legacy path.
+        self._bundled, self._legacy = rc.BUNDLED_CATALOG_PATH, rc.DEFAULT_CATALOG_PATH
+        rc.BUNDLED_CATALOG_PATH = rc.DEFAULT_CATALOG_PATH = os.path.join(self.tmpdir, "none")
+
+    def tearDown(self):
+        rc.BUNDLED_CATALOG_PATH, rc.DEFAULT_CATALOG_PATH = self._bundled, self._legacy
+        if self._env is not None:
+            os.environ["UW_SLIDES_HOME"] = self._env
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _stamp(self, text):
+        _write(os.path.join(self.deck, ".uw-slides.json"), text)
+
+    def test_uses_recorded_plugin_dir(self):
+        self._stamp('{"plugin_dir": %s}' % __import__("json").dumps(self.plugin))
+        self.assertEqual(rc._find_catalog(None, self.deck),
+                         os.path.join(self.plugin, "catalog"))
+
+    def test_no_stamp_or_no_plugin_dir_finds_nothing(self):
+        self.assertIsNone(rc._find_catalog(None, self.deck))
+        self._stamp('{"plugin_version": "0.3.0"}')
+        self.assertIsNone(rc._find_catalog(None, self.deck))
+
+    def test_stale_plugin_dir_finds_nothing_and_message_names_update_deck(self):
+        gone = os.path.join(self.tmpdir, "cache", "uw-slides", "0.2.0")
+        self._stamp('{"plugin_dir": %s}' % __import__("json").dumps(gone))
+        self.assertIsNone(rc._find_catalog(None, self.deck))
+        self.assertIn("update-deck", rc._catalog_not_found_message(None, self.deck))
+
+    def test_malformed_stamp_is_ignored(self):
+        self._stamp("not json")
+        self.assertIsNone(rc._find_catalog(None, self.deck))
+        self._stamp('{"plugin_dir": 5}')
+        self.assertIsNone(rc._find_catalog(None, self.deck))
+
+    def test_flag_and_env_take_precedence(self):
+        self._stamp('{"plugin_dir": %s}' % __import__("json").dumps(self.plugin))
+        self.assertEqual(rc._find_catalog(CATALOG_DIR, self.deck), CATALOG_DIR)
+        os.environ["UW_SLIDES_HOME"] = PLUGIN_DIR
+        try:
+            self.assertEqual(rc._find_catalog(None, self.deck), CATALOG_DIR)
+        finally:
+            del os.environ["UW_SLIDES_HOME"]
+
+    def test_resolve_works_without_flag(self):
+        _make_deck(self.deck, ["title"], {
+            "title": "---\nid: title\nuse: catalog/uw-title\nparams:\n  title: Hi\n---\n",
+        })
+        self._stamp('{"plugin_dir": %s}' % __import__("json").dumps(self.plugin))
+        self.assertEqual(rc.cmd_resolve(self.deck), 0)
+        self.assertTrue(os.path.isfile(os.path.join(self.deck, "content", "title.html")))
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
