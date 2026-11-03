@@ -1,35 +1,23 @@
 ---
 id: cb-research-and-classroom
 description: "The two CloudBank offerings side by side: Research (cloud accounts for projects) and Classroom (a JupyterHub for teaching)"
-kind: parameterized
+kind: verbatim
 brand: cloudbank
 version: "1.0.0"
 owner: aaarendt
-params:
-  focus: ""
 ---
 
 # Description
 
-A comparison of CloudBank's two offerings, so the audience knows they exist
-and which one the talk is about. A table with the CloudBank Research and
-CloudBank Classroom logos as column headers and three rows: who it is for,
-what you get, and how to start. Place it right after `cb-what-is`.
-
-Most CloudBank catalog slides (`cb-eligibility`, `cb-award-tiers`,
-`cb-process`) describe Research. Use `focus` to say so, or to point a teaching
-audience to Classroom.
+A comparison of CloudBank's two offerings, so the audience knows both exist.
+A table with the CloudBank Research and CloudBank Classroom logos as column
+headers and three rows: who it is for, what you get, and how to start. Place
+it right after `cb-what-is`.
 
 The speaker notes add background a presenter can use: the Berkeley Data Stack
 and Data 8, the 2i2c partnership with community colleges, teaching AI, and the
 HPCwire 2023 award. Hub and student counts are left off the slide because they
 change; check them with the CloudBank team before quoting.
-
-## Parameters
-
-- `focus` (optional): One line under the table, for example
-  `"The rest of this talk covers CloudBank Research."` Default: `""` (hidden
-  when empty).
 
 ## Assets
 
@@ -59,12 +47,11 @@ and bump `version` if the wording changes.
 ---
 id: research-and-classroom
 use: catalog/cb-research-and-classroom
-params:
-  focus: "The rest of this talk covers CloudBank Research."
 ---
 ```
 
-To customise beyond `focus`, eject it and edit the HTML directly.
+No parameters. This slide is verbatim: to customise it for one deck, eject it
+and edit the HTML directly.
 
 ```bash
 python3 tools/resolve-catalog.py eject . research-and-classroom --catalog=<plugin>/catalog
