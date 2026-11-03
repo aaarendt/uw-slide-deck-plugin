@@ -12,7 +12,7 @@ funding: "Funding credit slide — agency, grant ID, grant title (placeholder wo
 agenda: "Auto-generated agenda built from the deck.yml slide titles"
 feedback: "Session feedback slide — configurable URL for survey or QR code"
 thank-you: "Closing thank-you slide with presenter name and contact info"
-cb-title: "Standard CloudBank branded title slide — presenter, title, subtitle, date, affiliation"
+cb-title: "Standard CloudBank title slide — CloudBank and NSF logos, NSF award numbers, title, presenter, date, partner logo band"
 cb-eligibility: "CloudBank eligibility (who can lead a project) and recommended uses (good fit vs. better elsewhere)"
 cb-what-is: "What CloudBank is: who runs it, which clouds, the 2025 NSF award and the NAIRR link"
 cb-programs: "CloudBank's six standard services: no cost, helpdesk, accounts, multiple clouds, monitoring, training"
