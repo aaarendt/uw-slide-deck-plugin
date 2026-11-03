@@ -354,6 +354,24 @@ use: catalog/cb-nairr
 
 ---
 
+### `cb-by-the-numbers` — CloudBank by the numbers
+**Kind:** parameterized · **Brand:** cloudbank
+
+> **Program figures.** The defaults are the October 2026 figures. Update them and bump the slide's `version` when new figures are published; a deck can set newer ones in its brief meanwhile.
+
+Three headline stats (research projects awarded, dollars allocated to research, CloudBank Classroom courses), research awards by tier with average award, and the top three research fields with a count of the rest. Every figure is a param.
+
+```markdown
+---
+id: by-the-numbers
+use: catalog/cb-by-the-numbers
+params:
+  period: "October 2025 to October 2026"
+---
+```
+
+---
+
 ## Adding new catalog slides
 
 See [CURATION.md](CURATION.md) for the full process. In brief:
