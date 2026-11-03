@@ -42,10 +42,13 @@ Checked against the pages below on 2026-11-03.
   committees) and the NAIRR knowledge base's CloudBank onboarding page
   (onboarding presentation, acknowledgement, monthly cost estimate, 1-2 weeks).
 - The Classroom line: CloudBank's NAIRR Pilot Classroom guide.
-- "Everyone on the project, not just the lead" and "early awards were in
-  credits, now cash awards": from the slide owner. The NAIRR Pilot pages do
-  not state either; the ACCESS CloudBank Research page states that CloudBank
-  awards are made in dollars.
+- "Everyone on the project, not just the lead": from the slide owner; the
+  NAIRR Pilot pages do not state it.
+- "Early awards were in credits, now cash awards": from the slide owner. The
+  ACCESS CloudBank Research page states that CloudBank awards are made in
+  dollars, and the owner's "CloudBank Allocations (Oct'25 - Oct'26)" report
+  (2026-11-03) records about 20 NAIRR Pilot awards transitioned after vendor
+  credits expired on 2026-06-30.
 - The ACCESS comparison ("under a week") comes from `cb-process`.
 
 The NAIRR Pilot pages now say "SI" (super intelligence) where they used to
