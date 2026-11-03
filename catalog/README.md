@@ -372,6 +372,22 @@ params:
 
 ---
 
+### `cb-rule-of-thumb-costs` — Rule-of-thumb cloud costs
+**Kind:** verbatim · **Brand:** cloudbank
+
+> **Prices change.** Re-check every row against current AWS on-demand prices when the slide is revised. The slide's `slide.md` lists the figures and sources.
+
+Round-number prices in two columns, Compute (laptop-class VM, workstation, A10G GPU) and Storage and data (hot storage, cold archive, egress), each with a concrete example, and a callout on what a $1/hour machine costs if left on for a month. No params; eject to customise.
+
+```markdown
+---
+id: costs
+use: catalog/cb-rule-of-thumb-costs
+---
+```
+
+---
+
 ## Adding new catalog slides
 
 See [CURATION.md](CURATION.md) for the full process. In brief:
