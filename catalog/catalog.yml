@@ -12,8 +12,11 @@ funding: "Funding credit slide — agency, grant ID, grant title (placeholder wo
 agenda: "Auto-generated agenda built from the deck.yml slide titles"
 feedback: "Session feedback slide — configurable URL for survey or QR code"
 thank-you: "Closing thank-you slide with presenter name and contact info"
-cb-title: "Standard CloudBank branded title slide — presenter, title, subtitle, date, affiliation"
+cb-title: "Standard CloudBank title slide — CloudBank and NSF logos, NSF award numbers, title, presenter, date, partner logo band"
+cb-why-cloud: "Why use the cloud for research: data access, on-demand scale, parallel runs, LLMs, shared environments, hosted services"
+cb-what-weve-heard: "The friction: four paraphrased researcher quotes about cloud access, moving work, platform setup and surprise bills"
 cb-eligibility: "CloudBank eligibility (who can lead a project) and recommended uses (good fit vs. better elsewhere)"
+cb-research-and-classroom: "The two CloudBank offerings side by side: Research (cloud accounts for projects) and Classroom (a JupyterHub for teaching)"
 cb-what-is: "What CloudBank is: who runs it, which clouds, the 2025 NSF award and the NAIRR link"
 cb-programs: "CloudBank's six standard services: no cost, helpdesk, accounts, multiple clouds, monitoring, training"
 cb-why-choose: "Why a researcher would choose a CloudBank account: no card, one bill, spending cap, grant dollars"
@@ -28,8 +31,11 @@ slides:
   - feedback
   - thank-you
   - cb-title
+  - cb-why-cloud
+  - cb-what-weve-heard
   - cb-eligibility
   - cb-what-is
+  - cb-research-and-classroom
   - cb-programs
   - cb-why-choose
   - cb-award-tiers

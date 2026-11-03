@@ -251,9 +251,13 @@ def _rewrite_data_slide(fragment, old_id, new_id):
 
 
 def _rewrite_aria_label(fragment, aria_label):
-    """Replace the aria-label attribute value."""
+    """Replace the root <section>'s aria-label value.
+
+    Only the first aria-label (the section's) is rewritten; labels on
+    elements inside the slide, such as a labelled list, are kept.
+    """
     return ARIA_LABEL_RE.sub(
-        lambda m: m.group(1) + aria_label + m.group(3), fragment
+        lambda m: m.group(1) + aria_label + m.group(3), fragment, count=1
     )
 
 

@@ -170,14 +170,14 @@ params:
 ### `cb-title` — CloudBank title slide
 **Kind:** parameterized · **Brand:** cloudbank
 
-The CloudBank counterpart of `uw-title`: dark navy background, blue accent bar, title and subtitle centre, presenter details below.
+The CloudBank counterpart of `uw-title`, with the logos and award credit NSF requires: the CloudBank and NSF logos with "NSF Awards: 1925001 & 2505560" at the top, title and subtitle centre, presenter details below, and a Deep Navy band of partner logos (SDSC, UC San Diego, University of Washington, UC Berkeley, Strategic Blue) along the bottom. The logos and award line are fixed; they ship in the slide's `assets/` folder and are copied into the deck when it resolves.
 
 | Param | Required | Default |
 |-------|----------|---------|
 | `title` | yes | `"Presentation Title"` |
 | `subtitle` | no | hidden when empty |
 | `presenter` | no | `""` |
-| `affiliation` | no | `"CloudBank"` |
+| `affiliation` | no | hidden when empty |
 | `date` | no | hidden when empty |
 
 ```markdown
@@ -189,6 +189,40 @@ params:
   subtitle: "Cloud access for NSF-funded research"
   presenter: "Jane Doe"
   date: "November 3, 2026"
+---
+```
+
+---
+
+### `cb-why-cloud` — Why cloud?
+**Kind:** parameterized · **Brand:** cloudbank
+
+General motivation for cloud computing in research, to place before the CloudBank program slides. Six headed items with original line icons (inline SVG): bring compute to the data, scale up on demand, run in parallel, use and deploy LLMs, share reproducible environments, host research services. Example services are named in the speaker notes only.
+
+| Param | Required | Default |
+|-------|----------|---------|
+| `lead` | no | hidden when empty |
+
+```markdown
+---
+id: why-cloud
+use: catalog/cb-why-cloud
+params:
+  lead: "Commercial cloud computing can help with research like yours. With cloud you can:"
+---
+```
+
+---
+
+### `cb-what-weve-heard` — What we've heard from researchers
+**Kind:** verbatim · **Brand:** cloudbank
+
+A dark "The friction" slide: four paraphrased researcher quotes in cards (no account without a credit card, no time to learn it all, setup different on every platform, an opaque $12K bill), with a source line saying they are paraphrased. Place it between `cb-why-cloud` and `cb-what-is`; each quote is answered by a later CloudBank slide. No params; eject to use your own quotes.
+
+```markdown
+---
+id: what-weve-heard
+use: catalog/cb-what-weve-heard
 ---
 ```
 
@@ -221,6 +255,20 @@ Four cards: origin, cloud providers, the 2025 CloudBank 2.0 award, and the NAIRR
 ---
 id: what-is
 use: catalog/cb-what-is
+---
+```
+
+---
+
+### `cb-research-and-classroom` — Two ways to use CloudBank
+**Kind:** verbatim · **Brand:** cloudbank
+
+CloudBank Research and CloudBank Classroom side by side: a table with each offering's logo as a column header and rows for who it is for, what you get and how to start. Place it right after `cb-what-is`. No params; eject to customise.
+
+```markdown
+---
+id: research-and-classroom
+use: catalog/cb-research-and-classroom
 ---
 ```
 
