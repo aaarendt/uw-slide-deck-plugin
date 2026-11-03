@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ## [Unreleased]
 
 ### Added
+- Catalog slide `cb-research-and-classroom` (CloudBank brand, parameterized): "Two ways to use CloudBank", a table comparing CloudBank Research (cloud accounts for research projects, through an ACCESS or NAIRR Pilot allocation) and CloudBank Classroom (a JupyterHub for teaching, through an Explore ACCESS allocation), with the two logos as column headers. An optional `focus` line says which offering the talk covers.
 - Catalog slide `cb-why-cloud` (CloudBank brand, parameterized): a general "Why cloud?" motivation slide with six headed items and original line icons: bring compute to the data, scale up on demand, run in parallel, use and deploy LLMs, share reproducible environments, host research services. Example services are named in the speaker notes only. An optional `lead` param adds a talk-specific line under the heading.
 - Catalog slide `cb-what-weve-heard` (CloudBank brand, verbatim): a dark "The friction" slide with four paraphrased researcher quotes (no account without a credit card, no time to learn it all, setup different on every platform, an opaque $12K bill), labelled as paraphrased. Each quote is answered by a later CloudBank slide.
 - Catalog slide `cb-title` (CloudBank brand, parameterized): the CloudBank title slide, with the same params as `uw-title` (`title`, `subtitle`, `presenter`, `affiliation` defaulting to "CloudBank", `date`). A CloudBank deck can now be assembled entirely from catalog slides, starting with a title (#42).

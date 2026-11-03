@@ -260,6 +260,26 @@ use: catalog/cb-what-is
 
 ---
 
+### `cb-research-and-classroom` — Two ways to use CloudBank
+**Kind:** parameterized · **Brand:** cloudbank
+
+CloudBank Research and CloudBank Classroom side by side: a table with each offering's logo as a column header and rows for who it is for, what you get and how to start. Place it right after `cb-what-is`. The optional `focus` line says which offering the rest of the talk covers.
+
+| Param | Required | Default |
+|-------|----------|---------|
+| `focus` | no | hidden when empty |
+
+```markdown
+---
+id: research-and-classroom
+use: catalog/cb-research-and-classroom
+params:
+  focus: "The rest of this talk covers CloudBank Research."
+---
+```
+
+---
+
 ### `cb-programs` — CloudBank programs
 **Kind:** verbatim · **Brand:** cloudbank
 

@@ -1,0 +1,193 @@
+<section data-slide="cb-research-and-classroom"
+         data-layout="catalog"
+         data-catalog="cb-research-and-classroom@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>Two ways to use CloudBank</h1>
+
+    <table class="compare">
+      <thead>
+        <tr>
+          <td></td>
+          <th scope="col"><img src="assets/cloudbank-research.png" alt="CloudBank Research"></th>
+          <th scope="col"><img src="assets/cloudbank-classroom.png" alt="CloudBank Classroom"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">For</th>
+          <td>Research projects of any size</td>
+          <td>Courses taught with Jupyter notebooks</td>
+        </tr>
+        <tr>
+          <th scope="row">You get</th>
+          <td>Your own accounts on AWS, Google Cloud, Azure and IBM Cloud</td>
+          <td>A ready-made JupyterHub with grading tools; students just log in from a browser</td>
+        </tr>
+        <tr>
+          <th scope="row">To start</th>
+          <td>Apply for an ACCESS or NAIRR Pilot allocation</td>
+          <td>Apply for an Explore ACCESS allocation; CloudBank sets up your hub</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="focus">{{focus}}</p>
+
+    <p class="source">Sources:
+      <a href="https://operations.access-ci.org/node/905">ACCESS: CloudBank Research</a> ·
+      <a href="https://support.access-ci.org/documentation/resources/cloudbank-classroom">ACCESS: CloudBank Classroom</a></p>
+  </div>
+  <aside class="notes">
+    TWO WAYS TO USE CLOUDBANK. CloudBank has two offerings, and it helps to
+    say up front which one this talk is about.
+    CloudBank Research gives a research project its own accounts on the
+    commercial clouds (AWS, Google Cloud, Microsoft Azure, IBM Cloud), paid
+    from an ACCESS or NAIRR Pilot allocation, with CloudBank handling billing,
+    monitoring and support.
+    CloudBank Classroom is a cloud-hosted JupyterHub for teaching. Students log
+    in with their university credentials and work in the browser with no local
+    setup. Each hub comes with Python and R, JupyterLab, RStudio and VS Code,
+    and instructor tools for distributing materials and grading. It is
+    available to U.S.-based educators through an Explore ACCESS allocation, and
+    CloudBank staff set up the course environment.
+    Background you can mention: Classroom is built on the Berkeley Data Stack,
+    the platform behind UC Berkeley's Data 8 course. A partnership with 2i2c
+    has extended it to community colleges that could not run such a system
+    themselves, and work on teaching AI in the classroom has started. The SDSC,
+    UC Berkeley and UW work behind it won the HPCwire 2023 Readers' Choice
+    Award for Best Use of HPC in the Cloud (use case). Check current hub and
+    student counts with the CloudBank team before quoting them.
+  </aside>
+
+  <style>
+    section[data-slide="cb-research-and-classroom"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      --rule: var(--cb-gray-10);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-research-and-classroom"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-research-and-classroom"] .layout {
+      flex: 1;
+      height: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-research-and-classroom"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    /* Comparison table: logos as column headers, labels as row headers */
+    section[data-slide="cb-research-and-classroom"] .compare {
+      width: 100%;
+      margin: auto 0;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .compare th,
+    section[data-slide="cb-research-and-classroom"] .compare td {
+      padding: var(--space-3) var(--space-4);
+      border: 0;
+      border-bottom: 2px solid var(--rule);
+      text-align: left;
+      vertical-align: top;
+      background: none;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .compare thead th,
+    section[data-slide="cb-research-and-classroom"] .compare thead td {
+      border-bottom: var(--slide-accent-size) solid var(--slide-accent);
+      padding-bottom: var(--space-3);
+      vertical-align: bottom;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .compare tbody tr:last-child th,
+    section[data-slide="cb-research-and-classroom"] .compare tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .compare thead td:first-child,
+    section[data-slide="cb-research-and-classroom"] .compare tbody th {
+      width: 14%;
+      padding-left: 0;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .compare tbody th {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--slide-accent);
+    }
+
+    section[data-slide="cb-research-and-classroom"] .compare img {
+      display: block;
+      height: clamp(4rem, 6.25vw, 7.5rem);
+      width: auto;
+      max-width: 100%;
+      max-height: none;
+      margin: 0;
+      border: 0;
+      box-shadow: none;
+      background: none;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .focus {
+      background: var(--slide-bg-subtle);
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      padding: var(--space-2) var(--space-4);
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--head);
+      margin: var(--space-4) 0 0;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .focus:empty { display: none; }
+
+    section[data-slide="cb-research-and-classroom"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-research-and-classroom"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+  </style>
+</section>

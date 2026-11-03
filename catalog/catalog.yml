@@ -16,6 +16,7 @@ cb-title: "Standard CloudBank title slide — CloudBank and NSF logos, NSF award
 cb-why-cloud: "Why use the cloud for research: data access, on-demand scale, parallel runs, LLMs, shared environments, hosted services"
 cb-what-weve-heard: "The friction: four paraphrased researcher quotes about cloud access, moving work, platform setup and surprise bills"
 cb-eligibility: "CloudBank eligibility (who can lead a project) and recommended uses (good fit vs. better elsewhere)"
+cb-research-and-classroom: "The two CloudBank offerings side by side: Research (cloud accounts for projects) and Classroom (a JupyterHub for teaching)"
 cb-what-is: "What CloudBank is: who runs it, which clouds, the 2025 NSF award and the NAIRR link"
 cb-programs: "CloudBank's six standard services: no cost, helpdesk, accounts, multiple clouds, monitoring, training"
 cb-why-choose: "Why a researcher would choose a CloudBank account: no card, one bill, spending cap, grant dollars"
@@ -34,6 +35,7 @@ slides:
   - cb-what-weve-heard
   - cb-eligibility
   - cb-what-is
+  - cb-research-and-classroom
   - cb-programs
   - cb-why-choose
   - cb-award-tiers
