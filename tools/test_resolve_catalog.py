@@ -727,12 +727,21 @@ class TestBrandMismatchWarning(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertNotIn("may render incorrectly", buf.getvalue())
         out = _read(os.path.join(self.tmpdir, "content", "title.html"))
-        self.assertIn('data-catalog="cb-title@1.0.0"', out)
+        self.assertIn('data-catalog="cb-title@1.1.0"', out)
         self.assertIn('data-slide="title"', out)
         self.assertNotIn("cb-title\"]", out)
         self.assertNotIn("{{", out)
-        # affiliation defaults to plain "CloudBank"
-        self.assertIn('<p class="affiliation">CloudBank</p>', out)
+        # affiliation defaults to empty (the CloudBank logo is on the slide),
+        # so the resolver drops the element
+        self.assertNotIn('class="affiliation"', out)
+        # logos are copied into the deck and their paths rewritten
+        self.assertIn('src="../assets/images/catalog-cb-title/nsf.png"', out)
+        self.assertNotIn('src="assets/', out)
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.tmpdir, "assets", "images", "catalog-cb-title", "cloudbank.png")))
+        # the section's aria-label is rewritten; the partner list keeps its own
+        self.assertIn('aria-label="Slide 1: Presentation Title"', out)
+        self.assertIn('aria-label="CloudBank partners"', out)
 
     def test_cb_title_in_uw_deck_warns(self):
         _make_deck(self.tmpdir, ["title"], {

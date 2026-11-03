@@ -1,10 +1,18 @@
 <section data-slide="cb-title"
          data-layout="catalog"
-         data-catalog="cb-title@1.0.0"
+         data-catalog="cb-title@1.1.0"
          aria-label="{{aria-label}}"
          class="slide">
 
   <div class="layout">
+    <div class="brand">
+      <img class="cb-logo" src="assets/cloudbank.png" alt="CloudBank">
+      <div class="nsf">
+        <img src="assets/nsf.png" alt="U.S. National Science Foundation">
+        <p class="awards">NSF Awards: 1925001 &amp; 2505560</p>
+      </div>
+    </div>
+
     <div class="titles">
       <h1>{{title}}</h1>
       <p class="subtitle">{{subtitle}}</p>
@@ -17,14 +25,26 @@
     </div>
   </div>
 
+  <ul class="partners" aria-label="CloudBank partners">
+    <li><img class="p-sdsc" src="assets/sdsc-white.svg" alt="San Diego Supercomputer Center"></li>
+    <li><img class="p-ucsd" src="assets/ucsd-white.svg" alt="UC San Diego"></li>
+    <li><img class="p-uw" src="assets/uw-white.svg" alt="University of Washington"></li>
+    <li><img class="p-berkeley" src="assets/berkeley-white.svg" alt="UC Berkeley"></li>
+    <li><img class="p-strategic-blue" src="assets/strategic-blue-white.svg" alt="Strategic Blue"></li>
+  </ul>
+
   <style>
     section[data-slide="cb-title"] {
-      --bg: var(--slide-bg-dark);
-      --fg: var(--slide-text-on-dark);
-      --fg-muted: var(--slide-text-muted-on-dark);
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      --band: var(--slide-bg-dark);
+      --band-height: clamp(5rem, 6.5vw, 8rem);
       background: var(--bg);
       color: var(--fg);
       position: relative;
+      flex-direction: column;
     }
 
     section[data-slide="cb-title"]::before {
@@ -35,38 +55,86 @@
       background: var(--slide-accent);
     }
 
+    section[data-slide="cb-title"] img {
+      display: block;
+      margin: 0;
+      max-width: none;
+      max-height: none;
+      border: 0;
+      box-shadow: none;
+      background: none;
+    }
+
     section[data-slide="cb-title"] .layout {
       flex: 1;
       min-width: 0;
       min-height: 0;
+      height: calc(100% - var(--band-height));
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      gap: var(--space-4);
-      padding: clamp(2.5rem, 6vw, 6rem) clamp(2rem, 6vw, 7.5rem);
+      gap: var(--space-3);
+      padding: clamp(2rem, 3.5vw, 4rem) clamp(2rem, 6vw, 7.5rem) clamp(1.5rem, 2.5vw, 3rem);
       text-align: center;
     }
 
+    /* Logos: CloudBank and NSF, award numbers under the seal */
+    section[data-slide="cb-title"] .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(2rem, 5vw, 6rem);
+    }
+
+    section[data-slide="cb-title"] .cb-logo {
+      height: clamp(4.5rem, 6.5vw, 8rem);
+      width: auto;
+    }
+
+    section[data-slide="cb-title"] .nsf {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    section[data-slide="cb-title"] .nsf img {
+      height: clamp(5rem, 7vw, 8.5rem);
+      width: auto;
+    }
+
+    section[data-slide="cb-title"] .awards {
+      font-family: var(--font-body);
+      font-size: clamp(1.5rem, 1.3vw, 1.625rem);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--fg);
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    /* Title */
     section[data-slide="cb-title"] .titles {
-      max-width: 72rem;
+      max-width: 80rem;
     }
 
     section[data-slide="cb-title"] h1 {
       font-family: var(--font-display);
-      font-size: clamp(2.75rem, 4.5vw, 5.375rem);
+      font-size: clamp(2.5rem, 3.8vw, 4.5rem);
       font-weight: var(--slide-heading-weight);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
       text-transform: var(--slide-heading-transform);
       text-wrap: balance;
-      color: var(--fg);
-      margin: 0 0 var(--space-3);
+      color: var(--head);
+      margin: 0 0 var(--space-2);
     }
 
     section[data-slide="cb-title"] .subtitle {
       font-family: var(--font-body);
-      font-size: clamp(1.5rem, 2.4vw, 2.5rem);
+      font-size: clamp(1.5rem, 2.2vw, 2.25rem);
       font-weight: 400;
       line-height: 1.3;
       text-wrap: balance;
@@ -78,9 +146,10 @@
       display: none;
     }
 
+    /* Presenter details */
     section[data-slide="cb-title"] .presenter {
-      font-size: clamp(1.5rem, 1.8vw, 1.75rem);
-      line-height: 1.5;
+      font-size: clamp(1.5rem, 1.8vw, 1.875rem);
+      line-height: 1.4;
       color: var(--fg-muted);
     }
 
@@ -90,7 +159,7 @@
 
     section[data-slide="cb-title"] .presenter .name {
       font-weight: 600;
-      color: var(--fg);
+      color: var(--head);
     }
 
     section[data-slide="cb-title"] .presenter .name:empty,
@@ -98,5 +167,31 @@
     section[data-slide="cb-title"] .presenter .date:empty {
       display: none;
     }
+
+    /* Partner band: white logos on Deep Navy, heights balanced by eye */
+    section[data-slide="cb-title"] .partners {
+      flex: 0 0 auto;
+      height: var(--band-height);
+      box-sizing: border-box;
+      list-style: none;
+      margin: 0;
+      padding: 0 clamp(2rem, 6vw, 7.5rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--band);
+    }
+
+    section[data-slide="cb-title"] .partners li {
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="cb-title"] .partners img { width: auto; }
+    section[data-slide="cb-title"] .p-sdsc           { height: clamp(1.75rem, 2.3vw, 2.875rem); }
+    section[data-slide="cb-title"] .p-ucsd           { height: clamp(1.75rem, 2.4vw, 3rem); }
+    section[data-slide="cb-title"] .p-uw             { height: clamp(2rem, 2.7vw, 3.375rem); }
+    section[data-slide="cb-title"] .p-berkeley       { height: clamp(2.125rem, 2.9vw, 3.625rem); }
+    section[data-slide="cb-title"] .p-strategic-blue { height: clamp(1.375rem, 2vw, 2.5rem); }
   </style>
 </section>

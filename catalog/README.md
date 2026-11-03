@@ -170,14 +170,14 @@ params:
 ### `cb-title` — CloudBank title slide
 **Kind:** parameterized · **Brand:** cloudbank
 
-The CloudBank counterpart of `uw-title`: dark navy background, blue accent bar, title and subtitle centre, presenter details below.
+The CloudBank counterpart of `uw-title`, with the logos and award credit NSF requires: the CloudBank and NSF logos with "NSF Awards: 1925001 & 2505560" at the top, title and subtitle centre, presenter details below, and a Deep Navy band of partner logos (SDSC, UC San Diego, University of Washington, UC Berkeley, Strategic Blue) along the bottom. The logos and award line are fixed; they ship in the slide's `assets/` folder and are copied into the deck when it resolves.
 
 | Param | Required | Default |
 |-------|----------|---------|
 | `title` | yes | `"Presentation Title"` |
 | `subtitle` | no | hidden when empty |
 | `presenter` | no | `""` |
-| `affiliation` | no | `"CloudBank"` |
+| `affiliation` | no | hidden when empty |
 | `date` | no | hidden when empty |
 
 ```markdown
