@@ -1,0 +1,266 @@
+<section data-slide="cb-by-the-numbers"
+         data-layout="catalog"
+         data-catalog="cb-by-the-numbers@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>CloudBank by the numbers</h1>
+    <p class="lede">Awards from {{period}}</p>
+
+    <ul class="stats">
+      <li>
+        <span class="num">{{research-projects}}</span>
+        <span class="label">research projects awarded</span>
+      </li>
+      <li>
+        <span class="num">{{allocated}}</span>
+        <span class="label">allocated to research</span>
+      </li>
+      <li>
+        <span class="num">{{classrooms}}</span>
+        <span class="label">CloudBank Classroom courses</span>
+      </li>
+    </ul>
+
+    <div class="columns">
+      <div class="column">
+        <h2>Research awards by tier</h2>
+        <table>
+          <thead>
+            <tr><th scope="col">Tier</th><th scope="col">Projects</th><th scope="col">Average</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Explore</th><td>{{explore-projects}}</td><td>{{explore-avg}}</td></tr>
+            <tr><th scope="row">Discover</th><td>{{discover-projects}}</td><td>{{discover-avg}}</td></tr>
+            <tr><th scope="row">Accelerate</th><td>{{accelerate-projects}}</td><td>{{accelerate-avg}}</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <div class="column">
+        <h2>Top research fields</h2>
+        <ol class="fields">
+          <li>AI and intelligent systems</li>
+          <li>Computer science</li>
+          <li>Materials engineering</li>
+        </ol>
+        <p class="more">plus {{more-fields}} more fields</p>
+      </div>
+    </div>
+
+    <p class="source">Source: CloudBank allocation records, {{period}}</p>
+  </div>
+
+  <aside class="notes">
+    CLOUDBANK BY THE NUMBERS, {{period}}. {{research-projects}} research
+    projects awarded, with {{allocated}} allocated to research, and
+    {{classrooms}} classes using CloudBank Classroom. By tier: Explore
+    {{explore-projects}} projects, average award {{explore-avg}}; Discover
+    {{discover-projects}} projects, average {{discover-avg}}; Accelerate
+    {{accelerate-projects}} projects, average {{accelerate-avg}}. Most projects
+    are small Explore awards, so the typical researcher starts with a few
+    thousand dollars of cloud and grows from there. No Maximize awards were
+    made in this period. Research fields: AI and intelligent systems leads, then
+    computer science and materials engineering, followed by {{more-fields}}
+    more fields, from astronomy and ecology to psychology and economics, so
+    CloudBank is not just for computer scientists.
+  </aside>
+
+  <style>
+    section[data-slide="cb-by-the-numbers"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-by-the-numbers"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-by-the-numbers"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-by-the-numbers"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-by-the-numbers"] .lede {
+      font-size: clamp(1.5rem, 2.1vw, 2rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-by-the-numbers"] .stats {
+      list-style: none;
+      margin: 0 0 var(--space-4);
+      padding: 0;
+      font-size: clamp(1.5rem, 2vw, 1.875rem);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(1.5rem, 3vw, 3rem);
+    }
+
+    section[data-slide="cb-by-the-numbers"] .stats li {
+      min-width: 0;
+      background: var(--slide-bg-subtle);
+      border-top: var(--slide-accent-size) solid var(--slide-accent);
+      padding: var(--space-3) var(--space-4);
+    }
+
+    section[data-slide="cb-by-the-numbers"] .num {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 5.5vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-by-the-numbers"] .label {
+      display: block;
+      margin-top: var(--space-1);
+      font-size: clamp(1.5rem, 2vw, 1.875rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-by-the-numbers"] .columns {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr;
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+
+    section[data-slide="cb-by-the-numbers"] .column {
+      min-width: 0;
+      font-size: clamp(1.5rem, 2.1vw, 2rem);
+      line-height: 1.35;
+    }
+
+    section[data-slide="cb-by-the-numbers"] .divider {
+      align-self: stretch;
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-by-the-numbers"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-by-the-numbers"] table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    section[data-slide="cb-by-the-numbers"] thead th {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--fg-muted);
+      text-align: right;
+      padding: 0 0 var(--space-1);
+      border-bottom: 2px solid var(--slide-accent);
+    }
+
+    section[data-slide="cb-by-the-numbers"] thead th:first-child,
+    section[data-slide="cb-by-the-numbers"] tbody th {
+      text-align: left;
+    }
+
+    section[data-slide="cb-by-the-numbers"] tbody th {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-by-the-numbers"] tbody th,
+    section[data-slide="cb-by-the-numbers"] tbody td {
+      padding: var(--space-1) 0;
+      border-bottom: 1px solid var(--slide-bg-subtle);
+    }
+
+    section[data-slide="cb-by-the-numbers"] tbody td {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    section[data-slide="cb-by-the-numbers"] .fields {
+      list-style: none;
+      counter-reset: field;
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="cb-by-the-numbers"] .fields li {
+      counter-increment: field;
+      position: relative;
+      padding-left: 3.5rem;
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-by-the-numbers"] .fields li::before {
+      content: counter(field);
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: var(--slide-accent);
+      color: var(--slide-text-on-dark);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+    }
+
+    section[data-slide="cb-by-the-numbers"] .more {
+      font-weight: 600;
+      color: var(--head);
+      margin: var(--space-2) 0 0;
+    }
+
+    section[data-slide="cb-by-the-numbers"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+  </style>
+</section>

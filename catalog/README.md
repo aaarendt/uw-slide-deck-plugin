@@ -338,6 +338,56 @@ use: catalog/cb-process
 
 ---
 
+### `cb-nairr` — CloudBank through the NAIRR Pilot
+**Kind:** verbatim · **Brand:** cloudbank
+
+> **Program policy wording.** Re-check against the NAIRR Pilot pages whenever they change, and when NAIRR moves from the pilot to the NAIRR Operations Center. The slide's `slide.md` lists its sources.
+
+The second route to a CloudBank account: four differences from ACCESS (AI focus, everyone on the project U.S.-based, cash awards, longer review) and three numbered steps to request it (prepare, request, onboard), with a pointer to NAIRR Classroom projects for educators. The full wording is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: nairr
+use: catalog/cb-nairr
+---
+```
+
+---
+
+### `cb-by-the-numbers` — CloudBank by the numbers
+**Kind:** parameterized · **Brand:** cloudbank
+
+> **Program figures.** The defaults are the October 2026 figures. Update them and bump the slide's `version` when new figures are published; a deck can set newer ones in its brief meanwhile.
+
+Three headline stats (research projects awarded, dollars allocated to research, CloudBank Classroom courses), research awards by tier with average award, and the top three research fields with a count of the rest. Every figure is a param.
+
+```markdown
+---
+id: by-the-numbers
+use: catalog/cb-by-the-numbers
+params:
+  period: "October 2025 to October 2026"
+---
+```
+
+---
+
+### `cb-rule-of-thumb-costs` — Rule-of-thumb cloud costs
+**Kind:** verbatim · **Brand:** cloudbank
+
+> **Prices change.** Re-check every row against current AWS on-demand prices when the slide is revised. The slide's `slide.md` lists the figures and sources.
+
+Round-number prices in two columns, Compute (laptop-class VM, workstation, A10G GPU) and Storage and data (hot storage, cold archive, egress), each with a concrete example, and a callout on what a $1/hour machine costs if left on for a month. No params; eject to customise.
+
+```markdown
+---
+id: costs
+use: catalog/cb-rule-of-thumb-costs
+---
+```
+
+---
+
 ## Adding new catalog slides
 
 See [CURATION.md](CURATION.md) for the full process. In brief:

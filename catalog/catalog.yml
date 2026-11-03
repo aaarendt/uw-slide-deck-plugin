@@ -22,6 +22,9 @@ cb-programs: "CloudBank's six standard services: no cost, helpdesk, accounts, mu
 cb-why-choose: "Why a researcher would choose a CloudBank account: no card, one bill, spending cap, grant dollars"
 cb-award-tiers: "CloudBank grant award tiers (Explore, Discover, Accelerate): dollar ranges, averages, who each fits"
 cb-process: "CloudBank onboarding process: four steps from cost estimate to onboarding, ending with working in the cloud, in under a week"
+cb-by-the-numbers: "CloudBank usage figures: research projects, dollars allocated, classrooms, awards by tier and the top research fields, for a stated period"
+cb-rule-of-thumb-costs: "Rule-of-thumb cloud prices: laptop-class VM, workstation, A10G GPU, hot and cold storage, data egress, and what a machine left on for a month costs"
+cb-nairr: "CloudBank through the NAIRR Pilot: how it differs from ACCESS (AI focus, all-U.S. team, cash awards, longer review) and the three steps to request it"
 
 # Ordered list of slide IDs included in this catalog.
 slides:
@@ -40,3 +43,6 @@ slides:
   - cb-why-choose
   - cb-award-tiers
   - cb-process
+  - cb-nairr
+  - cb-by-the-numbers
+  - cb-rule-of-thumb-costs
