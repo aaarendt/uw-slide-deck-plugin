@@ -1,6 +1,6 @@
 ---
 id: cb-nairr
-description: "CloudBank through the NAIRR Pilot: how it differs from ACCESS (SI focus, all-U.S. team, cash awards, longer review) and the portal's three routes"
+description: "CloudBank through the NAIRR Pilot: how it differs from ACCESS (AI focus, all-U.S. team, cash awards, longer review) and the portal's three routes"
 kind: verbatim
 brand: cloudbank
 version: "1.0.0"
@@ -25,14 +25,14 @@ the 2026 NAIRR Operations Center award.
 
 ## Tags
 
-cloudbank, nairr, nairr-pilot, si, super-intelligence, ai, access, allocations, eligibility, program
+cloudbank, nairr, nairr-pilot, ai, access, allocations, eligibility, program
 
 ## Sources
 
 Adapted from a CloudBank slide supplied by the slide owner on 2026-11-03.
 Checked against the pages below on 2026-11-03.
 
-- "SI focus", "U.S.-based", the monthly review cycle, the 12-month project
+- "AI focus", "U.S.-based", the monthly review cycle, the 12-month project
   length and the three portal routes: NAIRR Pilot pages.
 - "Everyone on the project, not just the lead" and "early awards were in
   credits, now cash awards": from the slide owner. The NAIRR Pilot pages do
@@ -40,10 +40,9 @@ Checked against the pages below on 2026-11-03.
   awards are made in dollars.
 - The ACCESS comparison ("under a week") comes from `cb-process`.
 
-"SI" (super intelligence) follows the federal rename of "AI" in the
-September 29, 2026 executive order "Inaugurating the Era of Super
-Intelligence", which the NAIRR Pilot pages now use. The lede spells it out
-once for audiences who have not met the term.
+The NAIRR Pilot pages now say "SI" (super intelligence) where they used to
+say "AI". This slide keeps "AI" throughout, by the slide owner's decision on
+2026-11-03; do not switch it when re-checking against those pages.
 
 Re-check when NAIRR moves from the pilot to the NAIRR Operations Center
 (awarded September 2026): the portal address and the word "Pilot" may change.
