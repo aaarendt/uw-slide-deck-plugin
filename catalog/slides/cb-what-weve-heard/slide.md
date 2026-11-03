@@ -17,9 +17,9 @@ quote maps to a later slide:
 | Quote | Answered by |
 |-------|-------------|
 | No account without a university credit card | `cb-why-choose`: no card or purchase agreement |
-| Laptop run takes 40 hours | `cb-programs`: consulting and helpdesk |
+| No time to learn it, need a jump start | `cb-programs`: consulting, helpdesk and curated training |
 | Setup different for every platform | `cb-why-choose`: one account, multiple clouds |
-| $12K bill, don't understand why | `cb-why-choose`: cost monitoring and spending cap |
+| Opaque $12K bill, no time to dig into it | `cb-why-choose`: cost monitoring and spending cap |
 
 The quote marks and card borders use the CloudBank amber accent
 (`--cb-accent-amber`, 6.3:1 on Deep Navy); they are decorative and
