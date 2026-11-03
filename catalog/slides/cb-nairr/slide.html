@@ -1,0 +1,231 @@
+<section data-slide="cb-nairr"
+         data-layout="catalog"
+         data-catalog="cb-nairr@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <h1>CloudBank through the NAIRR Pilot</h1>
+    <p class="lede">A second way to a CloudBank account, for super intelligence (SI) research</p>
+
+    <div class="columns">
+      <div class="column">
+        <h2>How it differs from ACCESS</h2>
+        <dl class="diffs">
+          <div>
+            <dt>Focus</dt>
+            <dd>SI research and education</dd>
+          </div>
+          <div>
+            <dt>Who</dt>
+            <dd>Everyone on the project must be U.S.-based, not just the lead</dd>
+          </div>
+          <div>
+            <dt>Awards</dt>
+            <dd>Now cash awards; early awards were in credits</dd>
+          </div>
+          <div>
+            <dt>Review</dt>
+            <dd>Longer: monthly cycle, decision by the end of the next month</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <div class="column apply">
+        <h2>Apply at the NAIRR Pilot portal</h2>
+        <ul>
+          <li><strong>Researcher resources</strong><span>Application required</span></li>
+          <li><strong>Classroom resources</strong><span>Application required</span></li>
+          <li><strong>Data, models and more</strong><span>Freely available, no application</span></li>
+        </ul>
+        <p class="url"><a href="https://nairrpilot.org/">nairrpilot.org</a></p>
+      </div>
+    </div>
+
+    <p class="source">Sources:
+      <a href="https://nairrpilot.org/allocations">NAIRR Pilot resource requests</a> ·
+      <a href="https://operations.access-ci.org/node/905">ACCESS: CloudBank Research</a> ·
+      <a href="https://www.cloudbank.org/training/nairr-pilot-cloudbank-classroom">CloudBank: NAIRR Pilot Classroom</a></p>
+  </div>
+
+  <aside class="notes">
+    CLOUDBANK ALSO AVAILABLE THROUGH THE NAIRR PILOT. Besides ACCESS, researchers
+    and educators can get a CloudBank account through the NAIRR Pilot. How it
+    differs from ACCESS: it is focused on super intelligence (SI) research and
+    education. SI is the federal term for what was called AI: a September 2026
+    executive order directs agencies to use it, and the NAIRR Pilot site now
+    does. Allocations are only for U.S.-based researchers, and that means
+    everyone on the project, not just the PI. The original awards were in
+    credits; they are now cash awards. Review tends to take longer: requests
+    are reviewed on a monthly cycle, and a request submitted by the 15th is
+    typically decided by the end of the following month, where an ACCESS
+    Explore request can reach a working account in under a week. NAIRR Pilot
+    projects run for 12 months. The portal has three routes: researcher
+    resources (computing, cloud, models, software and platforms; application
+    required), classroom and educator resources (for example CloudBank
+    Classroom JupyterHubs; application required), and data, models and more
+    (freely available, no application). Apply at nairrpilot.org. In September
+    2026 NSF funded a NAIRR Operations Center, led by SDSC with TACC, to build
+    on the pilot; existing opportunities remain on nairrpilot.org.
+  </aside>
+
+  <style>
+    section[data-slide="cb-nairr"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-nairr"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-nairr"] .layout {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(3.5rem, 6vw, 6rem);
+    }
+
+    section[data-slide="cb-nairr"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-nairr"] .lede {
+      font-size: clamp(1.5rem, 2.1vw, 2rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-nairr"] .columns {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 3fr 2px 2fr;
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+
+    section[data-slide="cb-nairr"] .column {
+      min-width: 0;
+      font-size: clamp(1.5rem, 2.1vw, 2rem);
+      line-height: 1.35;
+    }
+
+    section[data-slide="cb-nairr"] .divider {
+      align-self: stretch;
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-nairr"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 var(--space-3);
+    }
+
+    section[data-slide="cb-nairr"] .diffs {
+      margin: 0;
+    }
+
+    section[data-slide="cb-nairr"] .diffs > div {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      border-top: 1px solid var(--slide-bg-subtle);
+    }
+
+    section[data-slide="cb-nairr"] .diffs > div:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    section[data-slide="cb-nairr"] dt {
+      flex: 0 0 4.75em;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-nairr"] dd {
+      margin: 0;
+      min-width: 0;
+    }
+
+    section[data-slide="cb-nairr"] .apply ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="cb-nairr"] .apply li {
+      background: var(--slide-bg-subtle);
+      border-left: var(--slide-accent-size) solid var(--slide-accent);
+      padding: var(--space-2) var(--space-3);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-nairr"] .apply li strong {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-nairr"] .apply li span {
+      display: block;
+      color: var(--fg-muted);
+    }
+
+    section[data-slide="cb-nairr"] .url {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 800;
+      margin: var(--space-3) 0 0;
+    }
+
+    section[data-slide="cb-nairr"] .url a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+
+    section[data-slide="cb-nairr"] .source {
+      position: absolute;
+      left: clamp(2rem, 6vw, 7.5rem);
+      right: clamp(2rem, 6vw, 7.5rem);
+      bottom: clamp(1rem, 2.5vw, 2.5rem);
+      font-size: clamp(1rem, 1.1vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    section[data-slide="cb-nairr"] .source a {
+      color: var(--slide-accent);
+      text-underline-offset: 0.15em;
+    }
+  </style>
+</section>

@@ -338,6 +338,22 @@ use: catalog/cb-process
 
 ---
 
+### `cb-nairr` — CloudBank through the NAIRR Pilot
+**Kind:** verbatim · **Brand:** cloudbank
+
+> **Program policy wording.** Re-check against the NAIRR Pilot pages whenever they change, and when NAIRR moves from the pilot to the NAIRR Operations Center. The slide's `slide.md` lists its sources.
+
+The second route to a CloudBank account: four differences from ACCESS (SI focus, everyone on the project U.S.-based, cash awards, longer review) and the NAIRR Pilot portal's three routes, with the portal address. The full wording is in the speaker notes. No params; eject to customise.
+
+```markdown
+---
+id: nairr
+use: catalog/cb-nairr
+---
+```
+
+---
+
 ## Adding new catalog slides
 
 See [CURATION.md](CURATION.md) for the full process. In brief:
