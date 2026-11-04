@@ -238,3 +238,5 @@ Plugin source lives in this repository. Skills are in `skills/<name>/SKILL.md`; 
 ### Versioning
 
 `plugin.json` and `.claude-plugin/plugin.json` carry the version; bump both together. The release process is in `CHANGELOG.md`. Bump to a new minor version for new features; patch for fixes; major for breaking changes.
+
+Users only receive changes when the version changes: merging to `main` without a version bump does not reach anyone who installed from the marketplace, and merging a version bump reaches them immediately. See the release process in `CHANGELOG.md`, and [Update to a new version](README.md#update-to-a-new-version) for what users do.

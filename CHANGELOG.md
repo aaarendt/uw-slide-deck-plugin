@@ -21,6 +21,7 @@ The CloudBank catalog grows to 13 slides, enough to build a standard CloudBank t
 - Catalog slide `cb-what-weve-heard` (CloudBank brand, verbatim): a dark "The friction" slide with four paraphrased researcher quotes (no account without a credit card, no time to learn it all, setup different on every platform, an opaque $12K bill), labelled as paraphrased. Each quote is answered by a later CloudBank slide.
 - Catalog slide `cb-title` (CloudBank brand, parameterized): the CloudBank title slide, with the same params as `uw-title` (`title`, `subtitle`, `presenter`, `affiliation` defaulting to "CloudBank", `date`). A CloudBank deck can now be assembled entirely from catalog slides, starting with a title (#42).
 - `tools/new-deck.py` scaffolds a deck in one command: `python3 <PLUGIN>/tools/new-deck.py <name> [--brand=uw|cloudbank]`. It does everything `/uw-slides:new-deck` used to do with about twenty separate commands (templates, brand header and footer, fonts for `uw`, the vendored tools, `.github/` files, `.brand`, `.uw-slides.json`, `deck.yml` and the starter briefs), validates the result and runs `setup-reveal.sh`. A failed reveal.js download is a warning, not a failure. It refuses to touch an existing folder, rejects names that are not safe as a folder name, removes the folder it created if a step fails, and makes every `*.sh` executable (`setup-reveal.sh` and `export.sh` were not executable in the plugin). Tests: `tools/test_new_deck.py`, including a check that its managed-files list matches `/uw-slides:update-deck`.
+- README section "Update to a new version": how to update the plugin in Claude Code (`claude plugin update`, `/plugin`, turning on auto-update, `/reload-plugins`), Codex, GitHub Copilot CLI and linked-skill installs, then how to update each deck with `/uw-slides:update-deck`. The release process in this file and `CONTRIBUTING.md` now say that users receive changes only when the version changes, and add publishing a GitHub release.
 
 ### Changed
 - The catalog version is now 2.1.0: seven CloudBank slides were added and `cb-title` changed (see Added and the line below). Nothing was removed, so decks pinned to 2.0.0 keep working.
@@ -146,8 +147,13 @@ Initial release (WS0 baseline fixes).
 
 ## Release and tagging process
 
+Users receive a release when the version in `plugin.json` changes, not when commits are pushed. Claude Code compares that version with the installed one, so changes merged to `main` without a version bump stay invisible to `claude plugin update` and auto-update, and a merged version bump reaches users straight away, before any tag exists. Merge release-worthy changes, then release them together.
+
 1. Update the version in `plugin.json` and `.claude-plugin/plugin.json` (they must match; `python3 tools/validate_plugin.py` checks).
-2. Move `[Unreleased]` entries under a new `[x.y.z] — YYYY-MM-DD` heading.
-3. Commit: `chore(release): bump to vX.Y.Z`.
-4. Tag: `git tag -a vX.Y.Z -m "Release vX.Y.Z"`.
+2. Move `[Unreleased]` entries under a new `[x.y.z] — YYYY-MM-DD` heading, with a one-paragraph summary that says whether users need to run `/uw-slides:update-deck` in existing decks.
+3. Commit: `chore(release): bump to vX.Y.Z`, on a `release/vX.Y.Z` branch, and merge it with a pull request.
+4. Tag the merge commit: `git tag -a vX.Y.Z -m "Release vX.Y.Z" <merge-commit>`.
 5. Push tag: `git push origin vX.Y.Z`.
+6. Publish a GitHub release from the tag, with the summary and the version's changelog sections as its description. People who watch the repository for releases are notified.
+
+How users install updates is documented in the README, [Update to a new version](README.md#update-to-a-new-version).
