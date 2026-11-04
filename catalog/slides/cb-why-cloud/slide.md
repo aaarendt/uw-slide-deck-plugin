@@ -15,7 +15,7 @@ A general motivation slide for cloud computing in research, meant to come
 before the CloudBank program slides (`cb-what-is`, `cb-why-choose`). Six
 benefits in a two-column grid of short headed items, each with an original
 line icon (inline SVG, decorative, `aria-hidden`) in a tinted circle, in the
-same style as `cb-programs`. No logos and no copied artwork.
+same style as `cb-why-choose`. No logos and no copied artwork.
 
 The six items: bring compute to the data, scale up on demand, run in parallel,
 use and deploy LLMs, share reproducible environments, host research services.
