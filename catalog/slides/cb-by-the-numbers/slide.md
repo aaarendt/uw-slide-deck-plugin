@@ -3,7 +3,7 @@ id: cb-by-the-numbers
 description: "CloudBank usage figures: research projects, dollars allocated, classrooms, awards by tier and the top research fields, for a stated period"
 kind: parameterized
 brand: cloudbank
-version: "1.0.0"
+version: "1.0.1"
 owner: aaarendt
 params:
   period: "October 2025 to October 2026"

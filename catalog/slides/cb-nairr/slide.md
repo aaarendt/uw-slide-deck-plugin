@@ -3,7 +3,7 @@ id: cb-nairr
 description: "CloudBank through the NAIRR Pilot: how it differs from ACCESS (AI focus, all-U.S. team, cash awards, longer review) and the three steps to request it"
 kind: verbatim
 brand: cloudbank
-version: "1.0.0"
+version: "1.1.0"
 owner: aaarendt
 ---
 
