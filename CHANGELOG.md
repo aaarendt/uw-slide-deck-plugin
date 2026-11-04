@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Added
+- Catalog slide `cb-getting-help` (CloudBank brand, parameterized): "You don't have to figure out the cloud alone", the places to get help, ordered by how people look for it. "Learn on your own" lists the video tutorials (Cloud 101 and the monthly Cloud Clinics, cloudbank.org/video-tutorials) and the CloudBank Catalog (cloudbank.org/cloudbank-catalog); "Ask a person" lists the monthly office hours on Zoom (10–11 am Pacific) and the community forum (community.cloudbank.org); a band at the bottom gives help@cloudbank.org. An optional `next-office-hours` param shows the next session's date, since there is no stable page listing upcoming sessions. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
+
+### Changed
+- The catalog version is now 2.2.0: one slide was added (see Added). Nothing was removed, so decks pinned to 2.1.0 keep working.
+
 ### Fixed
 - Four CloudBank catalog slides overlapped or ran off the screen below 1920×1080, failing the fit check in `references/layouts.md` §7 (1920×1080, 1600×1200, 1280×720, 1024×768); all 13 CloudBank slides now pass it, also at 1440×900 and 1366×768. Each `clamp()` now reaches the 1.5rem floor on laptop screens instead of staying above it, with the same maximum, so the slides look the same at 1920×1080.
   - `cb-nairr` 1.1.0: the right column ran under the Sources line and off the bottom of the slide, so the "Teaching?" box overlapped the source links. Each step's title now sits on the same line as its text, and the Request step reads "reviewers match it to CloudBank" (was "to cloud through CloudBank").
