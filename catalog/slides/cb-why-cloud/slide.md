@@ -3,7 +3,7 @@ id: cb-why-cloud
 description: "Why use the cloud for research: data access, on-demand scale, parallel runs, LLMs, shared environments, hosted services"
 kind: parameterized
 brand: cloudbank
-version: "1.0.0"
+version: "1.0.1"
 owner: aaarendt
 params:
   lead: ""

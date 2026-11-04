@@ -8,6 +8,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Fixed
+- Four CloudBank catalog slides overlapped or ran off the screen below 1920×1080, failing the fit check in `references/layouts.md` §7 (1920×1080, 1600×1200, 1280×720, 1024×768); all 13 CloudBank slides now pass it, also at 1440×900 and 1366×768. Each `clamp()` now reaches the 1.5rem floor on laptop screens instead of staying above it, with the same maximum, so the slides look the same at 1920×1080.
+  - `cb-nairr` 1.1.0: the right column ran under the Sources line and off the bottom of the slide, so the "Teaching?" box overlapped the source links. Each step's title now sits on the same line as its text, and the Request step reads "reviewers match it to CloudBank" (was "to cloud through CloudBank").
+  - `cb-rule-of-thumb-costs` 1.1.0: the $730 callout overlapped the prices line or fell off the slide. The price column is narrower, and two rows are shorter: "Laptop-class virtual machine" (was "Virtual machine with laptop power") and "NVIDIA A10G GPU machine", "Spot: about half. Ask for quota first." (was "Machine with an NVIDIA A10G GPU", "Spot: about half. Request GPU quota first.").
+  - `cb-why-cloud` 1.0.1: at 1366×768 and smaller the vertically centred grid overflowed upwards into the "Why cloud?" heading. The grid now uses `align-content: safe center`.
+  - `cb-by-the-numbers` 1.0.1: at 1280×720 the Accelerate row overlapped the Source line.
+
 ## [0.4.0] — 2026-11-03
 
 The CloudBank catalog grows to 13 slides, enough to build a standard CloudBank talk from catalog slides alone: a title slide, the case for cloud, what CloudBank offers and how to apply through ACCESS or the NAIRR Pilot, usage figures and rule-of-thumb costs. `/uw-slides:new-deck` now scaffolds a deck with one command. The catalog version is now 2.1.0. In existing decks, run `/uw-slides:update-deck` once to get the fixed resolver.
