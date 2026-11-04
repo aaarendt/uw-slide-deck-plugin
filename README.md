@@ -24,7 +24,7 @@ claude plugin install uw-slides@uw-slide-deck
 
 Inside Claude Code the same commands start with `/plugin`: `/plugin marketplace add aaarendt/uw-slide-deck-plugin`, then `/plugin install uw-slides@uw-slide-deck`. The plugin's commands all start with `/uw-slides:`.
 
-Installed an earlier version with a symlink? See [Upgrading from the symlink install](#upgrading-from-the-symlink-install).
+Installed an earlier version with a symlink? See [Upgrading from the symlink install](#upgrading-from-the-symlink-install). Already installed? See [Update to a new version](#update-to-a-new-version).
 
 ### Other agents
 
@@ -54,6 +54,67 @@ export UW_SLIDES_HOME=~/src/uw-slide-deck-plugin   # add to your shell profile
 ```
 
 The same loop works for `~/.agents/skills` or any other skills directory. Skills keep their plain names there (`new-deck`, not `uw-slides:new-deck`).
+
+---
+
+## Update to a new version
+
+New versions are listed in the [changelog](CHANGELOG.md) and on the [releases page](https://github.com/aaarendt/uw-slide-deck-plugin/releases). To be told about each one, choose **Watch → Custom → Releases** on the repository's GitHub page.
+
+Updating takes two steps: update the plugin once, then update each deck you are still working on.
+
+### 1. Update the plugin
+
+**Claude Code.** In your terminal:
+
+```bash
+claude plugin update uw-slides@uw-slide-deck
+```
+
+This fetches the latest marketplace listing and installs the new version, or reports that you already have the latest one. `claude plugin list` shows which version you have. Inside Claude Code you can do the same from `/plugin`: on the **Installed** tab, open `uw-slides` and choose **Update now**.
+
+- A session that is already running keeps the version it started with. Start a new session, or run `/reload-plugins` in the open one.
+- `claude plugin marketplace update` on its own only refreshes the listing; it does not update the installed plugin.
+- To get new versions automatically, run `/plugin`, go to the **Marketplaces** tab, select `uw-slide-deck` and choose **Enable auto-update**. It is off by default for marketplaces other than Anthropic's. With it on, Claude Code updates the plugin in the background after a session starts and tells you to run `/reload-plugins`.
+- The plugin's folder name includes its version, so the first `/uw-slides:new-deck` after an update asks for permission again unless you added the allow rule in [Create the deck](#1-create-the-deck).
+
+**Codex** (not tested yet). Refresh the marketplace, then check the installed version:
+
+```bash
+codex plugin marketplace upgrade uw-slide-deck
+codex plugin list
+```
+
+If the list still shows the old version, install it again with `codex plugin add uw-slides@uw-slide-deck`. Start a new session to load it.
+
+**GitHub Copilot CLI** (follows GitHub's [plugin reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-plugin-reference); not tested yet):
+
+```bash
+copilot plugin marketplace update uw-slide-deck
+copilot plugin update uw-slides
+```
+
+**OpenCode and other linked-skill installs.** Pull the clone; the linked skills read from it, so they update with it:
+
+```bash
+git -C ~/src/uw-slide-deck-plugin pull
+```
+
+Restart the agent to load the new skills. If a release adds a skill, run the linking loop from [Other agents](#other-agents) again; links that already exist report `File exists`, which is harmless.
+
+### 2. Update each deck
+
+Each deck keeps its own copies of the build scripts, the brand header and footer, and the Python tools, so it keeps working even when the plugin changes. After updating the plugin, open each deck you are still working on in Claude Code and run:
+
+```
+/uw-slides:update-deck
+```
+
+It lists the files that differ from the new version and asks before replacing them. It never touches your briefs, slides, `deck.yml` or images. It also records where the new version is installed, which the catalog resolver needs: until you run it, the resolver may report that it can't find the catalog.
+
+Catalog slides come from the installed plugin, so new and revised catalog slides reach a deck the next time you run `/uw-slides:generate-slides`. Read the [changelog](CHANGELOG.md) first if a release changes a catalog slide you use.
+
+Decks you have finished presenting don't need updating: a built deck keeps working with the files it has.
 
 ---
 
@@ -251,7 +312,7 @@ A brief's **key message** becomes the slide's headline. **Talking points** are w
 
 A slide ID is lowercase letters, digits and single hyphens (`why-cloud`) and matches its brief's file name. Keep the deck in git, including `assets/reveal/`, so it works offline.
 
-When the plugin is updated, run `/uw-slides:update-deck` in each deck to pick up the new scripts and tools.
+When the plugin is updated, run `/uw-slides:update-deck` in each deck to pick up the new scripts and tools; see [Update to a new version](#update-to-a-new-version).
 
 ---
 
