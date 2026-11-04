@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-11-03
+
+The CloudBank catalog grows to 13 slides, enough to build a standard CloudBank talk from catalog slides alone: a title slide, the case for cloud, what CloudBank offers and how to apply through ACCESS or the NAIRR Pilot, usage figures and rule-of-thumb costs. `/uw-slides:new-deck` now scaffolds a deck with one command. The catalog version is now 2.1.0. In existing decks, run `/uw-slides:update-deck` once to get the fixed resolver.
+
 ### Added
 - Catalog slide `cb-rule-of-thumb-costs` (CloudBank brand, verbatim): "Rule-of-thumb cloud costs", round-number AWS on-demand prices (US East, October 2026) for a laptop-class VM (10¢/hour), a workstation ($1/hour), an A10G GPU machine ($1/hour, spot about half), hot storage (2.3¢/GB/month), cold archive (0.1¢/GB/month) and data egress (9¢/GB), each with an example, plus a callout that a $1/hour machine left on for a month costs about $730.
 - Catalog slide `cb-by-the-numbers` (CloudBank brand, parameterized): "CloudBank by the numbers" for October 2025 to October 2026. Three headline stats (292 research projects, $2.24M allocated to research, 78 CloudBank Classroom courses), research awards by tier with average award (Explore 234 at $4,423, Discover 56 at $19,689, Accelerate 2 at $52,094), and the top three research fields plus 40 more. Every figure is a param defaulting to the current value, so decks can show newer figures without ejecting.
@@ -19,9 +23,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 - `tools/new-deck.py` scaffolds a deck in one command: `python3 <PLUGIN>/tools/new-deck.py <name> [--brand=uw|cloudbank]`. It does everything `/uw-slides:new-deck` used to do with about twenty separate commands (templates, brand header and footer, fonts for `uw`, the vendored tools, `.github/` files, `.brand`, `.uw-slides.json`, `deck.yml` and the starter briefs), validates the result and runs `setup-reveal.sh`. A failed reveal.js download is a warning, not a failure. It refuses to touch an existing folder, rejects names that are not safe as a folder name, removes the folder it created if a step fails, and makes every `*.sh` executable (`setup-reveal.sh` and `export.sh` were not executable in the plugin). Tests: `tools/test_new_deck.py`, including a check that its managed-files list matches `/uw-slides:update-deck`.
 
 ### Changed
+- The catalog version is now 2.1.0: seven CloudBank slides were added and `cb-title` changed (see Added and the line below). Nothing was removed, so decks pinned to 2.0.0 keep working.
 - Catalog slide `cb-title` 1.1.0 carries the logos and award credit NSF requires: the CloudBank and NSF logos with "NSF Awards: 1925001 & 2505560", and a Deep Navy band of white partner logos (San Diego Supercomputer Center, UC San Diego, University of Washington, UC Berkeley, Strategic Blue). The background changes from Deep Navy to white so the full-colour logos read. The logos ship in the slide's `assets/` folder, the first catalog slide to use it; the resolver copies them into the deck and `publish.sh` embeds them. The `affiliation` default changes from `"CloudBank"` to empty, since the logo is on the slide. Params are otherwise unchanged, so decks pick this up on their next resolve.
 - `/uw-slides:new-deck` runs that script instead of copying files one by one, so Claude Code asks for permission once instead of about twenty times, and the result is the same every run, in seconds and with few tokens. The README documents the allow rule `Bash(python3 */tools/new-deck.py *)`; the `*` stands in for the version-numbered plugin folder (#50).
 - Every skill's "Plugin directory" section now says to write paths literally and never use shell variables (`PLUGIN=... $PLUGIN/...`), which Claude Code cannot match against an allow rule (#50).
+
+### Fixed
+- The deck's `tools/resolve-catalog.py` rewrites only the root `<section>`'s `aria-label` when it resolves a catalog slide. It used to rewrite every `aria-label` in the fragment, which would have replaced the labels inside a slide, such as the partner logo list on `cb-title` 1.1.0, with the slide's own label.
 
 ## [0.3.1] — 2026-11-02
 

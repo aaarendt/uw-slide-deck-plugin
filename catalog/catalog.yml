@@ -3,7 +3,7 @@
 # Each slide's param defaults and full metadata live in slides/<id>/slide.md.
 # Curation rules: catalog/CURATION.md
 
-version: "2.0.0"
+version: "2.1.0"
 
 # Brief descriptions used by plan-deck when choosing catalog slides.
 # Full metadata is in slides/<id>/slide.md.
