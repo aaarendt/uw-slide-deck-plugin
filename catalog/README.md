@@ -279,7 +279,7 @@ use: catalog/cb-research-and-classroom
 
 > **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
-Two columns of four headed items with original line icons. "Billing, handled for you": no credit card, one bill across several clouds, a spending cap, dollars rather than credits. "More than virtual machines": shared access, moving big datasets, using hosted AI models, hosting a tool or dataset. Version 2.0.0 merged the former `cb-programs` slide into this one. No params; eject to customise.
+Two columns of four headed items with original line icons. "Billing, handled for you": no credit card, one bill across several clouds, a spending cap, dollars rather than credits. "Accounts, handled for you": set up after onboarding, one login to each cloud, collaborators managed in one place, another cloud added later. Version 2.0.0 merged the former `cb-programs` slide into this one. No params; eject to customise.
 
 ```markdown
 ---

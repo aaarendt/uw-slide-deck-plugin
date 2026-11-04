@@ -1,6 +1,6 @@
 ---
 id: cb-why-choose
-description: "What you get with a CloudBank account: billing handled (no card, one bill, spending cap, grant dollars) and more than virtual machines (shared access, data transfer, AI models, hosting tools and datasets)"
+description: "What you get with a CloudBank account: billing handled (no card, one bill, spending cap, grant dollars) and accounts handled (set up for you, one login, collaborators, add clouds later)"
 kind: verbatim
 brand: cloudbank
 version: "2.0.0"
@@ -17,21 +17,25 @@ tinted circle. No provider logos.
   NAIRR Pilot award), one bill across several clouds, a spending cap with
   alerts and tips on idle resources, and dollars rather than credits, so the
   award also pays for marketplace software and AI model access.
-- **More than virtual machines:** shared access (ACCESS login, collaborators),
-  moving big datasets (Globus), using hosted AI models without GPUs, and
-  hosting a tool or dataset for a community (science gateways).
+- **Accounts, handled for you:** accounts set up after onboarding, one login
+  (ACCESS credentials) to each cloud, collaborators managed in one place, and
+  another cloud added to the project later.
+
+Both columns answer "why get cloud through CloudBank rather than directly from
+a provider?". General cloud capabilities (AI models, hosting, data access)
+belong on `cb-why-cloud`, not here.
 
 Version 2.0.0 merges the former `cb-programs` slide into this one. Its help
 and training items moved to `cb-getting-help`; its account, monitoring and
 multiple-cloud items are here. The heading changed from "Why choose CloudBank
 for an account?".
 
-The slide names services in plain words; the speaker notes give the product
-names (Globus, Amazon Bedrock, Azure AI, Google Vertex AI).
+The speaker notes also mention Globus for moving large datasets between
+campus and cloud storage.
 
 ## Tags
 
-cloudbank, benefits, billing, marketplace, spending-cap, accounts, data-transfer, globus, ai, llm, inference, gateways, program
+cloudbank, benefits, billing, marketplace, spending-cap, accounts, login, collaborators, program
 
 ## Pending
 
@@ -48,11 +52,12 @@ cloudbank, benefits, billing, marketplace, spending-cap, accounts, data-transfer
 Version 1.0.0 (no card, one bill, spending cap, grant dollars) and the former
 `cb-programs` (no cost, account management, monitoring and optimization) were
 accepted by the slide owner on 2026-11-02. Version 2.0.0, drafted on
-2026-11-03, merges them and adds three services that the ACCESS resource pages
-list: Globus data transfer and sharing, model inference services, and science
-gateway support (community accounts, hosting of data collections, databases,
-services and web interfaces). CloudBank's program details change: re-check the
-slide when they do, and bump `version` if the wording changes.
+2026-11-03, merges them. The account items come from the ACCESS resource
+pages: the portal creates cloud accounts for the platforms in the request and
+more can be added later, users sign in with their ACCESS credentials
+(federated login), and the project manages which authorized ACCESS users can
+use each account. CloudBank's program details change: re-check the slide when
+they do, and bump `version` if the wording changes.
 
 - ACCESS resource page, "CloudBank Research": https://operations.access-ci.org/node/905
 - ACCESS resource page, "CloudBank Cloud Resource Provider": https://operations.access-ci.org/node/890
