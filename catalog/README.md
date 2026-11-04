@@ -388,6 +388,28 @@ use: catalog/cb-rule-of-thumb-costs
 
 ---
 
+### `cb-sensitive-data` — Sensitive and regulated data
+**Kind:** parameterized · **Brand:** cloudbank
+
+> **Check with CloudBank.** The rules for regulated data change, and so does what CloudBank offers for it. The slide's `slide.md` lists the sources.
+
+Answers "can I put sensitive data in a CloudBank account?": "Know your data's rules" (health records under HIPAA, NIH controlled-access data, federal and export-controlled data, other data under an IRB protocol or data use agreement) and three steps under "Before you upload" (read the rules, ask your institution, talk to CloudBank early).
+
+| Param | Required | Default |
+|-------|----------|---------|
+| `local-contact` | no | hidden when empty |
+
+```markdown
+---
+id: sensitive-data
+use: catalog/cb-sensitive-data
+params:
+  local-contact: "Here: the research compliance office, compliance.example.edu"
+---
+```
+
+---
+
 ### `cb-getting-help` — Learning and support
 **Kind:** parameterized · **Brand:** cloudbank
 

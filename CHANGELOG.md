@@ -9,6 +9,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 ## [Unreleased]
 
 ### Added
+- Catalog slide `cb-sensitive-data` (CloudBank brand, parameterized): "Sensitive data can go in the cloud, but not by default". "Know your data's rules" lists health records under HIPAA (a signed agreement with the cloud provider covering the account, approved services only; de-identified data may fall outside HIPAA), NIH controlled-access data (systems that meet NIH's security standard), federal and export-controlled data, and other data under an IRB protocol or data use agreement. "Before you upload" gives three steps: read the rules, ask your institution, talk to CloudBank early. The slide spells out terms instead of acronyms; the speaker notes give the formal names (business associate agreement, NIST SP 800-171, controlled unclassified information). An optional `local-contact` param names the host institution's office. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
+
+### Changed
+- The catalog version is now 2.3.0: one slide was added (see Added). Nothing was removed, so decks pinned to 2.2.0 keep working.
+
+### Added
 - Catalog slide `cb-getting-help` (CloudBank brand, parameterized): "You don't have to figure out the cloud alone", the places to get help, ordered by how people look for it. "Learn on your own" lists the video tutorials (Cloud 101 and the monthly Cloud Clinics, cloudbank.org/video-tutorials) and the CloudBank Catalog (cloudbank.org/cloudbank-catalog); "Ask a person" lists the monthly office hours on Zoom (10–11 am Pacific) and the community forum (community.cloudbank.org); a band at the bottom gives help@cloudbank.org. An optional `next-office-hours` param shows the next session's date, since there is no stable page listing upcoming sessions. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
 
 ### Changed
