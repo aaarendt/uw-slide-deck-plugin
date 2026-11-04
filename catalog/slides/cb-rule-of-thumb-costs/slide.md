@@ -3,7 +3,7 @@ id: cb-rule-of-thumb-costs
 description: "Rule-of-thumb cloud prices: laptop-class VM, workstation, A10G GPU, hot and cold storage, data egress, and what a machine left on for a month costs"
 kind: verbatim
 brand: cloudbank
-version: "1.0.0"
+version: "1.1.0"
 owner: aaarendt
 ---
 
