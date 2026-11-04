@@ -388,6 +388,26 @@ use: catalog/cb-rule-of-thumb-costs
 
 ---
 
+### `cb-getting-help` — Learning and support
+**Kind:** parameterized · **Brand:** cloudbank
+
+Where to get help, for the end of a CloudBank talk: "Learn on your own" (video tutorials, the CloudBank Catalog) and "Ask a person" (monthly office hours, the community forum), each with its web address, and help@cloudbank.org in a band at the bottom.
+
+| Param | Required | Default |
+|-------|----------|---------|
+| `next-office-hours` | no | hidden when empty |
+
+```markdown
+---
+id: getting-help
+use: catalog/cb-getting-help
+params:
+  next-office-hours: "Next: Wednesday, November 18"
+---
+```
+
+---
+
 ## Adding new catalog slides
 
 See [CURATION.md](CURATION.md) for the full process. In brief:

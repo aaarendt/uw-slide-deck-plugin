@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Added
+- Catalog slide `cb-getting-help` (CloudBank brand, parameterized): "You don't have to figure out the cloud alone", the places to get help, ordered by how people look for it. "Learn on your own" lists the video tutorials (Cloud 101 and the monthly Cloud Clinics, cloudbank.org/video-tutorials) and the CloudBank Catalog (cloudbank.org/cloudbank-catalog); "Ask a person" lists the monthly office hours on Zoom (10–11 am Pacific) and the community forum (community.cloudbank.org); a band at the bottom gives help@cloudbank.org. An optional `next-office-hours` param shows the next session's date, since there is no stable page listing upcoming sessions. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
+
+### Changed
+- The catalog version is now 2.2.0: one slide was added (see Added). Nothing was removed, so decks pinned to 2.1.0 keep working.
+
 ## [0.4.0] — 2026-11-03
 
 The CloudBank catalog grows to 13 slides, enough to build a standard CloudBank talk from catalog slides alone: a title slide, the case for cloud, what CloudBank offers and how to apply through ACCESS or the NAIRR Pilot, usage figures and rule-of-thumb costs. `/uw-slides:new-deck` now scaffolds a deck with one command. The catalog version is now 2.1.0. In existing decks, run `/uw-slides:update-deck` once to get the fixed resolver.
