@@ -249,7 +249,7 @@ use: catalog/cb-eligibility
 
 > **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
-A diagram of where CloudBank sits, You → CloudBank → the clouds, drawn in the slide with no outside artwork, then three facts: who runs it (since 2019), the 2025 CloudBank 2.0 award, and the NAIRR interface role. No params; eject to customise.
+"CloudBank: A Managed Service to Simplify Cloud Access". One diagram, drawn in the slide with no outside artwork: Researcher → CloudBank (opens your accounts, pays from your award, tracks your spending) → the commercial clouds, with the CloudBank box standing on the edge of the clouds panel to show it is not a cloud itself. A body-size line underneath says who runs it. The 2025 award and the NAIRR role are in the speaker notes (see `cb-by-the-numbers` and `cb-nairr`). No params; eject to customise.
 
 ```markdown
 ---
