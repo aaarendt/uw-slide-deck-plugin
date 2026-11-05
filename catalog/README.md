@@ -249,7 +249,7 @@ use: catalog/cb-eligibility
 
 > **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
-Four cards: origin, cloud providers, the 2025 CloudBank 2.0 award, and the NAIRR interface role. The full original wording is in the speaker notes. No params; eject to customise.
+A diagram of where CloudBank sits, You → CloudBank → the clouds, drawn in the slide with no outside artwork, then three facts: who runs it (since 2019), the 2025 CloudBank 2.0 award, and the NAIRR interface role. No params; eject to customise.
 
 ```markdown
 ---
