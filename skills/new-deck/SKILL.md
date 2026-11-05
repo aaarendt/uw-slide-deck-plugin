@@ -47,7 +47,7 @@ This skill creates a **fragment-based** presentation:
 ├── build.sh                     # Pass 1: concatenate content/ → build/index.html
 ├── outline.sh                   # Regenerate OUTLINE.md from deck.yml + slides/
 ├── build-visuals.sh             # Pass 2: concatenate content-with-visuals/ → build/index-with-visuals.html
-├── publish.sh                   # Pass 3: inline images as base64 → build/index-published.html
+├── publish.sh                   # Pass 3: inline images and reveal.js → build/index-published.html
 └── README.md                    # User instructions
 ```
 
@@ -61,7 +61,7 @@ This skill creates a **fragment-based** presentation:
 6. **Plan visuals:** Edit `VISUALS.md` once content is settled
 7. **Apply visuals:** Run `/uw-slides:apply-visuals` (LLM reads VISUALS.md, writes to `content-with-visuals/`)
 8. **Build pass 2:** Run `./build-visuals.sh` → `build/index-with-visuals.html`
-9. **Publish:** Run `./publish.sh` → `build/index-published.html` (all images inlined as base64 for a fully self-contained portable file)
+9. **Publish:** Run `./publish.sh` → `build/index-published.html` (images, reveal.js and the notes plugin inlined, so the file works on its own; fonts stay linked)
 
 ## Slide Fragment Pattern
 
@@ -231,12 +231,16 @@ Pass 2 — visual additions (after content is settled):
 3. Build: ./build-visuals.sh
 4. Preview: open build/index-with-visuals.html
 
-Pass 3 — publish (portable, self-contained file):
+Pass 3 — publish (portable single file):
 1. Run: ./publish.sh
-2. Share: build/index-published.html (all images inlined as base64)
+2. Share: build/index-published.html (images and reveal.js inlined; fonts need internet or assets/fonts/)
+
+On the web (GitHub Pages):
+1. Push the deck to GitHub with assets/reveal/ (and assets/fonts/ for UW) committed
+2. Settings → Pages → Source: GitHub Actions; CI deploys each push to main
 
 PDF export (requires Playwright + Node):
-1. ./export.sh → build/deck.pdf
+1. ./export.sh → build/deck.pdf (16:9, fonts embedded; --notes adds speaker notes)
 2. Or open build/index.html?print-pdf in Chrome and print to PDF
 
 Keyboard shortcuts in the browser (reveal.js):

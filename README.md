@@ -247,7 +247,19 @@ It edits copies of the slides in `content-with-visuals/` and builds `build/index
 
 ### 8. Share it
 
-Ask Claude Code to **"publish the deck"**. This makes `build/index-published.html`, a single file with every image built in that you can email or upload. Ask for a PDF and it runs the PDF export, which needs [Playwright](https://playwright.dev/) (`npm install -g playwright && npx playwright install chromium`).
+There are three ways to share a finished deck. Ask Claude Code for any of them in plain words, or run the scripts yourself.
+
+**On the web, with GitHub Pages** (best for presenting from any computer). Keep the deck in its own GitHub repository. On every push to `main`, the deck's CI workflow builds it and puts it online at `https://<owner>.github.io/<repo>/`, where anyone can open it and present, including speaker view (press S). One-time setup:
+
+1. Commit the whole deck, including `assets/reveal/` and, for UW decks, `assets/fonts/`, and push it to GitHub.
+2. In the repository, open Settings → Pages and set **Source** to **GitHub Actions**.
+3. Push again, or re-run the "Deck CI" workflow from the Actions tab. The deploy job shows the address when it finishes.
+
+Until step 2 is done, the workflow builds and checks the deck but skips the deploy, with a notice. A Pages site is public, even when the repository is private, and anyone can read the speaker notes (press S or view the page source), so keep the notes free of anything private. Pages from a private repository needs a paid GitHub plan. The web fonts (Open Sans, and the CloudBank fonts) need the viewer to be online, as everything on Pages does; for a venue without internet, present from a copy of the deck folder instead.
+
+**As one file** (to email or upload). Ask Claude Code to **"publish the deck"**, or run `./publish.sh`. This makes `build/index-published.html`, with the images and the presentation runtime (reveal.js) built in. Fonts are not built in: Open Sans and the CloudBank fonts load from Google Fonts, so they need internet access, and UW decks show the Encode Sans headings only where the deck's `assets/fonts/` folder sits next to the file. Elsewhere the browser uses a system font instead; the slides still work. `publish.sh` lists what the file still needs at the end of its output. `./publish.sh --site` also writes `build/site/`, the folder CI puts on GitHub Pages: the page as `index.html` with the font files it uses next to it. That folder works on any web server, or zipped and sent.
+
+**As a PDF** (handouts, or sending a copy to read). Ask for a PDF, or run `./export.sh` (`--visuals` for the pass-2 build, `--notes` for a page of speaker notes after each slide). It writes `build/deck.pdf`, one 16:9 page per slide, with the fonts embedded, so it looks the same everywhere. Export with internet access, so Open Sans and the CloudBank fonts can be embedded; the script warns when a font could not be loaded. It needs [Playwright](https://playwright.dev/): `npm install -g playwright && npx playwright install chromium`. A PDF has no speaker view or interactive content.
 
 ### Running the scripts yourself
 
@@ -257,8 +269,8 @@ Everything the skills build or check is a plain script in the deck folder, so yo
 |--------|--------------|
 | `./build.sh` | Builds `build/index.html` from `content/` in `deck.yml` order (`--strict` fails on missing slides) |
 | `./build-visuals.sh` | Builds `build/index-with-visuals.html`, using `content-with-visuals/` where a slide has visuals |
-| `./publish.sh` | Makes the single-file `build/index-published.html`; run `./build-visuals.sh` first, even with no visuals |
-| `./export.sh` | Writes `build/deck.pdf` (needs Playwright) |
+| `./publish.sh` | Makes the single-file `build/index-published.html` (images and reveal.js inlined; fonts are not) from `build/index-with-visuals.html`, or from `build/index.html` if there is none. `--site` also writes `build/site/`, the web site CI deploys to GitHub Pages |
+| `./export.sh` | Writes `build/deck.pdf`, 16:9 with fonts embedded (needs Playwright; `--visuals`, `--notes`) |
 | `./lint.sh` | Quick automatic checks: missing slides, alt text, font sizes, stale briefs |
 | `./status.sh` | Lists every slide and whether it is up to date |
 | `./outline.sh` | Refreshes `OUTLINE.md`, a read-only overview of the deck |
@@ -410,7 +422,7 @@ To change colors, spacing or type for one deck only, edit that deck's `shared/he
 - Image paths are relative to `build/index.html`, so go up one level: `<img src="../assets/images/photo.jpg" alt="...">`.
 
 **Fonts look wrong**
-- UW decks need the Encode Sans files in `assets/fonts/` (copy them from the plugin's `design-systems/uw-brand/fonts/` if they're missing). CloudBank decks and Open Sans load from Google Fonts, so they need internet access.
+- UW decks need the Encode Sans files in `assets/fonts/` (copy them from the plugin's `design-systems/uw-brand/fonts/` if they're missing). CloudBank decks and Open Sans load from Google Fonts, so they need internet access. A published file (`build/index-published.html`) sent on its own has no `assets/fonts/`, so UW headings fall back to a system font there.
 
 **The deck doesn't run, or presenter view (`S`) doesn't open**
 - reveal.js is missing: run `./setup-reveal.sh` in the deck folder (it needs internet access). Offline, download `reveal.min.js`, `reveal.min.css` and `plugin/notes/notes.js` from `https://cdn.jsdelivr.net/npm/reveal.js@6.0.2/` into `assets/reveal/`.

@@ -1,18 +1,26 @@
 # CI workflow for a uw-slides presentation deck.
 #
-# Copy this file to <deck>/.github/workflows/deck.yml.
-# It requires no secrets and no extra setup beyond a Python 3 runner.
+# Lives at <deck>/.github/workflows/deck.yml (/uw-slides:new-deck adds it;
+# /uw-slides:update-deck keeps it current). No secrets needed.
 #
-# What it does on every push and PR:
-#   1. Build   — concatenate fragments into build/index.html (./build.sh)
-#   2. Lint    — check fragments, CSS scoping, font sizes, alt text, staleness
-#   3. Publish — inline all images as base64 (./publish.sh)
-#   4. Upload  — attach build/index-published.html as a workflow artifact
+# On every push and pull request:
+#   1. Build   — build/index.html (./build.sh) and build/index-with-visuals.html
+#                (./build-visuals.sh)
+#   2. Lint    — fragments, CSS scoping, font sizes, alt text, staleness
+#   3. Publish — build/index-published.html with images and reveal.js inlined,
+#                and build/site/: that page as index.html plus the font files
+#                it links to (./publish.sh --site)
+#   4. Upload  — build/site/ as the "deck" workflow artifact (a preview for
+#                pull requests: download, unzip, open index.html)
 #
-# Optional: GitHub Pages
-#   Uncomment the "Deploy to Pages" step and enable Pages in repo settings
-#   (Source: GitHub Actions). The artifact URL in the Actions summary is also
-#   a convenient preview link for pull requests.
+# On pushes to main, it also deploys build/site/ to GitHub Pages, so the deck
+# is live at https://<owner>.github.io/<repo>/. One-time setup: Settings →
+# Pages → Source: GitHub Actions. Until then the deploy job skips itself with
+# a notice instead of failing. Pages sites are public, even for a private
+# repository, and anyone can open the speaker notes (press S).
+#
+# Commit reveal.js (git add assets/reveal/) and, for UW decks, assets/fonts/;
+# the publish step inlines reveal.js and copies the fonts from the repository.
 
 name: Deck CI
 
@@ -20,9 +28,16 @@ on:
   push:
     branches: ["main"]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+# One Pages deployment at a time; a newer push waits rather than cancelling a
+# deployment in progress.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build-lint-publish:
@@ -35,27 +50,61 @@ jobs:
       - name: Build (pass 1)
         run: ./build.sh --strict
 
+      - name: Build with visuals (pass 2)
+        run: ./build-visuals.sh --strict
+
       - name: Lint
         run: python3 tools/lint.py .
 
       - name: Publish (pass 3)
-        run: ./publish.sh
+        run: ./publish.sh --site
 
-      - name: Upload artifact
+      - name: Upload deck artifact
         uses: actions/upload-artifact@v4
         with:
           name: deck
-          path: build/index-published.html
+          path: build/site/
           if-no-files-found: error
 
-      # --- Optional: deploy to GitHub Pages ---
-      # Uncomment the two steps below, then enable Pages in repo settings
-      # (Settings → Pages → Source: GitHub Actions).
-      #
-      # - name: Upload Pages artifact
-      #   uses: actions/upload-pages-artifact@v3
-      #   with:
-      #     path: build/
-      #
-      # - name: Deploy to Pages
-      #   uses: actions/deploy-pages@v4
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/site/
+
+  deploy-pages:
+    needs: build-lint-publish
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      # deploy to Pages and read its settings
+      id-token: write   # verify the deployment comes from this workflow
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check that GitHub Pages is set up
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if out=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .build_type 2>&1); then
+            if [ "$out" = "workflow" ]; then
+              echo "deploy=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning title=Deck not deployed::GitHub Pages publishes from a branch in this repository. To deploy the deck, set Settings → Pages → Source to GitHub Actions."
+              echo "deploy=false" >> "$GITHUB_OUTPUT"
+            fi
+          elif echo "$out" | grep -q "HTTP 404"; then
+            echo "::notice title=Deck not deployed::GitHub Pages is not turned on. To put the deck online, set Settings → Pages → Source to GitHub Actions, then push again or re-run this workflow."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Could not read the Pages settings ($out); deploying anyway."
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: steps.pages.outputs.deploy == 'true'
+        uses: actions/deploy-pages@v4
