@@ -71,6 +71,11 @@ class TestFiles(ScaffoldCase):
                     self.assertTrue(os.path.isdir(os.path.join(deck, d)), d)
                 self.assertEqual(r.files, len(expected))
 
+    def test_empty_folders_have_gitkeep(self):
+        deck = self.scaffold().deck_dir
+        for d in nd.EMPTY_DIRS:
+            self.assertTrue(os.path.isfile(os.path.join(deck, d, ".gitkeep")), d)
+
     def test_shell_scripts_are_executable(self):
         r = self.scaffold()
         scripts = [f for f in os.listdir(r.deck_dir) if f.endswith(".sh")]
@@ -120,6 +125,44 @@ class TestFiles(ScaffoldCase):
             sources += [s for _, s in nd.TEXT_TEMPLATES] + ["templates/deck.yml", "plugin.json"]
             for s in sources:
                 self.assertTrue(os.path.isfile(os.path.join(PLUGIN_DIR, s)), s)
+
+
+@unittest.skipUnless(shutil.which("git"), "git not installed")
+class TestFreshClone(ScaffoldCase):
+    """A new deck committed to git and cloned, as the CI workflow checks it out."""
+
+    def clone_deck(self, drop_gitkeep=False):
+        deck = self.scaffold().deck_dir
+        for sid in ("title", "example-slide"):  # stand-ins for generated slides
+            with open(os.path.join(deck, "content", f"{sid}.html"), "w", encoding="utf-8") as fh:
+                fh.write(f'<section data-slide="{sid}" class="slide"><h1>{sid}</h1></section>\n')
+        if drop_gitkeep:  # a deck scaffolded before .gitkeep files were added
+            for d in nd.EMPTY_DIRS:
+                os.remove(os.path.join(deck, d, ".gitkeep"))
+        git = ["git", "-c", "user.name=t", "-c", "user.email=t@example.org", "-c", "init.defaultBranch=main"]
+        for args in (["init", "-q"], ["add", "-A"], ["commit", "-q", "-m", "deck"]):
+            subprocess.run(git + args, cwd=deck, check=True, capture_output=True)
+        clone = os.path.join(self.tmp, "clone")
+        subprocess.run(["git", "clone", "-q", deck, clone], check=True, capture_output=True)
+        return clone
+
+    def run_ci_steps(self, clone):
+        for cmd in (["bash", "build.sh", "--strict"], ["bash", "build-visuals.sh", "--strict"],
+                    ["bash", "publish.sh", "--site"]):
+            proc = subprocess.run(cmd, cwd=clone, capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 0, f"{cmd}: {proc.stdout}{proc.stderr}")
+        self.assertTrue(os.path.isfile(os.path.join(clone, "build", "site", "index.html")))
+
+    def test_clone_keeps_empty_folders(self):
+        clone = self.clone_deck()
+        for d in nd.EMPTY_DIRS:
+            self.assertTrue(os.path.isdir(os.path.join(clone, d)), d)
+        self.run_ci_steps(clone)
+
+    def test_build_visuals_works_without_the_folder(self):
+        clone = self.clone_deck(drop_gitkeep=True)
+        self.assertFalse(os.path.exists(os.path.join(clone, "content-with-visuals")))
+        self.run_ci_steps(clone)
 
 
 class TestContents(ScaffoldCase):
@@ -204,7 +247,7 @@ class TestContents(ScaffoldCase):
     def test_no_slides_md_or_content_fragments(self):
         r = self.scaffold()
         self.assertFalse(os.path.exists(os.path.join(r.deck_dir, "SLIDES.md")))
-        self.assertEqual(os.listdir(os.path.join(r.deck_dir, "content")), [])
+        self.assertEqual(os.listdir(os.path.join(r.deck_dir, "content")), [".gitkeep"])
 
 
 class TestRefusals(ScaffoldCase):

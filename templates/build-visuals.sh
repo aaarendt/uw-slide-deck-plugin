@@ -31,9 +31,11 @@ if [ ! -f "$DECK_DIR/shared/header.html" ]; then
   exit 1
 fi
 
+# A deck without pass-2 visuals may have no content-with-visuals/ at all (git
+# does not keep empty folders, so a fresh checkout in CI lacks it). Every
+# slide then comes from content/.
 if [ ! -d "$DECK_DIR/content-with-visuals" ]; then
-  echo "Error: content-with-visuals/ not found — run apply-visuals first"
-  exit 1
+  echo "Note: content-with-visuals/ not found; building every slide from content/."
 fi
 
 if [ ! -f "$DECK_DIR/shared/footer.html" ]; then
