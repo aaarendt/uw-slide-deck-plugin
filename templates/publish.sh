@@ -4,22 +4,36 @@
 # reveal.js stylesheet, reveal.js script and speaker-notes plugin inlined,
 # so it works on its own (emailed, uploaded, or served from build/ alone).
 #
-# Usage: ./publish.sh [deck-dir]
+# Usage: ./publish.sh [--site] [deck-dir]
+#   --site  also write build/site/, ready to upload as a web site (GitHub
+#           Pages): index.html plus the local files it still links to (the
+#           UW brand's fonts), copied with their paths fixed for the site.
 #
 # Input: build/index-with-visuals.html (./build-visuals.sh). If that file is
 # missing, build/index.html (./build.sh) is published instead.
 #
-# What stays a link: web fonts loaded from the internet (the CloudBank brand
-# uses Google Fonts) and anything else this script does not inline. The script
-# lists those at the end; they need internet access or the deck's assets/.
+# What stays a link: fonts. Local font files (UW brand, assets/fonts/) load
+# only where they sit next to the file, as they do in build/site/; web fonts
+# (Google Fonts) need internet access. The script lists these at the end.
 #
 # Requires python3 (standard library only).
 
 set -e
 
-DECK_DIR="${1:-.}"
+DECK_DIR="."
+SITE=0
+for arg in "$@"; do
+  case "$arg" in
+    --site) SITE=1 ;;
+    -*) echo "Error: unknown option $arg (usage: ./publish.sh [--site] [deck-dir])"; exit 2 ;;
+    *) DECK_DIR="$arg" ;;
+  esac
+done
+
 BUILD_DIR="$DECK_DIR/build"
 OUTPUT="$BUILD_DIR/index-published.html"
+SITE_DIR=""
+[ "$SITE" -eq 1 ] && SITE_DIR="$BUILD_DIR/site"
 
 if [ -f "$BUILD_DIR/index-with-visuals.html" ]; then
   INPUT="$BUILD_DIR/index-with-visuals.html"
@@ -38,11 +52,11 @@ fi
 
 echo "Inlining assets from $(basename "$INPUT")..."
 
-python3 - "$BUILD_DIR" "$INPUT" "$OUTPUT" <<'EOF'
-import sys, re, base64, os
+python3 - "$BUILD_DIR" "$INPUT" "$OUTPUT" "$SITE_DIR" <<'EOF'
+import sys, re, base64, os, shutil
 from urllib.parse import urlsplit
 
-build_dir, input_path, output_path = sys.argv[1], sys.argv[2], sys.argv[3]
+build_dir, input_path, output_path, site_dir = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 
 with open(input_path, 'r', encoding='utf-8') as f:
     html = f.read()
@@ -223,6 +237,60 @@ if remote:
 
 size_kb = os.path.getsize(output_path) / 1024
 print(f'  Size: {size_kb:,.0f} KB')
+
+
+# --- 4. Optional web site: build/site/ ---------------------------------------
+# index.html is the published page with each remaining local reference
+# rewritten from build/-relative ("../assets/fonts/X.ttf") to site-relative
+# ("assets/fonts/X.ttf"), and the referenced files copied to the same place.
+# Relative paths keep working when the site is served from a subfolder, as a
+# GitHub Pages project site is (https://<user>.github.io/<repo>/).
+
+def outside_scripts(text, fn):
+    """Apply fn to the parts of text that are not <script> elements."""
+    parts = re.split(r'(<script\b[^>]*>.*?</script\s*>)', text, flags=re.I | re.S)
+    return ''.join(p if i % 2 else fn(p) for i, p in enumerate(parts))
+
+
+if site_dir:
+    deck_root = os.path.dirname(os.path.abspath(build_dir))
+    if os.path.isdir(site_dir):
+        shutil.rmtree(site_dir)
+    os.makedirs(site_dir)
+
+    mapping, copied, problems = {}, 0, 0
+    for ref in sorted({r for refs in local.values() for r in refs}):
+        abs_path = os.path.abspath(local_file(ref))
+        rel = os.path.relpath(abs_path, deck_root)
+        if rel == os.pardir or rel.startswith(os.pardir + os.sep):
+            print(f'  Warning: {ref} is outside the deck folder; not copied to the site')
+            problems += 1
+            continue
+        if not os.path.isfile(abs_path):
+            print(f'  Warning: not found — {ref}; not copied to the site')
+            problems += 1
+            continue
+        dest = os.path.join(site_dir, rel)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        shutil.copy2(abs_path, dest)
+        copied += 1
+        suffix = ref[len(ref.split('#', 1)[0].split('?', 1)[0]):]  # keep ?query / #fragment
+        mapping[ref] = rel.replace(os.sep, '/') + suffix
+
+    def rewrite(text):
+        # Longest first, bounded by a quote, paren or space, so one reference
+        # never rewrites part of another.
+        for ref in sorted(mapping, key=len, reverse=True):
+            text = re.sub(r'(?<=["\'(\s])' + re.escape(ref) + r'(?=["\')\s])',
+                          lambda m, new=mapping[ref]: new, text)
+        return text
+
+    with open(os.path.join(site_dir, 'index.html'), 'w', encoding='utf-8') as f:
+        f.write(outside_scripts(html, rewrite))
+    print(f'  Site: {site_dir}/index.html + {copied} linked file(s)'
+          + (f', {problems} missing' if problems else ''))
 EOF
 
 echo "✓ Published: $OUTPUT"
+[ "$SITE" -eq 1 ] && echo "✓ Site: $SITE_DIR/ (upload this folder; index.html is the deck)"
+exit 0

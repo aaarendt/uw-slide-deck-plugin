@@ -235,8 +235,12 @@ Pass 3 — publish (portable single file):
 1. Run: ./publish.sh
 2. Share: build/index-published.html (images and reveal.js inlined; fonts need internet or assets/fonts/)
 
+On the web (GitHub Pages):
+1. Push the deck to GitHub with assets/reveal/ (and assets/fonts/ for UW) committed
+2. Settings → Pages → Source: GitHub Actions; CI deploys each push to main
+
 PDF export (requires Playwright + Node):
-1. ./export.sh → build/deck.pdf
+1. ./export.sh → build/deck.pdf (16:9, fonts embedded; --notes adds speaker notes)
 2. Or open build/index.html?print-pdf in Chrome and print to PDF
 
 Keyboard shortcuts in the browser (reveal.js):

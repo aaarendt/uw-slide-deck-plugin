@@ -71,8 +71,8 @@ class PublishCase(unittest.TestCase):
     def build(self, name="index-with-visuals.html", page=PAGE):
         _write(os.path.join(self.deck, "build", name), page)
 
-    def publish(self, expect_ok=True):
-        proc = subprocess.run(["bash", PUBLISH, self.deck], capture_output=True, text=True)
+    def publish(self, expect_ok=True, *args):
+        proc = subprocess.run(["bash", PUBLISH, *args, self.deck], capture_output=True, text=True)
         if expect_ok:
             self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
         return proc
@@ -172,6 +172,66 @@ class PublishCase(unittest.TestCase):
         self.assertIn("Not inlined: 1 local file(s)", out)
         self.assertIn("../assets/fonts/", out)
         self.assertIn("Needs internet for: example.org, fonts.googleapis.com", out)
+
+    def test_no_site_without_flag(self):
+        self.build()
+        self.publish()
+        self.assertFalse(os.path.exists(os.path.join(self.deck, "build", "site")))
+
+    def test_unknown_option_is_refused(self):
+        self.build()
+        proc = self.publish(False, "--sitee")
+        self.assertEqual(proc.returncode, 2)
+
+    # --- --site: build/site/ for GitHub Pages --------------------------------
+
+    def site(self, *rel):
+        return os.path.join(self.deck, "build", "site", *rel)
+
+    def test_site_copies_linked_files_and_rewrites_paths(self):
+        self.build()
+        out = self.publish(True, "--site").stdout
+        html = _read(self.site("index.html"))
+        self.assertIn("url('assets/fonts/X-400.ttf')", html)
+        self.assertNotIn("../assets/", html)
+        self.assertTrue(os.path.isfile(self.site("assets", "fonts", "X-400.ttf")))
+        self.assertIn("Site:", out)
+
+    def test_site_copies_only_what_is_still_linked(self):
+        # Images and reveal.js are inlined, so the site needs no copy of them.
+        self.build()
+        self.publish(True, "--site")
+        copied = sorted(os.path.relpath(os.path.join(d, f), self.site())
+                        for d, _, files in os.walk(self.site()) for f in files)
+        self.assertEqual(copied, ["assets/fonts/X-400.ttf", "index.html"])
+
+    def test_site_index_matches_published_file_apart_from_paths(self):
+        self.build()
+        self.publish(True, "--site")
+        published = _read(self.out)
+        site = _read(self.site("index.html"))
+        self.assertEqual(site.replace("assets/fonts/", "../assets/fonts/"), published)
+
+    def test_site_leaves_inlined_scripts_alone(self):
+        _write(os.path.join(self.deck, "assets", "reveal", "reveal.min.js"),
+               'var Reveal={f:"url(\'../assets/fonts/X-400.ttf\')"};\n')
+        self.build()
+        self.publish(True, "--site")
+        self.assertIn('var Reveal={f:"url(\'../assets/fonts/X-400.ttf\')"}', _read(self.site("index.html")))
+
+    def test_site_is_rebuilt_from_scratch(self):
+        self.build()
+        os.makedirs(self.site(), exist_ok=True)
+        _write(self.site("stale.txt"), "old")
+        self.publish(True, "--site")
+        self.assertFalse(os.path.exists(self.site("stale.txt")))
+
+    def test_site_warns_for_missing_linked_file(self):
+        os.remove(os.path.join(self.deck, "assets", "fonts", "X-400.ttf"))
+        self.build()
+        out = self.publish(True, "--site").stdout
+        self.assertIn("not copied to the site", out)
+        self.assertIn("1 missing", out)
 
 
 if __name__ == "__main__":

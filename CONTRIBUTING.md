@@ -54,6 +54,8 @@ Lint checks every slide fragment against the brief, verifies CSS scoping, font s
 ```bash
 ./publish.sh
 # → build/index-published.html (images and reveal.js inlined; fonts stay linked)
+./publish.sh --site
+# → also build/site/ (index.html + the fonts it uses), what CI deploys to GitHub Pages
 ```
 
 Share `build/index-published.html` as a pull-request preview artifact or email attachment.

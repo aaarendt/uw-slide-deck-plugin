@@ -33,4 +33,8 @@ Built with the `uw-slides` plugin (version in `.uw-slides.json`).
 ./build.sh              # pass 1 → build/index.html
 ./build-visuals.sh      # pass 2 → build/index-with-visuals.html
 ./publish.sh            # pass 3 → build/index-published.html (images + reveal.js inlined; fonts linked)
+./publish.sh --site     # also build/site/: the GitHub Pages site (index.html + fonts it uses)
+./export.sh             # build/deck.pdf, 16:9, fonts embedded (needs Playwright; --visuals, --notes)
 ```
+
+The CI workflow (`.github/workflows/deck.yml`) deploys `build/site/` to GitHub Pages on every push to `main`, once Settings → Pages → Source is set to GitHub Actions.

@@ -18,12 +18,12 @@
 3. Build: `./build-visuals.sh`
 4. Preview: `open build/index-with-visuals.html`
 
-## Pass 3 — Publish (portable file)
+## Pass 3 — Publish
 
-1. Run: `./publish.sh` (requires `python3`)
-2. Share: `build/index-published.html` — works on its own: images, reveal.js and the speaker-notes plugin are inlined. Fonts are not: Google Fonts need internet access, and local fonts in `assets/fonts/` load only when that folder sits next to the file (otherwise a system font is used). The script lists what is still linked.
-
-If `build/index-with-visuals.html` is missing, `./publish.sh` publishes `build/index.html`.
+- **GitHub Pages:** push the deck to GitHub with `assets/reveal/` (and `assets/fonts/` for UW decks) committed, then set Settings → Pages → Source to GitHub Actions. The CI workflow (`.github/workflows/deck.yml`) deploys every push to `main` to `https://<owner>.github.io/<repo>/`. Pages sites are public, speaker notes included.
+- **One file:** `./publish.sh` (requires `python3`) writes `build/index-published.html`, with images, reveal.js and the speaker-notes plugin inlined. Fonts are not: Google Fonts need internet access, and local fonts in `assets/fonts/` load only when that folder sits next to the file (otherwise a system font is used). The script lists what is still linked. If `build/index-with-visuals.html` is missing, it publishes `build/index.html`.
+- **Web folder:** `./publish.sh --site` also writes `build/site/` (the page as `index.html` plus the fonts it uses), which is what CI deploys. It works on any web server.
+- **PDF:** `./export.sh` writes `build/deck.pdf` (16:9, fonts embedded; `--visuals`, `--notes`). Requires Playwright: `npm install -g playwright && npx playwright install chromium`.
 
 ## Reordering Slides
 

@@ -30,7 +30,9 @@ uw-slides-plugin/
 │   ├── build.sh             # Pass-1 build script template
 │   ├── build-visuals.sh     # Pass-2 build script template
 │   ├── outline.sh           # Regenerates the read-only OUTLINE.md (needs python3)
-│   ├── publish.sh           # Pass-3 publish script template (inlines images, reveal.js CSS/JS and notes plugin; needs python3; tests: tools/test_publish.py)
+│   ├── publish.sh           # Pass-3 publish script template (inlines images, reveal.js CSS/JS and notes plugin; --site writes the GitHub Pages site; needs python3; tests: tools/test_publish.py)
+│   ├── export.sh            # PDF export via Playwright (16:9, fonts embedded; optional Node dependency)
+│   ├── .github/workflows/deck.yml  # Deck CI: build, lint, publish, deploy to GitHub Pages
 │   ├── deck.yml             # Deck metadata + slide order template (see references/slide-schema.md)
 │   ├── slides/_example.md   # Slide brief template
 │   ├── VISUALS.md           # Visual additions template
@@ -121,7 +123,7 @@ python3 tools/deckparse.py status <deck-dir>   # missing / stale / untracked / f
 | `/uw-slides:accessibility-check` | WCAG 2.1 AA validation |
 | `/uw-slides:design-review` | UW brand compliance check |
 | `/uw-slides:extract-to-markdown` | Convert an existing HTML deck → `deck.yml` + `slides/*.md` briefs; `--migrate` migrates a legacy SLIDES.md deck in place |
-| `/uw-slides:update-deck` | Diff and update managed files (build scripts, shared templates, the vendored `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py`) against the current plugin; never touches `content/`, `slides/`, or `assets/` |
+| `/uw-slides:update-deck` | Diff and update managed files (build and publish scripts, shared templates, the CI workflow, the vendored `tools/deckparse.py`, `tools/lint.py` and `tools/resolve-catalog.py`) against the current plugin; never touches `content/`, `slides/`, or `assets/` |
 
 ## Design System
 

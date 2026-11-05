@@ -1,6 +1,6 @@
 ---
 name: update-deck
-description: Update a deck's managed files (build scripts, shared templates, vendored tools in tools/) to match the current plugin version, without touching slides, content, or assets.
+description: Update a deck's managed files (build and publish scripts, shared templates, the CI workflow, vendored tools in tools/) to match the current plugin version, without touching slides, content, or assets.
 ---
 
 # Update Deck
@@ -16,13 +16,15 @@ Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-dec
 - `status.sh`
 - `outline.sh`
 - `publish.sh`
+- `export.sh`
+- `.github/workflows/deck.yml`
 - `shared/footer.html`
 - `shared/header.html` (brand-specific)
 - `tools/deckparse.py`
 - `tools/lint.py`
 - `tools/resolve-catalog.py`
 
-**Never touched:** `content/`, `content-with-visuals/`, `slides/`, `assets/`, `deck.yml`, `VISUALS.md`, `OUTLINE.md`, `.brand`, `*.md` files.
+**Never touched:** `content/`, `content-with-visuals/`, `slides/`, `assets/`, `deck.yml` (the deck's metadata and slide order; the CI workflow `.github/workflows/deck.yml` is a different file, and managed), `VISUALS.md`, `OUTLINE.md`, `.brand`, `*.md` files.
 
 ## Plugin directory
 
@@ -75,13 +77,17 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 | `status.sh` | `<PLUGIN>/templates/status.sh` |
 | `outline.sh` | `<PLUGIN>/templates/outline.sh` |
 | `publish.sh` | `<PLUGIN>/templates/publish.sh` |
+| `export.sh` | `<PLUGIN>/templates/export.sh` |
+| `.github/workflows/deck.yml` | `<PLUGIN>/templates/.github/workflows/deck.yml` |
 | `shared/footer.html` | reveal.js deck: `<PLUGIN>/templates/shared/footer-reveal.html`; legacy deck: `<PLUGIN>/templates/shared/footer.html` |
 | `shared/header.html` | reveal.js deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header-reveal.html`; legacy deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
 | `tools/deckparse.py` | `<PLUGIN>/tools/deckparse.py` |
 | `tools/lint.py` | `<PLUGIN>/tools/lint.py` |
 | `tools/resolve-catalog.py` | `<PLUGIN>/tools/resolve-catalog.py` |
 
-Read both versions and note whether they differ. A file the deck is missing counts as a diff: decks scaffolded by older plugin versions may have no `tools/lint.py` or `tools/resolve-catalog.py`, and this adds them.
+Read both versions and note whether they differ. A file the deck is missing counts as a diff: decks scaffolded by older plugin versions may have no `tools/lint.py`, `tools/resolve-catalog.py` or `.github/workflows/deck.yml`, and this adds them.
+
+`export.sh` and `.github/workflows/deck.yml` became managed in v0.6.0, and users may have edited their copies (the old `export.sh` told them to). When one of these differs, show the user the diff and point out any of their own changes that the update would remove, so they can decide.
 
 ### 3. Report and ask for confirmation
 
@@ -110,7 +116,7 @@ Ask the user to confirm before writing anything. If they decline, stop.
 
 For each changed file the user confirmed:
 - Copy the plugin's version over the deck's version.
-- Keep the file executable if it was executable before (`build.sh`, `build-visuals.sh`, `outline.sh`, `publish.sh`).
+- Keep the file executable if it was executable before (`build.sh`, `build-visuals.sh`, `outline.sh`, `publish.sh`, `export.sh`); a `*.sh` file this adds is made executable.
 
 ### 5. Update the stamp
 
