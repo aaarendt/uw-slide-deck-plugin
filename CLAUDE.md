@@ -145,8 +145,8 @@ Slides are projected to a live audience. Small text is invisible past the third 
 - **All visible text:** minimum `1.5rem` (24pt) — use `clamp(1.5rem, <vw>, <max>)`
 - **Source/citation lines only:** `clamp(1rem, 1.1vw, 1.25rem)` — the one exception
 - **Never use fixed values below 1.5rem** for any text element
-- **The vw midpoint must scale above the minimum** — use at least `2vw` for body text
-- **Body/description text:** `clamp(1.5rem, 1.6–2.2vw, 1.625–2rem)`
+- **Body text should reach its maximum at about 1920px wide** — pick the vw as the maximum in px ÷ 19.2 (`1.7vw` for a `2rem` maximum). Text then grows above the minimum on large screens and sits at the minimum on laptops, where there is least room. A much higher vw keeps body text above the minimum at 1280×720 too, and is the usual cause of text overflowing there
+- **Body/description text:** `clamp(1.5rem, 1.55–1.8vw, 1.875–2rem)`
 - **Key message / headline:** `clamp(1.5rem, 2.5–2.8vw, 2.25–2.5rem)` or larger
 - **Labels / uppercase tags:** `clamp(1rem, 1.2vw, 1.25rem)` — decorative, not primary content
 - **Text must fit on the slide** — if content overflows, reduce the amount of text, not the font size

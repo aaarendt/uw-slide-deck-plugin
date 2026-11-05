@@ -328,11 +328,18 @@ The catalog is a set of pre-made, vetted slides that any deck can include by ID 
 | `feedback` | Session feedback prompt with an optional survey link | any |
 | `thank-you` | Closing slide with presenter and contact details | any |
 | `cb-title` | Title slide: title, subtitle, presenter, affiliation, date | cloudbank |
-| `cb-what-is` | What CloudBank is and who runs it | cloudbank |
-| `cb-why-choose` | What you get with a CloudBank account | cloudbank |
+| `cb-why-cloud` | Why use the cloud for research: six things it makes possible | cloudbank |
+| `cb-what-weve-heard` | Four paraphrased researcher quotes about the friction of cloud | cloudbank |
 | `cb-eligibility` | Who can lead a project; good and poor fits | cloudbank |
+| `cb-what-is` | What CloudBank is and who runs it | cloudbank |
+| `cb-research-and-classroom` | The two offerings side by side: Research and Classroom | cloudbank |
+| `cb-why-choose` | What you get with a CloudBank account | cloudbank |
 | `cb-award-tiers` | Grant award tiers (Explore, Discover, Accelerate) | cloudbank |
 | `cb-process` | Steps from cost estimate to working in the cloud | cloudbank |
+| `cb-nairr` | CloudBank through the NAIRR Pilot, and how it differs from ACCESS | cloudbank |
+| `cb-by-the-numbers` | Usage figures for a stated period (projects, dollars, classrooms) | cloudbank |
+| `cb-rule-of-thumb-costs` | Round-number cloud prices, and what a machine left on costs | cloudbank |
+| `cb-getting-help` | Where to get help: videos, office hours, forum, help email | cloudbank |
 
 Every slide in the catalog has been checked and is ready to use. The `funding` slide needs your award's details: its agency, grant ID and grant title default to `PLACEHOLDER` values, and the resolver warns until you set them. **Brand** limits where a slide is offered: `cb-` slides only in CloudBank decks, `uw` slides only in UW decks, `any` everywhere.
 
