@@ -21,7 +21,9 @@
 ## Pass 3 — Publish (portable file)
 
 1. Run: `./publish.sh` (requires `python3`)
-2. Share: `build/index-published.html` — fully self-contained, all images inlined as base64
+2. Share: `build/index-published.html` — works on its own: images, reveal.js and the speaker-notes plugin are inlined. Fonts are not: Google Fonts need internet access, and local fonts in `assets/fonts/` load only when that folder sits next to the file (otherwise a system font is used). The script lists what is still linked.
+
+If `build/index-with-visuals.html` is missing, `./publish.sh` publishes `build/index.html`.
 
 ## Reordering Slides
 

@@ -5,14 +5,17 @@
 #
 # What it does on every push and PR:
 #   1. Build   — concatenate fragments into build/index.html (./build.sh)
-#   2. Lint    — check fragments, CSS scoping, font sizes, alt text, staleness
-#   3. Publish — inline all images as base64 (./publish.sh)
-#   4. Upload  — attach build/index-published.html as a workflow artifact
+#   2. Visuals — add pass-2 visuals, build/index-with-visuals.html (./build-visuals.sh)
+#   3. Lint    — check fragments, CSS scoping, font sizes, alt text, staleness
+#   4. Publish — one file with images and reveal.js inlined (./publish.sh)
+#   5. Upload  — attach build/index-published.html as a workflow artifact
+#
+# reveal.js must be committed (git add assets/reveal/) for step 4 to inline it.
 #
 # Optional: GitHub Pages
-#   Uncomment the "Deploy to Pages" step and enable Pages in repo settings
-#   (Source: GitHub Actions). The artifact URL in the Actions summary is also
-#   a convenient preview link for pull requests.
+#   Uncomment the Pages steps and permissions below, then enable Pages in repo
+#   settings (Source: GitHub Actions). The artifact URL in the Actions summary
+#   is also a convenient preview link for pull requests.
 
 name: Deck CI
 
@@ -23,10 +26,16 @@ on:
 
 permissions:
   contents: read
+  # For GitHub Pages, also uncomment:
+  # pages: write
+  # id-token: write
 
 jobs:
   build-lint-publish:
     runs-on: ubuntu-latest
+    # For GitHub Pages, also uncomment:
+    # environment:
+    #   name: github-pages
 
     steps:
       - name: Checkout
@@ -34,6 +43,9 @@ jobs:
 
       - name: Build (pass 1)
         run: ./build.sh --strict
+
+      - name: Build with visuals (pass 2)
+        run: ./build-visuals.sh --strict
 
       - name: Lint
         run: python3 tools/lint.py .
@@ -49,13 +61,21 @@ jobs:
           if-no-files-found: error
 
       # --- Optional: deploy to GitHub Pages ---
-      # Uncomment the two steps below, then enable Pages in repo settings
-      # (Settings → Pages → Source: GitHub Actions).
+      # Uncomment the steps below and the permissions above, then enable Pages
+      # in repo settings (Settings → Pages → Source: GitHub Actions). The site
+      # is the published file alone, served as index.html; it deploys only
+      # from main, not from pull requests.
+      #
+      # - name: Prepare Pages site
+      #   if: github.event_name == 'push'
+      #   run: mkdir -p _site && cp build/index-published.html _site/index.html
       #
       # - name: Upload Pages artifact
+      #   if: github.event_name == 'push'
       #   uses: actions/upload-pages-artifact@v3
       #   with:
-      #     path: build/
+      #     path: _site/
       #
       # - name: Deploy to Pages
+      #   if: github.event_name == 'push'
       #   uses: actions/deploy-pages@v4

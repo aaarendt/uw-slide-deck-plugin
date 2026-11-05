@@ -30,7 +30,7 @@ uw-slides-plugin/
 │   ├── build.sh             # Pass-1 build script template
 │   ├── build-visuals.sh     # Pass-2 build script template
 │   ├── outline.sh           # Regenerates the read-only OUTLINE.md (needs python3)
-│   ├── publish.sh           # Pass-3 publish script template (inlines images; needs python3)
+│   ├── publish.sh           # Pass-3 publish script template (inlines images, reveal.js CSS/JS and notes plugin; needs python3; tests: tools/test_publish.py)
 │   ├── deck.yml             # Deck metadata + slide order template (see references/slide-schema.md)
 │   ├── slides/_example.md   # Slide brief template
 │   ├── VISUALS.md           # Visual additions template

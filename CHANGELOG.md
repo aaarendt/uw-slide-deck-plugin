@@ -8,6 +8,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Fixed
+- `publish.sh` inlines the reveal.js stylesheet (`<link rel="stylesheet">` becomes `<style>`), reveal.js and the speaker-notes plugin (`<script src>` becomes an inline `<script>`), resolving paths from `build/` as it does for images. `http(s):` and `data:` URLs are left alone, and a missing local file still prints "not found" and keeps its link. The "unknown type" warnings for the two script files are gone. Contents are copied as is, and a `</script` or `</style` inside an inlined file is written as `<\/script` / `<\/style` so it cannot close the element early. The file grows by about 240 KB. Checked in Chrome with only the published file in an empty folder, opened from `file://` and over HTTP: one slide at a time, arrow keys, the "3 / 15" counter, and speaker view (S) with notes, synced in both directions.
+- `publish.sh` publishes `build/index.html` when `build/index-with-visuals.html` is missing, instead of failing, so decks without visuals no longer need `./build-visuals.sh` first. It warns when `build/index.html` is newer than `build/index-with-visuals.html`, which means pass 2 was not rebuilt.
+
+### Changed
+- `publish.sh` ends by listing what the published file still depends on: local files it did not inline (UW decks: the 45 Encode Sans files in `../assets/fonts/`) and hosts it needs internet for (Google Fonts, used for Open Sans and the CloudBank fonts). Fonts are not inlined yet; offline or without `assets/fonts/` next to the file, the browser uses a system font.
+- The deck CI workflow (`.github/workflows/deck.yml`) runs `./build-visuals.sh --strict` before publishing. Its optional GitHub Pages steps now deploy the published file alone as `index.html` from a `_site/` folder, only on pushes to `main`, and list the `pages`/`id-token` permissions and `github-pages` environment that Pages deployment needs.
+- `README.md`, the deck `README.md` and `AGENTS.md`, `CONTRIBUTING.md` and `/uw-slides:new-deck` no longer call the published file "fully self-contained"; they say what is inlined and that fonts are not.
+
+### Added
+- `tools/test_publish.py` (stdlib only, no network): runs `templates/publish.sh` on a small fake deck and checks the inlining, exact copying of backslashes, the end-tag guard, the fallback to `build/index.html` and the dependency report.
+
 ## [0.5.0] — 2026-11-05
 
 Fixes the CloudBank slides that overlapped or ran off the screen on laptop-size displays: all 13 now fit at every size from 1920×1080 down to 1024×768. The CloudBank catalog also changes shape: a new slide on where to get help, a diagram on `cb-what-is` showing that CloudBank sits between you and the clouds, and `cb-why-choose` now covers what `cb-programs` did. **The catalog version is now 3.0.0 because `cb-programs` was removed:** a deck that uses it needs the change under Removed. Revised catalog slides reach a deck the next time you run `/uw-slides:generate-slides`. No build scripts or tools changed, so decks don't need `/uw-slides:update-deck` for this release.

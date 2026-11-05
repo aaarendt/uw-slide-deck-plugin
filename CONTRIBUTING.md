@@ -53,7 +53,7 @@ Lint checks every slide fragment against the brief, verifies CSS scoping, font s
 
 ```bash
 ./publish.sh
-# → build/index-published.html (all images inlined as base64)
+# → build/index-published.html (images and reveal.js inlined; fonts stay linked)
 ```
 
 Share `build/index-published.html` as a pull-request preview artifact or email attachment.
@@ -224,6 +224,7 @@ Plugin source lives in this repository. Skills are in `skills/<name>/SKILL.md`; 
    python3 tools/test_lint.py
    python3 tools/test_resolve_catalog.py
    python3 tools/test_new_deck.py
+   python3 tools/test_publish.py
    python3 tools/test_validate_plugin.py
    python3 tools/validate_plugin.py          # add --claude to also run `claude plugin validate`
    ```

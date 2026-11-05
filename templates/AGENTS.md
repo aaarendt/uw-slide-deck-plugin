@@ -32,5 +32,5 @@ Built with the `uw-slides` plugin (version in `.uw-slides.json`).
 ./outline.sh            # OUTLINE.md (read-only overview)
 ./build.sh              # pass 1 → build/index.html
 ./build-visuals.sh      # pass 2 → build/index-with-visuals.html
-./publish.sh            # pass 3 → build/index-published.html (self-contained)
+./publish.sh            # pass 3 → build/index-published.html (images + reveal.js inlined; fonts linked)
 ```
