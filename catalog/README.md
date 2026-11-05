@@ -274,28 +274,12 @@ use: catalog/cb-research-and-classroom
 
 ---
 
-### `cb-programs` — CloudBank programs
+### `cb-why-choose` — What you get with a CloudBank account
 **Kind:** verbatim · **Brand:** cloudbank
 
 > **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
 
-Six short headed items with original line icons (inline SVG): no cost, consulting and helpdesk, account management, multiple clouds, monitoring and optimization, training. No logos. The full original wording is in the speaker notes. No params; eject to customise.
-
-```markdown
----
-id: programs
-use: catalog/cb-programs
----
-```
-
----
-
-### `cb-why-choose` — Why choose CloudBank for an account
-**Kind:** verbatim · **Brand:** cloudbank
-
-> **Program policy wording.** Re-check against CloudBank's current pages when they change. The slide's `slide.md` lists its sources.
-
-Three reasons (no card or purchase agreement, one bill for several clouds, cost monitoring and spending cap) and a callout that awards are grant dollars, not credits. The full original wording is in the speaker notes. No params; eject to customise.
+Two columns of four headed items with original line icons. "Billing, handled for you": no credit card, one bill across several clouds, a spending cap, dollars rather than credits. "Accounts, handled for you": set up after onboarding, one login to each cloud, collaborators managed in one place, another cloud added later. Version 2.0.0 merged the former `cb-programs` slide into this one. No params; eject to customise.
 
 ```markdown
 ---
