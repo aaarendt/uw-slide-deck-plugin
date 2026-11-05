@@ -17,7 +17,7 @@ quote maps to a later slide:
 | Quote | Answered by |
 |-------|-------------|
 | No account without a university credit card | `cb-why-choose`: no card or purchase agreement |
-| No time to learn it, need a jump start | `cb-programs`: consulting, helpdesk and curated training |
+| No time to learn it, need a jump start | `cb-getting-help`: video tutorials, office hours, forum and helpdesk |
 | Setup different for every platform | `cb-why-choose`: one account, multiple clouds |
 | Opaque $12K bill, no time to dig into it | `cb-why-choose`: cost monitoring and spending cap |
 

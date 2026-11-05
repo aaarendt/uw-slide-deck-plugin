@@ -8,6 +8,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Changed
+- Catalog slide `cb-why-choose` 2.0.0 is now "What you get with a CloudBank account", merging in the former `cb-programs`. Two columns of four headed items with line icons. "Billing, handled for you": no credit card, one bill across several clouds, a spending cap, dollars rather than credits. "Accounts, handled for you": accounts set up after onboarding, one login (ACCESS credentials) to each cloud, collaborators managed in one place, and another cloud added later, from the ACCESS resource pages. Both columns say what CloudBank adds over going to a provider directly; general cloud capabilities stay on `cb-why-cloud`. The help and training items of `cb-programs` are covered by `cb-getting-help`. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
+- The catalog version is now 3.0.0, because a slide was removed (see Removed). Decks pinned to 2.x that use `cb-programs` need the change below.
+
+### Removed
+- Catalog slide `cb-programs`, merged into `cb-why-choose` (see Changed), which keeps the CloudBank catalog within its 10 to 15 slide guideline. A deck that used it fails to resolve that slide ("catalog slide metadata not found"); its existing `content/<id>.html` is kept. Remove the slide from `deck.yml` (and add `cb-why-choose` if the deck doesn't have it), or keep the old slide by replacing `use: catalog/cb-programs` in its brief with `locked: true` and a `# Key message` line, as eject would have.
+
 ### Added
 - Catalog slide `cb-getting-help` (CloudBank brand, parameterized): "You don't have to figure out the cloud alone", the places to get help, ordered by how people look for it. "Learn on your own" lists the video tutorials (Cloud 101 and the monthly Cloud Clinics, cloudbank.org/video-tutorials) and the CloudBank Catalog (cloudbank.org/cloudbank-catalog); "Ask a person" lists the monthly office hours on Zoom (10–11 am Pacific) and the community forum (community.cloudbank.org); a band at the bottom gives help@cloudbank.org. An optional `next-office-hours` param shows the next session's date, since there is no stable page listing upcoming sessions. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
 
