@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-11-05
+
+Finished decks can now go live on GitHub Pages: the deck's CI workflow deploys every push to `main` to `https://<owner>.github.io/<repo>/`, where anyone can open the deck and present it, speaker view included. The published file also works on its own now; it used to show every slide in one stack wherever the deck's `assets/` folder was missing. And `./export.sh` makes a PDF again; it had failed on every run. **In existing decks, run `/uw-slides:update-deck`** to get the new `publish.sh`, `export.sh` and CI workflow (the last two are now managed files, so the update offers them), then set Settings → Pages → Source to GitHub Actions in the deck's repository.
+
 ### Added
 - The deck CI workflow (`.github/workflows/deck.yml`) deploys the deck to GitHub Pages on every push to `main` (and when run by hand), in a separate `deploy-pages` job with the `pages`/`id-token` permissions and `github-pages` environment it needs. One-time setup is Settings → Pages → Source: GitHub Actions. Until then, or while Pages publishes from a branch, the job skips the deploy with a notice instead of failing; if it cannot read the Pages settings it deploys anyway and lets the deploy report the problem. Pull requests build, lint and upload a preview artifact but never deploy.
 - `./publish.sh --site` also writes `build/site/`: the published page as `index.html` plus the local files it still links to, copied with their paths rewritten from `build/` to the site (`../assets/fonts/X.ttf` becomes `assets/fonts/X.ttf`). For UW decks that is the Encode Sans files, so the headings keep their font on Pages; images and reveal.js are inlined and not copied. Relative paths keep working under a Pages project URL (`/<repo>/`). Inline scripts are never rewritten, and the folder is rebuilt from scratch each run. Checked by serving the site from a subfolder in Chrome: Encode Sans loads (the browser fetched only the one weight the slides use), navigation and speaker view work. This folder is what CI deploys and what the `deck` artifact now contains.
