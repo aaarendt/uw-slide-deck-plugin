@@ -1,0 +1,254 @@
+<section data-slide="cb-sensitive-data"
+         data-layout="catalog"
+         data-catalog="cb-sensitive-data@1.0.0"
+         aria-label="{{aria-label}}"
+         class="slide">
+
+  <div class="layout">
+    <p class="eyebrow">Sensitive &amp; regulated data</p>
+    <h1>Sensitive data can go in the cloud, but not by default</h1>
+
+    <div class="columns">
+      <div class="column">
+        <h2>Know your data's rules</h2>
+        <dl class="rules">
+          <div>
+            <dt>Health records (HIPAA)</dt>
+            <dd>A signed agreement with the cloud provider that covers your account, and only its approved services. De&#8209;identified data may fall outside HIPAA.</dd>
+          </div>
+          <div>
+            <dt>NIH controlled&#8209;access data</dt>
+            <dd>Systems that meet NIH's security standard</dd>
+          </div>
+          <div>
+            <dt>Federal or export&#8209;controlled data</dt>
+            <dd>Government-grade security; some data is limited to U.S. persons</dd>
+          </div>
+          <div>
+            <dt>Other sensitive data</dt>
+            <dd>Whatever its IRB protocol or data use agreement says</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <div class="column">
+        <h2>Before you upload</h2>
+        <ol class="steps">
+          <li>
+            <strong>Read the rules</strong>
+            <span>in your IRB protocol, data use agreement or sponsor contract.</span>
+          </li>
+          <li>
+            <strong>Ask your institution's</strong>
+            <span>privacy, IRB or research security office. Many have approved cloud setups.</span>
+            <span class="local">{{local-contact}}</span>
+          </li>
+          <li>
+            <strong>Talk to CloudBank early.</strong>
+            <span>Its partners run regulated projects in managed, compliant environments.</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+
+  <aside class="notes">
+    SENSITIVE AND REGULATED DATA. The question we get at every talk: can I put
+    my data in a CloudBank account? Yes, sensitive data can go in the cloud,
+    but a standard account is not set up for it. Whether you can, and how,
+    depends on the rules that come with your data, not on the cloud.
+    Know your data's rules. Health records covered by HIPAA (protected health
+    information) need a business associate agreement, a signed contract in
+    which the cloud provider agrees to protect the data, and it has to cover
+    the specific account you use. Your university may have one with AWS or
+    Microsoft for accounts it owns; do not assume it covers a CloudBank
+    account. Health data can then only go into the provider's HIPAA-eligible
+    services. NIH controlled-access human genomic data (for example from
+    dbGaP): since January 25, 2025, NIH requires that it be kept on systems,
+    including cloud systems, that meet the federal security standard NIST
+    SP 800-171, and you attest to this when you sign or renew the data use
+    certification. Many genomics researchers don't realise this applies to
+    them. Federal controlled unclassified information follows the same
+    standard; export-controlled data (ITAR, EAR) can need a government cloud
+    and access only by U.S. persons. Student records (FERPA), licensed or
+    proprietary data, and anything covered by an IRB protocol or data use
+    agreement carry whatever conditions that agreement sets.
+    Before you upload. Read the rules first. Then ask your institution: the
+    privacy office, the IRB or research security; many universities already
+    have approved, compliant cloud environments. Then talk to CloudBank as
+    early as you can. CloudBank supports regulated data through Sherlock at
+    the San Diego Supercomputer Center, which runs managed environments on
+    AWS, Azure and Google Cloud built for HIPAA, federal (FISMA, controlled
+    unclassified) and FERPA requirements, with access control, encryption,
+    monitoring and help with audits. CloudBank can also help awardees write a
+    compliance plan. [PENDING CloudBank confirmation: whether a standard
+    CloudBank account can hold health data at all, and whether CloudBank has
+    business associate agreements with the providers; whether regulated
+    projects are limited in number and who qualifies; whether Sherlock's
+    management costs come out of the allocation; where to send a
+    regulated-data request.]
+    De-identified data: data de-identified under HIPAA's rules is no longer
+    protected health information, so a standard account may be fine, but your
+    IRB or data use agreement may still set conditions. Ask first.
+  </aside>
+
+  <style>
+    section[data-slide="cb-sensitive-data"] {
+      --bg: var(--slide-bg-light);
+      --fg: var(--slide-text);
+      --fg-muted: var(--slide-text-muted);
+      --head: var(--slide-heading);
+      background: var(--bg);
+      color: var(--fg);
+      position: relative;
+      text-align: left;
+    }
+
+    section[data-slide="cb-sensitive-data"]::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--slide-accent-size);
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-sensitive-data"] .layout {
+      flex: 1;
+      height: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 6vw, 7.5rem) clamp(2.5rem, 5vw, 5rem);
+    }
+
+    section[data-slide="cb-sensitive-data"] .eyebrow {
+      font-family: var(--font-body);
+      font-size: clamp(1.5rem, 1.5vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slide-accent);
+      margin: 0 0 var(--space-2);
+    }
+
+    section[data-slide="cb-sensitive-data"] h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 2.95vw, 3.5rem);
+      font-weight: var(--slide-heading-weight);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      text-transform: var(--slide-heading-transform);
+      color: var(--head);
+      margin: 0 0 var(--space-4);
+    }
+
+    section[data-slide="cb-sensitive-data"] .columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) 2px minmax(0, 1fr);
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+
+    section[data-slide="cb-sensitive-data"] .column {
+      min-width: 0;
+      font-size: clamp(1.5rem, 1.7vw, 2rem);
+      line-height: 1.3;
+    }
+
+    section[data-slide="cb-sensitive-data"] .divider {
+      align-self: stretch;
+      background: var(--slide-accent);
+    }
+
+    section[data-slide="cb-sensitive-data"] h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 2.1vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--head);
+      margin: 0 0 var(--space-3);
+    }
+
+    section[data-slide="cb-sensitive-data"] .rules {
+      margin: 0;
+    }
+
+    section[data-slide="cb-sensitive-data"] .rules > div {
+      padding: var(--space-2) 0;
+      border-top: 1px solid var(--slide-bg-subtle);
+    }
+
+    section[data-slide="cb-sensitive-data"] .rules > div:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    section[data-slide="cb-sensitive-data"] dt {
+      display: inline;
+      margin-right: 0.3em;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-sensitive-data"] dd {
+      display: inline;
+      margin: 0;
+      min-width: 0;
+    }
+
+    section[data-slide="cb-sensitive-data"] .steps {
+      list-style: none;
+      counter-reset: step;
+      margin: 0;
+      padding: 0;
+    }
+
+    section[data-slide="cb-sensitive-data"] .steps li {
+      counter-increment: step;
+      position: relative;
+      padding-left: 3.5rem;
+      margin: 0 0 var(--space-3);
+    }
+
+    section[data-slide="cb-sensitive-data"] .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: var(--slide-accent);
+      color: var(--slide-text-on-dark);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+    }
+
+    section[data-slide="cb-sensitive-data"] .steps strong {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-sensitive-data"] .steps .local {
+      display: block;
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    section[data-slide="cb-sensitive-data"] .steps .local:empty {
+      display: none;
+    }
+
+  </style>
+</section>
