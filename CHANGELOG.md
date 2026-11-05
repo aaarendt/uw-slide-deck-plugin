@@ -8,6 +8,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+## [0.6.1] — 2026-11-05
+
+A deck without pass-2 visuals failed in CI: git does not keep empty folders, so the CI checkout had no `content-with-visuals/` and `./build-visuals.sh` stopped with "content-with-visuals/ not found". **In existing decks, run `/uw-slides:update-deck`** to get the fixed `build-visuals.sh`.
+
+### Fixed
+- `build-visuals.sh` treats a missing `content-with-visuals/` like an empty one: it notes it and builds every slide from `content/`, instead of failing. This is what CI hit on a fresh checkout of a deck with no visuals.
+- `/uw-slides:new-deck` puts a `.gitkeep` file in each folder it creates empty (`content/`, `content-with-visuals/`, `assets/images/`, `assets/diagrams/`), so a clone of a new deck has them.
+
+### Added
+- `tools/test_new_deck.py` commits a new deck to git, clones it as CI does and runs the CI build steps (`./build.sh --strict`, `./build-visuals.sh --strict`, `./publish.sh --site`), with and without the `.gitkeep` files.
+
 ## [0.6.0] — 2026-11-05
 
 Finished decks can now go live on GitHub Pages: the deck's CI workflow deploys every push to `main` to `https://<owner>.github.io/<repo>/`, where anyone can open the deck and present it, speaker view included. The published file also works on its own now; it used to show every slide in one stack wherever the deck's `assets/` folder was missing. And `./export.sh` makes a PDF again; it had failed on every run. **In existing decks, run `/uw-slides:update-deck`** to get the new `publish.sh`, `export.sh` and CI workflow (the last two are now managed files, so the update offers them), then set Settings → Pages → Source to GitHub Actions in the deck's repository.

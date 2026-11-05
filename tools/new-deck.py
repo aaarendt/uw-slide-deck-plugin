@@ -269,6 +269,10 @@ def _populate(result, name, brand, plugin_dir, copies, fonts_src):
 
     for d in EMPTY_DIRS:
         os.makedirs(os.path.join(deck_dir, d), exist_ok=True)
+        # git does not keep empty folders; without this a fresh clone (CI)
+        # would be missing them.
+        with open(os.path.join(deck_dir, d, ".gitkeep"), "w", encoding="utf-8"):
+            pass
 
     write_deck_yml(deck_dir, plugin_dir, name)
     write_starter_briefs(deck_dir, name)
