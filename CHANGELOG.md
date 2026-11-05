@@ -8,6 +8,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Changed
+- The `README.md` that `/uw-slides:new-deck` writes into each deck is rewritten for the current workflow. It links to the uw-slides repository as the deck's source and to its install, update, catalog, brief-format, layout, brand and accessibility pages, and says where the plugin version is recorded. It now covers what it left out: the brand review and the accessibility check (which `/uw-slides:generate-slides` runs, and which can be run again), `./lint.sh` and `./status.sh`, catalog slides, replacing the two starter slides, `plan-deck replan`, the presenter keys and where speaker notes come from, keeping a deck up to date with `/uw-slides:update-deck`, and which files to leave alone. It no longer has you run `./build.sh` after `generate-slides`, which already builds. A "Live deck" line is there to replace with the GitHub Pages link. Existing decks keep their README (`/uw-slides:update-deck` never touches `*.md` files); copy `templates/README.md` from the plugin to replace it, then put the deck's name and brand back in.
+
 ## [0.6.1] — 2026-11-05
 
 A deck without pass-2 visuals failed in CI: git does not keep empty folders, so the CI checkout had no `content-with-visuals/` and `./build-visuals.sh` stopped with "content-with-visuals/ not found". **In existing decks, run `/uw-slides:update-deck`** to get the fixed `build-visuals.sh`.
