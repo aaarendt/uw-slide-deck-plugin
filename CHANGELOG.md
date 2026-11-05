@@ -8,18 +8,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
-### Changed
-- Catalog slide `cb-why-choose` 2.0.0 is now "What you get with a CloudBank account", merging in the former `cb-programs`. Two columns of four headed items with line icons. "Billing, handled for you": no credit card, one bill across several clouds, a spending cap, dollars rather than credits. "Accounts, handled for you": accounts set up after onboarding, one login (ACCESS credentials) to each cloud, collaborators managed in one place, and another cloud added later, from the ACCESS resource pages. Both columns say what CloudBank adds over going to a provider directly; general cloud capabilities stay on `cb-why-cloud`. The help and training items of `cb-programs` are covered by `cb-getting-help`. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
-- The catalog version is now 3.0.0, because a slide was removed (see Removed). Decks pinned to 2.x that use `cb-programs` need the change below.
-
-### Removed
-- Catalog slide `cb-programs`, merged into `cb-why-choose` (see Changed), which keeps the CloudBank catalog within its 10 to 15 slide guideline. A deck that used it fails to resolve that slide ("catalog slide metadata not found"); its existing `content/<id>.html` is kept. Remove the slide from `deck.yml` (and add `cb-why-choose` if the deck doesn't have it), or keep the old slide by replacing `use: catalog/cb-programs` in its brief with `locked: true` and a `# Key message` line, as eject would have.
-
 ### Added
 - Catalog slide `cb-getting-help` (CloudBank brand, parameterized): "You don't have to figure out the cloud alone", the places to get help, ordered by how people look for it. "Learn on your own" lists the video tutorials (Cloud 101 and the monthly Cloud Clinics, cloudbank.org/video-tutorials) and the CloudBank Catalog (cloudbank.org/cloudbank-catalog); "Ask a person" lists the monthly office hours on Zoom (10–11 am Pacific) and the community forum (community.cloudbank.org); a band at the bottom gives help@cloudbank.org. An optional `next-office-hours` param shows the next session's date, since there is no stable page listing upcoming sessions. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
 
 ### Changed
-- The catalog version is now 2.2.0: one slide was added (see Added). Nothing was removed, so decks pinned to 2.1.0 keep working.
+- Catalog slide `cb-why-choose` 2.0.0 is now "What you get with a CloudBank account", merging in the former `cb-programs`. Two columns of four headed items with line icons. "Billing, handled for you": no credit card, one bill across several clouds, a spending cap, dollars rather than credits. "Accounts, handled for you": accounts set up after onboarding, one login (ACCESS credentials) to each cloud, collaborators managed in one place, and another cloud added later, from the ACCESS resource pages. Both columns say what CloudBank adds over going to a provider directly; general cloud capabilities stay on `cb-why-cloud`. The help and training items of `cb-programs` are covered by `cb-getting-help`. Checked at 1920×1080, 1600×1200, 1440×900, 1366×768, 1280×720 and 1024×768.
+- `CLAUDE.md`'s font-size rules no longer contradict each other. "Use at least `2vw` for body text" and a body range of "1.6–2.2vw" are replaced by the rule the CloudBank fixes followed: body text should reach its maximum at about 1920px wide (the maximum in px ÷ 19.2, so `1.7vw` for a `2rem` maximum), with the body range now `clamp(1.5rem, 1.55–1.8vw, 1.875–2rem)`. A higher vw keeps body text above the minimum on laptop screens, which caused the overflow fixed below. The headline rule is unchanged.
+- The catalog version is now 3.0.0: `cb-programs` was removed (see Removed), so the major version changes, and `cb-getting-help` was added. Decks pinned to 2.x keep working unless they use `cb-programs`; see Removed for the fix.
+
+### Removed
+- Catalog slide `cb-programs`, merged into `cb-why-choose` (see Changed), which keeps the CloudBank catalog within its 10 to 15 slide guideline. A deck that used it fails to resolve that slide ("catalog slide metadata not found"); its existing `content/<id>.html` is kept. Remove the slide from `deck.yml` (and add `cb-why-choose` if the deck doesn't have it), or keep the old slide by replacing `use: catalog/cb-programs` in its brief with `locked: true` and a `# Key message` line, as eject would have.
 
 ### Fixed
 - Four CloudBank catalog slides overlapped or ran off the screen below 1920×1080, failing the fit check in `references/layouts.md` §7 (1920×1080, 1600×1200, 1280×720, 1024×768); all 13 CloudBank slides now pass it, also at 1440×900 and 1366×768. Each `clamp()` now reaches the 1.5rem floor on laptop screens instead of staying above it, with the same maximum, so the slides look the same at 1920×1080.
@@ -27,6 +25,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
   - `cb-rule-of-thumb-costs` 1.1.0: the $730 callout overlapped the prices line or fell off the slide. The price column is narrower, and two rows are shorter: "Laptop-class virtual machine" (was "Virtual machine with laptop power") and "NVIDIA A10G GPU machine", "Spot: about half. Ask for quota first." (was "Machine with an NVIDIA A10G GPU", "Spot: about half. Request GPU quota first.").
   - `cb-why-cloud` 1.0.1: at 1366×768 and smaller the vertically centred grid overflowed upwards into the "Why cloud?" heading. The grid now uses `align-content: safe center`.
   - `cb-by-the-numbers` 1.0.1: at 1280×720 the Accelerate row overlapped the Source line.
+- The catalog table in `README.md` listed 6 of the 13 CloudBank slides. It now lists all of them, in catalog order.
 
 ## [0.4.0] — 2026-11-03
 
