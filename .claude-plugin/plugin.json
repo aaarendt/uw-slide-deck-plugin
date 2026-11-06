@@ -1,6 +1,6 @@
 {
     "name": "uw-slides",
-    "version": "0.6.2",
+    "version": "0.7.0",
     "description": "University of Washington slide deck builder with brand compliance and WCAG 2.1 AA accessibility. Create presentation slides using markdown-per-slide workflow with UW design system, accessibility validation, and reusable layout templates.",
     "author": {
         "name": "Anthony Arendt",

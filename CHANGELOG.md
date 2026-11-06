@@ -8,19 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
-### Fixed
+## [0.7.0] — 2026-11-06
 
-- `setup-reveal.sh` downloads the speaker-notes plugin from `dist/plugin/notes.js`, where reveal.js 6.x ships it. It used the 5.x path `plugin/notes/notes.js`, which returns 404 for 6.0.2, so the script stopped (`set -e`) after `reveal.min.js` and `reveal.min.css` and left `assets/reveal/plugin/notes/notes.js` missing. The file is still saved as `assets/reveal/plugin/notes/notes.js`, so `footer.html`, `publish.sh`, `export.sh` and `new-deck.py` are unchanged. Without it the footer's `RevealNotes` reference throws, `Reveal.initialize` never runs and the deck is a black screen. **In existing decks, run `/uw-slides:update-deck`, then `./setup-reveal.sh`.**
-- The README's manual-download instructions for the notes plugin use the correct URL.
-- `/uw-slides:update-deck` now manages `setup-reveal.sh` (#41), so existing decks receive changes to it.
+`/uw-slides:generate-slides` no longer asks permission for every command, read and write. New decks come with Claude Code permission rules, and `/uw-slides:update-deck` adds them to existing decks. **In existing decks, run `/uw-slides:update-deck`.** It shows the rules it will add and keeps everything already in your settings. The corrected `setup-reveal.sh` comes with it, so run `/uw-slides:update-deck` there once for both (see Fixed).
 
 ### Added
-
 - `tools/test_setup_reveal_urls.py` checks that the three download URLs in `templates/setup-reveal.sh` exist on jsDelivr (HEAD requests). It is skipped when the CDN cannot be reached, and checks the local path the deck expects either way (#56).
-
-`/uw-slides:generate-slides` no longer asks permission for every command, read and write. New decks come with Claude Code permission rules, and `/uw-slides:update-deck` adds them to existing decks. **In existing decks, run `/uw-slides:update-deck`.** It shows the rules it will add and keeps everything already in your settings.
-
-### Added
 - `tools/deckperms.py` writes the permission rules into a deck: `.claude/settings.json` (commit it) allows the deck's own commands (`python3 tools/deckparse.py`, `python3 tools/resolve-catalog.py resolve`, `python3 tools/lint.py`, `./build.sh`, `./build-visuals.sh`, `./outline.sh`, `./lint.sh`, `./status.sh`, `printenv UW_SLIDES_HOME`) and edits to `content/` and `slides/`; `.claude/settings.local.json` (this computer only, added to `.gitignore`) allows reading the plugin's folder, where the skills read layouts, brand rules and schemas. It adds only missing rules, keeps everything else, leaves a settings file that is not valid JSON untouched, and `--check` shows what it would add. `tools/test_deckperms.py` covers it.
 - `/uw-slides:new-deck` runs it, so a new deck has the rules from the start. It prints how many it wrote.
 - `tools/test_skill_commands.py` reads every command out of the `SKILL.md` files and fails unless each one is covered by a permission rule or is on a short list of commands that are meant to ask (`resolve-catalog.py eject`, `./publish.sh`, `./export.sh`, `./setup-reveal.sh`, `git rm`). It also fails on a compound command (`&&`, `;`, pipes, `$VAR`, redirects), because Claude Code checks each part and one unmatched part makes the whole command ask. A command added to a skill without a rule now fails CI instead of bringing the prompts back.
@@ -30,6 +23,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 - Every skill now says to run each command exactly as written, as one command with nothing appended. In a live run Claude added `2>/dev/null; echo "exit: $?"` to `printenv UW_SLIDES_HOME`, and the `$?` made an otherwise allowed command ask. The skills also say to check for a file with the Glob or Read tool instead of `ls` or `test` in the shell, and `generate-slides` no longer redirects the resolver's output (`2>&1`).
 - `/uw-slides:update-deck` checks the permission rules and offers to add them, in the same confirmation as the managed files. It treats them as add-only: they are not managed files and are never overwritten.
 - `.gitignore` in new decks lists `.claude/settings.local.json`.
+
+### Fixed
+- `setup-reveal.sh` downloads the speaker-notes plugin from `dist/plugin/notes.js`, where reveal.js 6.x ships it. It used the 5.x path `plugin/notes/notes.js`, which returns 404 for 6.0.2, so the script stopped (`set -e`) after `reveal.min.js` and `reveal.min.css` and left `assets/reveal/plugin/notes/notes.js` missing. The file is still saved as `assets/reveal/plugin/notes/notes.js`, so `footer.html`, `publish.sh`, `export.sh` and `new-deck.py` are unchanged. Without it the footer's `RevealNotes` reference throws, `Reveal.initialize` never runs and the deck is a black screen. **In existing decks, run `/uw-slides:update-deck`, then `./setup-reveal.sh`.**
+- The README's manual-download instructions for the notes plugin use the correct URL.
+- `/uw-slides:update-deck` now manages `setup-reveal.sh` (#41), so existing decks receive changes to it.
 
 ### Why
 - The earlier fix for permission prompts (#51) covered only `/uw-slides:new-deck`, by replacing about 20 commands with one script. `/uw-slides:generate-slides` still asked about the `deckparse.py` and resolver commands (which no rule was shipped for), about reading the plugin's files from outside the deck, and about writing each slide, so a 15-slide deck could mean 30 or more prompts. The skills also named an allow rule only in prose, and only for `deckparse.py`.
