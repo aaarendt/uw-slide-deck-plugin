@@ -8,6 +8,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+### Fixed
+
+- `setup-reveal.sh` downloads the speaker-notes plugin from `dist/plugin/notes.js`, where reveal.js 6.x ships it. It used the 5.x path `plugin/notes/notes.js`, which returns 404 for 6.0.2, so the script stopped (`set -e`) after `reveal.min.js` and `reveal.min.css` and left `assets/reveal/plugin/notes/notes.js` missing. The file is still saved as `assets/reveal/plugin/notes/notes.js`, so `footer.html`, `publish.sh`, `export.sh` and `new-deck.py` are unchanged. Without it the footer's `RevealNotes` reference throws, `Reveal.initialize` never runs and the deck is a black screen. **In existing decks, run `/uw-slides:update-deck`, then `./setup-reveal.sh`.**
+- The README's manual-download instructions for the notes plugin use the correct URL.
+- `/uw-slides:update-deck` now manages `setup-reveal.sh` (#41), so existing decks receive changes to it.
+
+### Added
+
+- `tools/test_setup_reveal_urls.py` checks that the three download URLs in `templates/setup-reveal.sh` exist on jsDelivr (HEAD requests). It is skipped when the CDN cannot be reached, and checks the local path the deck expects either way (#56).
+
 `/uw-slides:generate-slides` no longer asks permission for every command, read and write. New decks come with Claude Code permission rules, and `/uw-slides:update-deck` adds them to existing decks. **In existing decks, run `/uw-slides:update-deck`.** It shows the rules it will add and keeps everything already in your settings.
 
 ### Added
