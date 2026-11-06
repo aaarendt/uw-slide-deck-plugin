@@ -451,7 +451,7 @@ Claude Code asks before it runs a command, reads a file outside the folder you s
 | `.claude/settings.json` | Allow rules for the deck's own commands (`python3 tools/deckparse.py`, `python3 tools/resolve-catalog.py resolve`, `python3 tools/lint.py`, `./build.sh`, `./build-visuals.sh`, `./outline.sh`, `./lint.sh`, `./status.sh`) and for edits to `content/` and `slides/` | Yes: it reaches anyone who clones the deck |
 | `.claude/settings.local.json` | A read rule for the plugin's folder, where the skills read the layouts, brand rules and schemas | No: it holds this computer's path, and is in `.gitignore` |
 
-Commands you still get asked about are the ones that do something beyond building the deck: `./publish.sh`, `./export.sh`, `git`, `python3 tools/resolve-catalog.py eject`, and the first run of `/uw-slides:update-deck`. The plugin's folder name carries its version, so the read rule covers the plugin's whole folder of versions and survives updates.
+Commands you still get asked about are the ones that do something beyond building the deck: `./publish.sh`, `./export.sh`, `./setup-reveal.sh` (it downloads reveal.js), `git`, `python3 tools/resolve-catalog.py eject`, and the first run of `/uw-slides:update-deck`. The plugin's folder name carries its version, so the read rule covers the plugin's whole folder of versions and survives updates.
 
 **A deck made with an earlier plugin version** has neither file. Run `/uw-slides:update-deck` in it: it adds the missing rules, keeps anything already in your settings, and shows what it will add before it writes. Or from the terminal, in the deck folder:
 

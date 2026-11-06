@@ -40,6 +40,8 @@ If none of these has `tools/deckparse.py`, stop and ask the user where the plugi
 
 Write every path literally when you run a command. Never use shell variables (`PLUGIN=... python3 $PLUGIN/...`): Claude Code cannot match an allow rule against them, so each run asks for permission.
 
+Run each command exactly as this skill writes it, as one command with nothing appended: no redirects (`2>/dev/null`), no `; echo "exit: $?"`, no `&&`, pipes, loops or leading `cd`. Claude Code checks every part of a compound command, so one part that no rule matches makes the whole command ask. Check whether `UW_SLIDES_HOME` is set by running `printenv UW_SLIDES_HOME` alone (no output means it is not set), and check that a file exists with the Glob or Read tool, not with `ls` or `test` in the shell.
+
 ## Usage
 
 ```

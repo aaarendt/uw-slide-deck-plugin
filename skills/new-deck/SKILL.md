@@ -179,6 +179,7 @@ python3 <PLUGIN>/tools/new-deck.py <presentation-name> --brand=<brand>
 `--brand` defaults to `uw`; leave it out unless the user asked for another brand. Rules for the command, because Claude Code can only match an allow rule against literal text:
 
 - **Never use shell variables** (`PLUGIN=... python3 $PLUGIN/...`), `cd`, `&&` or pipes. Write each path literally and run one command per call.
+- Run the command exactly as written, with nothing appended: no redirects (`2>/dev/null`), no `; echo "exit: $?"`. Check whether `UW_SLIDES_HOME` is set by running `printenv UW_SLIDES_HOME` alone (no output means it is not set), and check that a file exists with the Glob or Read tool, not with `ls` or `test` in the shell.
 - Quote the presentation name if it contains spaces.
 
 Recommended allow rules, for the project's or the user's `.claude/settings.json`. The plugin folder is version-numbered, so the rule uses a `*` for the path instead of a literal version:

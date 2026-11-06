@@ -8,7 +8,7 @@
 
 ## Checklist
 
-- [ ] Tests pass: `python3 tools/test_deckparse.py && python3 tools/test_lint.py && python3 tools/test_resolve_catalog.py && python3 tools/test_new_deck.py && python3 tools/test_deckperms.py && python3 tools/test_validate_plugin.py`
+- [ ] Tests pass: `python3 tools/test_deckparse.py && python3 tools/test_lint.py && python3 tools/test_resolve_catalog.py && python3 tools/test_new_deck.py && python3 tools/test_deckperms.py && python3 tools/test_skill_commands.py && python3 tools/test_validate_plugin.py`
 - [ ] Packaging valid: `python3 tools/validate_plugin.py`
 - [ ] CLAUDE.md and README.md updated if the change affects skill behaviour, paths, or the user-facing workflow
 - [ ] CHANGELOG.md updated under `[Unreleased]`
