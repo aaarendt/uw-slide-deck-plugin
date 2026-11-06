@@ -27,6 +27,7 @@ sys.modules["new_deck"] = nd
 _spec.loader.exec_module(nd)
 
 import deckparse  # noqa: E402
+import deckperms  # noqa: E402
 
 
 def _read(path):
@@ -65,6 +66,7 @@ class TestFiles(ScaffoldCase):
                 expected = [d for d, _, _ in nd.FILES] + [nd.HEADER[0]]
                 expected += [d for d, _ in nd.TEXT_TEMPLATES]
                 expected += ["deck.yml", "slides/title.md", ".gitignore", ".brand", ".uw-slides.json"]
+                expected += [".claude/settings.json", ".claude/settings.local.json"]
                 for rel in expected:
                     self.assertTrue(os.path.isfile(os.path.join(deck, rel)), rel)
                 for d in nd.EMPTY_DIRS:
@@ -233,7 +235,35 @@ class TestContents(ScaffoldCase):
 
     def test_gitignore(self):
         r = self.scaffold()
-        self.assertEqual(_read(os.path.join(r.deck_dir, ".gitignore")), "build/\n.DS_Store\n*.swp\n*~\n")
+        self.assertEqual(
+            _read(os.path.join(r.deck_dir, ".gitignore")),
+            "build/\n.DS_Store\n*.swp\n*~\n.claude/settings.local.json\n",
+        )
+
+    def test_permission_rules_are_written(self):
+        r = self.scaffold()
+        shared = json.loads(_read(os.path.join(r.deck_dir, ".claude", "settings.json")))
+        self.assertEqual(shared["permissions"]["allow"], deckperms.SHARED_RULES)
+        local = json.loads(_read(os.path.join(r.deck_dir, ".claude", "settings.local.json")))
+        self.assertEqual(
+            local["permissions"]["allow"],
+            deckperms.plugin_read_rules(PLUGIN_DIR, os.path.realpath(PLUGIN_DIR)),
+        )
+        self.assertEqual(r.permission_rules, len(deckperms.SHARED_RULES) + len(local["permissions"]["allow"]))
+
+    def test_permission_rules_are_idempotent_after_scaffold(self):
+        r = self.scaffold()
+        again = deckperms.apply(r.deck_dir, os.path.realpath(PLUGIN_DIR), PLUGIN_DIR)
+        self.assertFalse(again.changed)
+
+    def test_every_script_a_rule_names_exists_in_the_deck(self):
+        """A rule for a script a deck does not have would silently never match."""
+        r = self.scaffold()
+        for rule in deckperms.SHARED_RULES:
+            m = re.fullmatch(r"Bash\((?:python3 )?(\./[\w.-]+\.sh|tools/[\w.-]+\.py)\b.*\)", rule)
+            if m:
+                with self.subTest(rule=rule):
+                    self.assertTrue(os.path.isfile(os.path.join(r.deck_dir, m.group(1))), m.group(1))
 
     def test_vendored_deckparse_validates_the_deck(self):
         r = self.scaffold()

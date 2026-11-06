@@ -8,9 +8,10 @@ Creates ./<name>/ in the current directory with everything
 /uw-slides:new-deck used to copy and write by hand: the build scripts and
 templates, the brand's shared header and footer, the vendored tools, the
 CI and collaboration files, fonts (uw brand only), .brand, .uw-slides.json,
-deck.yml with the starter briefs, README.md, AGENTS.md, CLAUDE.md and
-.gitignore. It then validates deck.yml and the briefs and downloads reveal.js
-with setup-reveal.sh.
+deck.yml with the starter briefs, README.md, AGENTS.md, CLAUDE.md,
+.gitignore and the Claude Code permission rules (.claude/, see deckperms.py).
+It then validates deck.yml and the briefs and downloads reveal.js with
+setup-reveal.sh.
 
 The plugin is the one this script lives in (two directories above it), so no
 plugin lookup is needed. The script refuses to touch an existing folder, and a
@@ -33,9 +34,13 @@ import shutil
 import subprocess
 import sys
 
-PLUGIN_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+# The plugin's path as this script was run (may go through a symlink) and with
+# symlinks resolved; deckperms needs both to write its Read rules.
+PLUGIN_DIR_LEXICAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PLUGIN_DIR = os.path.realpath(PLUGIN_DIR_LEXICAL)
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 import deckparse  # noqa: E402  (vendored alongside this file)
+import deckperms  # noqa: E402  (writes .claude/settings.json; not copied into decks)
 
 BRANDS = {"uw": "UW-branded", "cloudbank": "CloudBank-branded"}
 
@@ -78,7 +83,8 @@ TEXT_TEMPLATES = [
 
 EMPTY_DIRS = ["content", "content-with-visuals", "assets/images", "assets/diagrams"]
 
-GITIGNORE = "build/\n.DS_Store\n*.swp\n*~\n"
+# .claude/settings.local.json holds this computer's plugin path (see deckperms.py).
+GITIGNORE = "build/\n.DS_Store\n*.swp\n*~\n.claude/settings.local.json\n"
 
 TITLE_BRIEF = """---
 id: title
@@ -105,6 +111,7 @@ class Result:
         self.plugin_version = plugin_version
         self.files = 0
         self.fonts = 0
+        self.permission_rules = 0  # Claude Code allow rules written to .claude/
         self.reveal = None  # True downloaded, False failed, None skipped
         self.warnings = []
 
@@ -188,11 +195,12 @@ def _run_setup_reveal(deck_dir):
 # ---------------------------------------------------------------------------
 
 
-def scaffold(name, brand="uw", dest=".", plugin_dir=PLUGIN_DIR, skip_reveal=False, reveal_runner=None):
+def scaffold(name, brand="uw", dest=".", plugin_dir=PLUGIN_DIR_LEXICAL, skip_reveal=False, reveal_runner=None):
     """Create <dest>/<name>/ and return a Result. Raises ScaffoldError."""
     if brand not in BRANDS:
         raise ScaffoldError(f"unknown brand {brand!r} (use {' or '.join(BRANDS)})")
     validate_name(name)
+    lexical_plugin_dir = os.path.abspath(plugin_dir)
     plugin_dir = os.path.realpath(plugin_dir)
     version = _plugin_version(plugin_dir)
 
@@ -218,7 +226,7 @@ def scaffold(name, brand="uw", dest=".", plugin_dir=PLUGIN_DIR, skip_reveal=Fals
 
     result = Result(deck_dir, brand, version)
     try:
-        _populate(result, name, brand, plugin_dir, copies, fonts_src)
+        _populate(result, name, brand, plugin_dir, copies, fonts_src, lexical_plugin_dir)
         deckparse.load_deck_dir(deck_dir)  # validates deck.yml and the briefs
         if skip_reveal:
             result.reveal = None
@@ -235,6 +243,9 @@ def scaffold(name, brand="uw", dest=".", plugin_dir=PLUGIN_DIR, skip_reveal=Fals
     except deckparse.DeckParseError as e:
         shutil.rmtree(deck_dir, ignore_errors=True)
         raise ScaffoldError(f"the scaffolded deck did not validate (plugin bug): {e}")
+    except deckperms.PermissionsError as e:
+        shutil.rmtree(deck_dir, ignore_errors=True)
+        raise ScaffoldError(f"could not write the Claude Code permission rules (plugin bug): {e}")
     except BaseException as e:
         shutil.rmtree(deck_dir, ignore_errors=True)
         if isinstance(e, (ScaffoldError, KeyboardInterrupt)):
@@ -243,7 +254,7 @@ def scaffold(name, brand="uw", dest=".", plugin_dir=PLUGIN_DIR, skip_reveal=Fals
     return result
 
 
-def _populate(result, name, brand, plugin_dir, copies, fonts_src):
+def _populate(result, name, brand, plugin_dir, copies, fonts_src, lexical_plugin_dir=None):
     deck_dir = result.deck_dir
 
     for dst, src in copies:
@@ -289,6 +300,11 @@ def _populate(result, name, brand, plugin_dir, copies, fonts_src):
     }
     _write(os.path.join(deck_dir, ".uw-slides.json"), json.dumps(stamp, indent=2) + "\n")
     result.files += 3  # .gitignore, .brand, .uw-slides.json
+
+    # Claude Code permission rules, so the skills do not ask about every command.
+    perms = deckperms.apply(deck_dir, plugin_dir, lexical_plugin_dir)
+    result.files += perms.files
+    result.permission_rules = len(perms.shared) + len(perms.local)
 
 
 def write_deck_yml(deck_dir, plugin_dir, name):
@@ -338,6 +354,7 @@ def main(argv):
     print(f"  Plugin: v{r.plugin_version} ({PLUGIN_DIR}), recorded in .uw-slides.json")
     fonts = f", {r.fonts} fonts" if r.fonts else ""
     print(f"  Files: {r.files} written{fonts}; deck.yml and the starter briefs validate")
+    print(f"  Permissions: {r.permission_rules} Claude Code allow rules in .claude/ so the skills don't ask for each command")
     if r.reveal is True:
         print("  reveal.js: downloaded to assets/reveal/")
     elif r.reveal is None:

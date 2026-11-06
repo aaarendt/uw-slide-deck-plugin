@@ -39,7 +39,9 @@ Resolve the brand in this order:
 /uw-slides:generate-slides <id> [<id>...]  # only these slides
 ```
 
-Run from inside the presentation directory. All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put there by `/uw-slides:new-deck`). The recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
+Run from inside the presentation directory. All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put there by `/uw-slides:new-deck`).
+
+**Permissions.** Decks made by a plugin version with `tools/deckperms.py` ship Claude Code allow rules in `.claude/settings.json` for everything this skill runs: `deckparse.py`, `resolve-catalog.py resolve`, the build scripts, and writes to `content/` and `slides/`. The plugin's own files (layouts, brand rules, schemas) are covered by a Read rule in `.claude/settings.local.json`. A deck made earlier has neither: if the user is being asked to approve each command, tell them to run `/uw-slides:update-deck`, which adds the rules. Keep to the literal single-command forms below, or the rules cannot match. Do not ask the user to approve commands one by one when the rules are missing; point them at the update.
 
 ## Read first
 

@@ -8,6 +8,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ver
 
 ## [Unreleased]
 
+`/uw-slides:generate-slides` no longer asks permission for every command, read and write. New decks come with Claude Code permission rules, and `/uw-slides:update-deck` adds them to existing decks. **In existing decks, run `/uw-slides:update-deck`.** It shows the rules it will add and keeps everything already in your settings.
+
+### Added
+- `tools/deckperms.py` writes the permission rules into a deck: `.claude/settings.json` (commit it) allows the deck's own commands (`python3 tools/deckparse.py`, `python3 tools/resolve-catalog.py resolve`, `python3 tools/lint.py`, `./build.sh`, `./build-visuals.sh`, `./outline.sh`, `./lint.sh`, `./status.sh`, `printenv UW_SLIDES_HOME`) and edits to `content/` and `slides/`; `.claude/settings.local.json` (this computer only, added to `.gitignore`) allows reading the plugin's folder, where the skills read layouts, brand rules and schemas. It adds only missing rules, keeps everything else, leaves a settings file that is not valid JSON untouched, and `--check` shows what it would add. `tools/test_deckperms.py` covers it.
+- `/uw-slides:new-deck` runs it, so a new deck has the rules from the start. It prints how many it wrote.
+- README "Permission prompts" explains the rules, which commands still ask (`./publish.sh`, `./export.sh`, `git`, `resolve-catalog.py eject`), and the two user-level rules for the plugin's own scripts (`new-deck.py`, `deckperms.py`).
+
+### Changed
+- `/uw-slides:update-deck` checks the permission rules and offers to add them, in the same confirmation as the managed files. It treats them as add-only: they are not managed files and are never overwritten.
+- `.gitignore` in new decks lists `.claude/settings.local.json`.
+
+### Why
+- The earlier fix for permission prompts (#51) covered only `/uw-slides:new-deck`, by replacing about 20 commands with one script. `/uw-slides:generate-slides` still asked about the `deckparse.py` and resolver commands (which no rule was shipped for), about reading the plugin's files from outside the deck, and about writing each slide, so a 15-slide deck could mean 30 or more prompts. The skills also named an allow rule only in prose, and only for `deckparse.py`.
+
 ## [0.6.2] — 2026-11-05
 
 New decks get an up-to-date `README.md` that links back to the uw-slides repository. Nothing else changes, so existing decks don't need `/uw-slides:update-deck` for this release.
