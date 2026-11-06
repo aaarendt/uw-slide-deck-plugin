@@ -26,6 +26,8 @@ Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-dec
 
 **Never touched:** `content/`, `content-with-visuals/`, `slides/`, `assets/`, `deck.yml` (the deck's metadata and slide order; the CI workflow `.github/workflows/deck.yml` is a different file, and managed), `VISUALS.md`, `OUTLINE.md`, `.brand`, `*.md` files.
 
+**Add-only:** the Claude Code permission rules in `.claude/settings.json` and `.claude/settings.local.json`, and the `.gitignore` line for the local file (step 4b). These are not managed files: the script only adds rules that are missing and keeps everything else in those files.
+
 ## Plugin directory
 
 Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the deck. Resolve `PLUGIN` once per invocation. The first match wins, and `<PLUGIN>/tools/deckparse.py` must exist:
@@ -37,6 +39,8 @@ Paths written as `<PLUGIN>/...` are files in the uw-slides plugin, not in the de
 If none of these has `tools/deckparse.py`, stop and ask the user where the plugin is.
 
 Write every path literally when you run a command. Never use shell variables (`PLUGIN=... python3 $PLUGIN/...`): Claude Code cannot match an allow rule against them, so each run asks for permission.
+
+Run each command exactly as this skill writes it, as one command with nothing appended: no redirects (`2>/dev/null`), no `; echo "exit: $?"`, no `&&`, pipes, loops or leading `cd`. Claude Code checks every part of a compound command, so one part that no rule matches makes the whole command ask. Check whether `UW_SLIDES_HOME` is set by running `printenv UW_SLIDES_HOME` alone (no output means it is not set), and check that a file exists with the Glob or Read tool, not with `ls` or `test` in the shell.
 
 ## Usage
 
@@ -103,12 +107,21 @@ Changes found:
   tools/deckparse.py  — updated
   shared/header.html  — no change
   ...
+Permissions: 12 Claude Code allow rules missing (.claude/settings.json, .claude/settings.local.json)
 
 No changes:
   build-visuals.sh, outline.sh, publish.sh, shared/footer.html
 ```
 
-If nothing changed, say so and stop.
+Also check the Claude Code permission rules, which keep the other skills from asking about every command (the rules are not a managed file: the deck's own settings are never overwritten, only missing rules are added). Run from the deck directory, with `<PLUGIN>` written as the resolved absolute path:
+
+```
+python3 <PLUGIN>/tools/deckperms.py . --check
+```
+
+It prints the rules it would add to `.claude/settings.json` (shared with the deck's repository) and `.claude/settings.local.json` (this computer only), or says there is nothing to add. Add a `Permissions:` line to the report below for it. The recommended user-level allow rule for this command, so it does not ask in every deck, is `Bash(python3 */tools/deckperms.py *)` (the `*` stands for the version-numbered plugin folder).
+
+If no managed file changed and no permission rule is missing, say so and stop.
 
 Ask the user to confirm before writing anything. If they decline, stop.
 
@@ -117,6 +130,16 @@ Ask the user to confirm before writing anything. If they decline, stop.
 For each changed file the user confirmed:
 - Copy the plugin's version over the deck's version.
 - Keep the file executable if it was executable before (`build.sh`, `build-visuals.sh`, `outline.sh`, `publish.sh`, `export.sh`); a `*.sh` file this adds is made executable.
+
+### 4b. Add the permission rules
+
+If the check in step 3 found missing rules and the user confirmed, run from the deck directory:
+
+```
+python3 <PLUGIN>/tools/deckperms.py .
+```
+
+It merges the missing rules into `.claude/settings.json` and `.claude/settings.local.json` and adds the local file to `.gitignore`. It keeps everything already in those files and exits 1 without changing a file that is not valid JSON; report that error and carry on. Tell the user `.claude/settings.json` is meant to be committed with the deck, so the rules reach anyone who clones it.
 
 ### 5. Update the stamp
 
@@ -145,6 +168,7 @@ If either fails, report the error. The deck's source files (`slides/`, `deck.yml
     build-visuals.sh, outline.sh, publish.sh, shared/header.html
 
   .uw-slides.json stamped: v<deck-version> → v<current-version> (plugin_dir updated)
+  Permissions: added 11 rules to .claude/settings.json and 1 to .claude/settings.local.json (or: already up to date)
 
 Validation passed. Run ./build.sh to rebuild.
 ```

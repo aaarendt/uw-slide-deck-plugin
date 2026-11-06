@@ -179,6 +179,7 @@ python3 <PLUGIN>/tools/new-deck.py <presentation-name> --brand=<brand>
 `--brand` defaults to `uw`; leave it out unless the user asked for another brand. Rules for the command, because Claude Code can only match an allow rule against literal text:
 
 - **Never use shell variables** (`PLUGIN=... python3 $PLUGIN/...`), `cd`, `&&` or pipes. Write each path literally and run one command per call.
+- Run the command exactly as written, with nothing appended: no redirects (`2>/dev/null`), no `; echo "exit: $?"`. Check whether `UW_SLIDES_HOME` is set by running `printenv UW_SLIDES_HOME` alone (no output means it is not set), and check that a file exists with the Glob or Read tool, not with `ls` or `test` in the shell.
 - Quote the presentation name if it contains spaces.
 
 Recommended allow rules, for the project's or the user's `.claude/settings.json`. The plugin folder is version-numbered, so the rule uses a `*` for the path instead of a literal version:
@@ -206,6 +207,7 @@ For reference; do not repeat these steps by hand:
 - Writes `README.md` and `AGENTS.md` with the presentation name and brand filled in, `CLAUDE.md`, `.gitignore`, and `.brand` (the brand name, which other skills read; keep it git-tracked).
 - Writes `deck.yml` (title set to the presentation name; slides `title` then `example-slide`) and the starter briefs `slides/title.md` and `slides/example-slide.md`, then validates them. There is no `SLIDES.md`, and no `content/` fragments: `/uw-slides:generate-slides` writes those.
 - Writes `.uw-slides.json` with `plugin_version`, `brand`, `scaffolded_at`, `catalog` (null) and `plugin_dir`. `/uw-slides:update-deck` uses it to detect drift. `plugin_dir` lets the deck's `tools/resolve-catalog.py` find the catalog; it goes stale when the plugin updates (the cache folder is version-numbered) until `/uw-slides:update-deck` rewrites it, and it is machine-specific, so don't commit it to a repository shared between machines (the resolver ignores a path that doesn't exist).
+- Writes the Claude Code permission rules (`tools/deckperms.py`): `.claude/settings.json` allows the commands the other skills run in the deck (`deckparse.py`, `resolve-catalog.py resolve`, `lint.py`, the build, outline, lint and status scripts) and edits to `content/` and `slides/`; commit it with the deck. `.claude/settings.local.json` allows reading the plugin's own files (layouts, brand rules, schemas), which live outside the deck, and holds this computer's plugin path, so it goes in `.gitignore`. Together they stop `/uw-slides:generate-slides` from asking about every slide.
 - Creates the empty `content/`, `content-with-visuals/`, `assets/images/` and `assets/diagrams/` folders.
 - Runs `setup-reveal.sh` to download reveal.js into `assets/reveal/`. These files should be git-tracked so the deck works offline afterwards. A failed download is reported as a warning and does not fail the scaffold.
 

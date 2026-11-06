@@ -77,6 +77,7 @@ This fetches the latest marketplace listing and installs the new version, or rep
 - `claude plugin marketplace update` on its own only refreshes the listing; it does not update the installed plugin.
 - To get new versions automatically, run `/plugin`, go to the **Marketplaces** tab, select `uw-slide-deck` and choose **Enable auto-update**. It is off by default for marketplaces other than Anthropic's. With it on, Claude Code updates the plugin in the background after a session starts and tells you to run `/reload-plugins`.
 - The plugin's folder name includes its version, so the first `/uw-slides:new-deck` after an update asks for permission again unless you added the allow rule in [Create the deck](#1-create-the-deck).
+- Decks made with an earlier plugin version have no permission rules, so `/uw-slides:generate-slides` asks about every command there. `/uw-slides:update-deck` adds them; see [Permission prompts](#permission-prompts).
 
 **Codex** (not tested yet). Refresh the marketplace, then check the installed version:
 
@@ -120,7 +121,7 @@ Decks you have finished presenting don't need updating: a built deck keeps worki
 
 ## Make your first deck
 
-You work in Claude Code: type the `/uw-slides:` commands, or just ask in plain words ("rebuild the deck", "publish it"). The skills run the build and check scripts for you. The first time Claude Code wants to run each script it asks for permission; choose the option not to ask again, and from then on it runs them on its own. The only terminal steps are starting Claude Code (steps 1 and 2).
+You work in Claude Code: type the `/uw-slides:` commands, or just ask in plain words ("rebuild the deck", "publish it"). The skills run the build and check scripts for you. A new deck comes with permission rules for the commands the skills run, so `/uw-slides:generate-slides` doesn't ask about each slide (see [Permission prompts](#permission-prompts)). The only terminal steps are starting Claude Code (steps 1 and 2).
 
 ### 1. Create the deck
 
@@ -144,6 +145,8 @@ Creating the deck is a single command (`tools/new-deck.py` in the plugin), so Cl
 ```json
 "Bash(python3 */tools/new-deck.py *)"
 ```
+
+The new deck also gets its own permission rules for the skills that follow; see [Permission prompts](#permission-prompts).
 
 ### 2. Reopen Claude Code inside the deck
 
@@ -427,10 +430,46 @@ To change colors, spacing or type for one deck only, edit that deck's `shared/he
 **The deck doesn't run, or presenter view (`S`) doesn't open**
 - reveal.js is missing: run `./setup-reveal.sh` in the deck folder (it needs internet access). Offline, download `reveal.min.js`, `reveal.min.css` and `plugin/notes/notes.js` from `https://cdn.jsdelivr.net/npm/reveal.js@6.0.2/` into `assets/reveal/`.
 
+**Claude Code asks permission for every command while generating slides**
+- See [Permission prompts](#permission-prompts). A deck made with an earlier plugin version has no permission rules: run `/uw-slides:update-deck` in it.
+
 **A build script fails or warns about `deckparse.py`**
 - The error gives the file and line of the problem in `deck.yml` or a brief.
 - If the deck has no `tools/deckparse.py`, run `/uw-slides:update-deck` to add it.
 - If a script won't run: `chmod +x *.sh`.
+
+---
+
+## Permission prompts
+
+Claude Code asks before it runs a command, reads a file outside the folder you started it in, or edits a file. Generating a deck does all three many times: a few commands per slide, a read of the plugin's layout and brand files, and a write per slide. Without rules that is dozens of prompts for one `/uw-slides:generate-slides`.
+
+`/uw-slides:new-deck` writes two small settings files into every new deck, and the prompts for these steps go away:
+
+| File | Holds | Commit it? |
+|------|-------|------------|
+| `.claude/settings.json` | Allow rules for the deck's own commands (`python3 tools/deckparse.py`, `python3 tools/resolve-catalog.py resolve`, `python3 tools/lint.py`, `./build.sh`, `./build-visuals.sh`, `./outline.sh`, `./lint.sh`, `./status.sh`) and for edits to `content/` and `slides/` | Yes: it reaches anyone who clones the deck |
+| `.claude/settings.local.json` | A read rule for the plugin's folder, where the skills read the layouts, brand rules and schemas | No: it holds this computer's path, and is in `.gitignore` |
+
+Commands you still get asked about are the ones that do something beyond building the deck: `./publish.sh`, `./export.sh`, `./setup-reveal.sh` (it downloads reveal.js), `git`, `python3 tools/resolve-catalog.py eject`, and the first run of `/uw-slides:update-deck`. The plugin's folder name carries its version, so the read rule covers the plugin's whole folder of versions and survives updates.
+
+**A deck made with an earlier plugin version** has neither file. Run `/uw-slides:update-deck` in it: it adds the missing rules, keeps anything already in your settings, and shows what it will add before it writes. Or from the terminal, in the deck folder:
+
+```bash
+python3 <plugin>/tools/deckperms.py . --check   # show what would be added
+python3 <plugin>/tools/deckperms.py .           # add it
+```
+
+where `<plugin>` is where the plugin is installed (it differs by agent and changes with each version).
+
+**Allow the plugin's own commands once, for every deck.** `/uw-slides:new-deck` and `/uw-slides:update-deck` run a script from the plugin, whose folder is named after its version. To stop Claude Code asking after each plugin update, add these to `permissions.allow` in `~/.claude/settings.json` (the `*` stands for the version folder):
+
+```json
+"Bash(python3 */tools/new-deck.py *)",
+"Bash(python3 */tools/deckperms.py *)"
+```
+
+These rules are for Claude Code. Other agents ignore the `.claude/` folder and use their own permission settings.
 
 ---
 

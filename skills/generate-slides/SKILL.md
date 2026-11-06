@@ -25,6 +25,8 @@ If none of these has `tools/deckparse.py`, stop and ask the user where the plugi
 
 Write every path literally when you run a command. Never use shell variables (`PLUGIN=... python3 $PLUGIN/...`): Claude Code cannot match an allow rule against them, so each run asks for permission.
 
+Run each command exactly as this skill writes it, as one command with nothing appended: no redirects (`2>/dev/null`), no `; echo "exit: $?"`, no `&&`, pipes, loops or leading `cd`. Claude Code checks every part of a compound command, so one part that no rule matches makes the whole command ask. Check whether `UW_SLIDES_HOME` is set by running `printenv UW_SLIDES_HOME` alone (no output means it is not set), and check that a file exists with the Glob or Read tool, not with `ls` or `test` in the shell.
+
 ## Brand Resolution
 
 Resolve the brand in this order:
@@ -39,7 +41,9 @@ Resolve the brand in this order:
 /uw-slides:generate-slides <id> [<id>...]  # only these slides
 ```
 
-Run from inside the presentation directory. All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put there by `/uw-slides:new-deck`). The recommended allow rule is `Bash(python3 tools/deckparse.py *)`.
+Run from inside the presentation directory. All `deckparse.py` commands use the vendored copy at `tools/deckparse.py` (put there by `/uw-slides:new-deck`).
+
+**Permissions.** Decks made by a plugin version with `tools/deckperms.py` ship Claude Code allow rules in `.claude/settings.json` for everything this skill runs: `deckparse.py`, `resolve-catalog.py resolve`, the build scripts, and writes to `content/` and `slides/`. The plugin's own files (layouts, brand rules, schemas) are covered by a Read rule in `.claude/settings.local.json`. A deck made earlier has neither: if the user is being asked to approve each command, tell them to run `/uw-slides:update-deck`, which adds the rules. Keep to the literal single-command forms below, or the rules cannot match. Do not ask the user to approve commands one by one when the rules are missing; point them at the update.
 
 ## Read first
 
@@ -78,7 +82,7 @@ If the user named slide IDs, restrict to those. If `deck.yml` itself does not pa
 Skip this step if no slide is in state `catalog`, or if the user named slide IDs and none is a catalog slide. Otherwise run, from the deck directory:
 
 ```bash
-python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog 2>&1
+python3 tools/resolve-catalog.py resolve . --catalog=<PLUGIN>/catalog
 ```
 
 Write `<PLUGIN>` as the resolved absolute path (see Plugin directory), so the command stays literal; never save it in a file in the deck. The resolver rewrites `content/<id>.html` for every catalog slide in the deck (it cannot be limited to one), so a catalog slide's HTML is never hand-edited: to customise one, eject it (`python3 tools/resolve-catalog.py eject . <id> --catalog=<PLUGIN>/catalog`), which turns it into a locked layout slide.
