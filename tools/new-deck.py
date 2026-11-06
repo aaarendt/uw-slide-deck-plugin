@@ -63,7 +63,7 @@ FILES = [
     ("tools/deckparse.py", "tools/deckparse.py", True),
     ("tools/lint.py", "tools/lint.py", True),
     ("tools/resolve-catalog.py", "tools/resolve-catalog.py", True),
-    ("setup-reveal.sh", "templates/setup-reveal.sh", False),
+    ("setup-reveal.sh", "templates/setup-reveal.sh", True),
     ("VISUALS.md", "templates/VISUALS.md", False),
     ("CLAUDE.md", "templates/CLAUDE.md", False),
     (".github/CODEOWNERS", "templates/.github/CODEOWNERS", False),

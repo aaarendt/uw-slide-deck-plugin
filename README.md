@@ -428,7 +428,7 @@ To change colors, spacing or type for one deck only, edit that deck's `shared/he
 - UW decks need the Encode Sans files in `assets/fonts/` (copy them from the plugin's `design-systems/uw-brand/fonts/` if they're missing). CloudBank decks and Open Sans load from Google Fonts, so they need internet access. A published file (`build/index-published.html`) sent on its own has no `assets/fonts/`, so UW headings fall back to a system font there.
 
 **The deck doesn't run, or presenter view (`S`) doesn't open**
-- reveal.js is missing: run `./setup-reveal.sh` in the deck folder (it needs internet access). Offline, download `reveal.min.js`, `reveal.min.css` and `plugin/notes/notes.js` from `https://cdn.jsdelivr.net/npm/reveal.js@6.0.2/` into `assets/reveal/`.
+- reveal.js is missing: run `./setup-reveal.sh` in the deck folder (it needs internet access). Offline, download `reveal.min.js` and `reveal.min.css` from `https://cdn.jsdelivr.net/npm/reveal.js@6.0.2/dist/`, and `notes.js` from `https://cdn.jsdelivr.net/npm/reveal.js@6.0.2/dist/plugin/`, into `assets/reveal/` (save `notes.js` as `assets/reveal/plugin/notes/notes.js`).
 
 **Claude Code asks permission for every command while generating slides**
 - See [Permission prompts](#permission-prompts). A deck made with an earlier plugin version has no permission rules: run `/uw-slides:update-deck` in it.

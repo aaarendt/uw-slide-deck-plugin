@@ -17,6 +17,7 @@ Keep a deck's managed files in sync with the plugin version. `/uw-slides:new-dec
 - `outline.sh`
 - `publish.sh`
 - `export.sh`
+- `setup-reveal.sh`
 - `.github/workflows/deck.yml`
 - `shared/footer.html`
 - `shared/header.html` (brand-specific)
@@ -82,6 +83,7 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 | `outline.sh` | `<PLUGIN>/templates/outline.sh` |
 | `publish.sh` | `<PLUGIN>/templates/publish.sh` |
 | `export.sh` | `<PLUGIN>/templates/export.sh` |
+| `setup-reveal.sh` | `<PLUGIN>/templates/setup-reveal.sh` |
 | `.github/workflows/deck.yml` | `<PLUGIN>/templates/.github/workflows/deck.yml` |
 | `shared/footer.html` | reveal.js deck: `<PLUGIN>/templates/shared/footer-reveal.html`; legacy deck: `<PLUGIN>/templates/shared/footer.html` |
 | `shared/header.html` | reveal.js deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header-reveal.html`; legacy deck: `<PLUGIN>/design-systems/<brand>-brand/shared/header.html` |
@@ -91,7 +93,9 @@ For each managed file, compare the deck's copy with the plugin's canonical copy:
 
 Read both versions and note whether they differ. A file the deck is missing counts as a diff: decks scaffolded by older plugin versions may have no `tools/lint.py`, `tools/resolve-catalog.py` or `.github/workflows/deck.yml`, and this adds them.
 
-`export.sh` and `.github/workflows/deck.yml` became managed in v0.6.0, and users may have edited their copies (the old `export.sh` told them to). When one of these differs, show the user the diff and point out any of their own changes that the update would remove, so they can decide.
+`export.sh` and `.github/workflows/deck.yml` became managed in v0.6.0, and `setup-reveal.sh` after that; users may have edited their copies (the old `export.sh` told them to). When one of these differs, show the user the diff and point out any of their own changes that the update would remove, so they can decide.
+
+When `setup-reveal.sh` changes (a new reveal.js version or download path), tell the user to re-run `./setup-reveal.sh` and rebuild, since the update does not touch `assets/`. A deck scaffolded before the notes-plugin path fix (download URL `.../plugin/notes/notes.js`, which returns 404 for reveal.js 6.x) needs this update to run `./setup-reveal.sh` at all.
 
 ### 3. Report and ask for confirmation
 
@@ -129,7 +133,7 @@ Ask the user to confirm before writing anything. If they decline, stop.
 
 For each changed file the user confirmed:
 - Copy the plugin's version over the deck's version.
-- Keep the file executable if it was executable before (`build.sh`, `build-visuals.sh`, `outline.sh`, `publish.sh`, `export.sh`); a `*.sh` file this adds is made executable.
+- Keep the file executable if it was executable before (`build.sh`, `build-visuals.sh`, `outline.sh`, `publish.sh`, `export.sh`, `setup-reveal.sh`); a `*.sh` file this adds is made executable.
 
 ### 4b. Add the permission rules
 
